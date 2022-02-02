@@ -7,6 +7,7 @@ import FormSelect from "../../../components/forms/FormSelect";
 
 const SubBudgetHeads = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
+  const [departmentIDs, setDepartmentIDs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
@@ -67,6 +68,7 @@ const SubBudgetHeads = () => {
     } catch (error) {
       console.log(error);
     }
+    getDepartments();
   }, []);
 
   const options = [
@@ -135,6 +137,17 @@ const SubBudgetHeads = () => {
   //   }
   // };
 
+  const getDepartments = async () => {
+    const response = await collection("departments");
+    setDepartmentIDs(response.data.data);
+  };
+
+  const optionsType = [
+    { key: "capital", value: "Capital" },
+    { key: "recursive", value: "Recursive" },
+    { key: "personnel", value: "Personnel" },
+  ];
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -158,60 +171,83 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
-                        budget_head_id: parseInt(""),
-                        department_id: parseInt(""),
+                        budget_head_id: "Choose Option",
+                        department_id: "Choose Option",
+                        budgetCode: "",
                         description: "",
                         name: "",
-                        role: "",
                         type: "",
+                        logisticsBudget: "",
                       }}
                     >
                       <div className="row">
                         <div className="col-md-4">
-                          <FormInput
-                            placeholder="Enter Role Name"
-                            name="role"
+                          <FormSelect
+                            options={subBudgetHeads}
+                            // placeholder="Enter Role Name"
+                            name="budget_head_id"
                           />
                         </div>
 
                         <div className="col-md-4">
-                          <FormInput
-                            placeholder="Enter Max Slot"
-                            name="max_slot"
+                          <FormSelect
+                            options={departmentIDs}
+                            // placeholder="Enter "
+                            name="department_id"
                             type="number"
                           />
                         </div>
 
                         <div className="col-md-4">
-                          <FormSelect
-                            defaultText="Is Role Admin?"
-                            name="sub_budget_head"
-                            options={options}
+                          <FormInput
+                            placeholder="Budget Code"
+                            type="text"
+                            name="budgetCode"
+                          />
+                        </div>
+
+                        <div className="col-md-12">
+                          <FormInput
+                            placeholder="Description"
+                            type="text"
+                            name="description"
+                            multiline={true}
                           />
                         </div>
 
                         <div className="col-md-4">
                           <FormInput
-                            placeholder="Start Date"
-                            type="date"
-                            name="date"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <FormInput
-                            placeholder="Expiry Date"
-                            type="date"
-                            name="expiry_date"
+                            placeholder="Name"
+                            type="text"
+                            name="name"
                           />
                         </div>
 
                         <div className="col-md-4">
                           <FormSelect
-                            defaultText="Cannot Expire?"
-                            name="sub_budget_head"
-                            options={options}
+                            defaultText="Type"
+                            name="type"
+                            options={optionsType}
                           />
+                        </div>
+
+                        <div className="col-md-4 mt-2">
+                          <div class="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              role="switch"
+                              id="flexSwitchCheckChecked"
+                              checked
+                            />
+
+                            <label
+                              class="form-check-label"
+                              for="flexSwitchCheckChecked"
+                            >
+                              Logistics Budget
+                            </label>
+                          </div>
                         </div>
 
                         <div className="col-md-12 mt-3">

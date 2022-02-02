@@ -4,6 +4,8 @@ import { collection } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
+import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+import SubmitButton from "../../../components/forms/SubmitButton";
 
 const SubBudgetHeads = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
@@ -177,7 +179,7 @@ const SubBudgetHeads = () => {
                         description: "",
                         name: "",
                         type: "",
-                        logisticsBudget: "",
+                        logisticsBudget: true,
                       }}
                     >
                       <div className="row">
@@ -232,7 +234,12 @@ const SubBudgetHeads = () => {
                         </div>
 
                         <div className="col-md-4 mt-2">
-                          <div class="form-check form-switch">
+                          <CustomCheckbox
+                            label="Logistics Budget"
+                            name="logisticsBudget"
+                          />
+
+                          {/* <div class="form-check form-switch">
                             <input
                               className="form-check-input"
                               type="checkbox"
@@ -247,11 +254,16 @@ const SubBudgetHeads = () => {
                             >
                               Logistics Budget
                             </label>
-                          </div>
+                          </div> */}
                         </div>
 
-                        <div className="col-md-12 mt-3">
-                          <button type="submit" className="btn btn-primary">
+                        <div className="mt-3">
+                          <SubmitButton
+                            className="btn btn-primary"
+                            title="Submit"
+                          />
+
+                          {/* <button type="submit" className="btn btn-primary">
                             Submit
                           </button>
 
@@ -266,7 +278,7 @@ const SubBudgetHeads = () => {
                             }}
                           >
                             Close
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </Form>

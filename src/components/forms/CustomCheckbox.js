@@ -5,20 +5,21 @@ const CustomCheckbox = ({ label, name }) => {
   const { values, setFieldValue } = useFormikContext();
 
   return (
-    <div class="form-check form-switch">
-      <input
-        className="form-check-input"
-        value={values[name]}
-        onChange={({ target: { value } }) => setFieldValue(name, value)}
-        role="switch"
-        id="flexSwitchCheckChecked"
-        checked
-      />
-
-      <label className="form-check-label" htmlFor="flexSwitchCheckChecked">
-        {label}
-      </label>
-    </div>
+    <>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          checked={values[name]}
+          value={values[name]}
+          onChange={({ target: { value } }) => setFieldValue(name, value)}
+          id="defaultCheck1"
+        />
+        <label class="form-check-label" htmlFor="defaultCheck1">
+          {label}
+        </label>
+      </div>
+    </>
   );
 };
 

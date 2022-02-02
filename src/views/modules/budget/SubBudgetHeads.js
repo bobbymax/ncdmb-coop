@@ -3,6 +3,7 @@ import DataTableComponent from "../../../components/commons/tables/DataTableComp
 import { collection } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
+import FormSelect from "../../../components/forms/FormSelect";
 
 const SubBudgetHeads = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
@@ -67,6 +68,11 @@ const SubBudgetHeads = () => {
       console.log(error);
     }
   }, []);
+
+  const options = [
+    { key: "0", label: "Yes" },
+    { key: "1", label: "No" },
+  ];
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -138,7 +144,7 @@ const SubBudgetHeads = () => {
             onClick={() => setOpen(!open)}
             disabled={open}
           >
-            <i className="fa fa-plus-square"></i> Add Subbudget Head
+            <i className="fa fa-plus-square"></i> Add Sub budget Head
           </button>
         </div>
       </div>
@@ -152,10 +158,16 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
+                        budget_head_id: "",
+                        department_id: "",
+                        description: "",
+                        name: "",
                         role: "",
                         name: "",
                         max_slot: "",
-                        date: "",
+                        type: "",
+                        created_at: "",
+                        updated_at: "",
                       }}
                     >
                       <div className="row">
@@ -175,22 +187,11 @@ const SubBudgetHeads = () => {
                         </div>
 
                         <div className="col-md-4">
-                          {/* <CustomSelect
+                          <FormSelect
                             defaultText="Is Role Admin?"
+                            name="sub_budget_head"
                             options={options}
-                            value={state.isSuper}
-                            onChange={(e) =>
-                              setState({ ...state, isSuper: e.target.value })
-                            }
-                            error={
-                              errors &&
-                              errors.isSuper &&
-                              errors.isSuper.length > 0
-                            }
-                            errorMessage={
-                              errors && errors.isSuper && errors.isSuper[0]
-                            }
-                          /> */}
+                          />
                         </div>
 
                         <div className="col-md-4">
@@ -210,27 +211,11 @@ const SubBudgetHeads = () => {
                         </div>
 
                         <div className="col-md-4">
-                          {/* <CustomSelect
+                          <FormSelect
                             defaultText="Cannot Expire?"
+                            name="sub_budget_head"
                             options={options}
-                            value={state.cannot_expire}
-                            onChange={(e) =>
-                              setState({
-                                ...state,
-                                cannot_expire: e.target.value,
-                              })
-                            }
-                            error={
-                              errors &&
-                              errors.cannot_expire &&
-                              errors.cannot_expire.length > 0
-                            }
-                            errorMessage={
-                              errors &&
-                              errors.cannot_expire &&
-                              errors.cannot_expire[0]
-                            }
-                          /> */}
+                          />
                         </div>
 
                         <div className="col-md-12 mt-3">
@@ -238,18 +223,18 @@ const SubBudgetHeads = () => {
                             Submit
                           </button>
 
-                          {/* <button
+                          <button
                             type="button"
                             className="btn btn-danger"
                             onClick={() => {
-                              setUpdate(false);
-                              setState(initialState);
+                              // setUpdate(false);
+                              // setState(initialState);
                               setOpen(false);
-                              setErrors({});
+                              // setErrors({});
                             }}
                           >
                             Close
-                          </button> */}
+                          </button>
                         </div>
                       </div>
                     </Form>

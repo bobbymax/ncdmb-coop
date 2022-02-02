@@ -9,9 +9,9 @@ const useApi = (apiFunc) => {
     const response = await apiFunc(...args);
     setLoading(false);
 
-    if (response.data.message) {
-      console.log("Error getting the data", response.data.message);
-    }
+    // if (response.data.message) {
+    //   console.log("Error getting the data", response.data.message);
+    // }
 
     setData(response.data.data);
 

@@ -1,22 +1,20 @@
 import React from "react";
+import { useFormikContext } from "formik";
 
-const TextInputField = ({
+const FormInput = ({
   label = "",
+  name,
   type = "text",
-  value = "",
-  onChange = undefined,
   placeholder = "",
   required = false,
   multiline = 0,
   error = false,
-  errorMessage = null,
   additionalClasses = "",
 }) => {
-  // const { errors, touched, values, setFieldValue, setFieldTouched } =
-  //   useFormikContext();
+  const { errors, values, setFieldValue } = useFormikContext();
 
   return (
-    <div className={`form-group ${error ? "input-danger" : ""}`}>
+    <div className={`form-group ${errors[name] ? "input-danger" : ""}`}>
       {label !== "" && (
         <label className="mb-1">
           <strong>{label}</strong>
@@ -28,8 +26,8 @@ const TextInputField = ({
           type={type}
           className={`form-control ${additionalClasses}`}
           placeholder={placeholder}
-          value={value}
-          onChange={onChange}
+          value={values[name]}
+          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
           required={required}
         />
       ) : (
@@ -37,18 +35,21 @@ const TextInputField = ({
           className="form-control"
           row={multiline}
           required={required}
-          onChange={onChange}
+          value={values[name]}
+          onChange={({ target: { value: text } }) =>
+            setFieldValue(values[name], text)
+          }
           placeholder={placeholder}
-          value={value}
         ></textarea>
       )}
-      {errorMessage ? (
+
+      {errors ? (
         <span style={{ fontSize: 12 }} className="text-danger">
-          {errorMessage}
+          {errors[name]}
         </span>
       ) : null}
     </div>
   );
 };
 
-export default TextInputField;
+export default FormInput;

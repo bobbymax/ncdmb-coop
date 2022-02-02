@@ -158,16 +158,12 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
-                        budget_head_id: "",
-                        department_id: "",
+                        budget_head_id: parseInt(""),
+                        department_id: parseInt(""),
                         description: "",
                         name: "",
                         role: "",
-                        name: "",
-                        max_slot: "",
                         type: "",
-                        created_at: "",
-                        updated_at: "",
                       }}
                     >
                       <div className="row">

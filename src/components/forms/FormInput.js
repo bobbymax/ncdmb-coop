@@ -36,9 +36,7 @@ const FormInput = ({
           row={multiline}
           required={required}
           value={values[name]}
-          onChange={({ target: { value: text } }) =>
-            setFieldValue(values[name], text)
-          }
+          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
           placeholder={placeholder}
         ></textarea>
       )}

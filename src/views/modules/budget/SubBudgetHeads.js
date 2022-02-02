@@ -73,11 +73,6 @@ const SubBudgetHeads = () => {
     getDepartments();
   }, []);
 
-  const options = [
-    { key: "0", label: "Yes" },
-    { key: "1", label: "No" },
-  ];
-
   // const handleSubmit = (e) => {
   //   e.preventDefault();
 
@@ -173,14 +168,15 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
-                        budget_head_id: "Choose Option",
-                        department_id: "Choose Option",
+                        budget_head_id: 0,
+                        department_id: 0,
                         budgetCode: "",
                         description: "",
                         name: "",
                         type: "",
                         logisticsBudget: true,
                       }}
+                      onSubmit={(values) => console.log(values)}
                     >
                       <div className="row">
                         <div className="col-md-4">

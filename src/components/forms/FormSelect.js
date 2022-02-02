@@ -22,7 +22,6 @@ const FormSelect = ({
 
         <select
           className={arrinput ? `multi-select` : `form-control default-select`}
-          a
           value={values[name]}
           onChange={({ target: { value: text } }) => setFieldValue(name, text)}
           multiple={arrinput ? "multiple" : ""}
@@ -30,8 +29,8 @@ const FormSelect = ({
           <option value={defaultInputValue}>{defaultText}</option>
 
           {options.map((option, index) => (
-            <option key={index} value={option.budget_head_id}>
-              {option.name}
+            <option key={index} value={option.key}>
+              {option.value}
             </option>
           ))}
         </select>

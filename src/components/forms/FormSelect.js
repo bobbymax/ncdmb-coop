@@ -28,11 +28,14 @@ const FormSelect = ({
         >
           <option value={defaultInputValue}>{defaultText}</option>
 
-          {options.map((option, index) => (
-            <option key={index} value={option.key}>
-              {option.value}
-            </option>
-          ))}
+          {options.map((option, index) => {
+            if (option.key)
+              return (
+                <option key={index} value={option.key}>
+                  {option.value}
+                </option>
+              );
+          })}
         </select>
         {errors ? (
           <span style={{ fontSize: 12 }} className="text-danger">

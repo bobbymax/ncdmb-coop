@@ -162,7 +162,7 @@ const SubBudgetHeads = () => {
                         department_id: parseInt(""),
                         description: "",
                         name: "",
-                        role: "",
+
                         type: "",
                       }}
                     >

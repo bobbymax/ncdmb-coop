@@ -35,16 +35,16 @@ const FormSelect = ({
                   {option.value}
                 </option>
               );
-            else if (option.budget_head_id)
+            if (option.budget_head_id)
               return (
                 <option key={index} value={option.budget_head_id}>
                   {option.name}
                 </option>
               );
-            else if (option.department_id)
+            if (option.department_id)
               return (
                 <option key={index} value={option.department_id}>
-                  {option.name}
+                  {option.department_id}
                 </option>
               );
           })}

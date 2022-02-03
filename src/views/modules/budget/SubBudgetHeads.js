@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
-import { collection } from "../../../services/utils/controllers";
+import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
@@ -73,66 +73,70 @@ const SubBudgetHeads = () => {
     getDepartments();
   }, []);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
+  const handleSubmit = (values) => {
+    // store("subBudgetHeads", values)
+    //   .then((res) => console.log("Succcess", res))
+    //   .catch((err) => console.log(err));
 
-  //   const data = {
-  //     name: state.name,
-  //     max_slots: parseInt(state.max_slots),
-  //     isSuper: state.isSuper,
-  //     start_date: state.start_date,
-  //     expiry_date: state.expiry_date,
-  //     cannot_expire: state.cannot_expire,
-  //   };
+    console.log(values);
 
-  //   const formErrors = validate(rules, data);
-  //   setErrors(formErrors);
-  //   const status =
-  //     Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+    const data = {
+      name: state.name,
+      max_slots: parseInt(state.max_slots),
+      isSuper: state.isSuper,
+      start_date: state.start_date,
+      expiry_date: state.expiry_date,
+      cannot_expire: state.cannot_expire,
+    };
 
-  //   if (status) {
-  //     if (update) {
-  //       try {
-  //         alter("roles", state.id, data)
-  //           .then((res) => {
-  //             const result = res.data.data;
+    // const formErrors = validate(rules, data);
+    // setErrors(formErrors);
+    // const status =
+    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
 
-  //             setRoles(
-  //               roles.map((el) => {
-  //                 if (result.id === el.id) {
-  //                   return result;
-  //                 }
+    // if (status) {
+    //   if (update) {
+    //     try {
+    //       alter("roles", state.id, data)
+    //         .then((res) => {
+    //           const result = res.data.data;
 
-  //                 return el;
-  //               })
-  //             );
-  //             Alert.success("Updated", res.data.message);
-  //           })
-  //           .catch((err) => console.log(err.message));
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     } else {
-  //       try {
-  //         store("roles", data)
-  //           .then((res) => {
-  //             const result = res.data.data;
-  //             setRoles([result, ...roles]);
-  //             Alert.success("Created!!", res.data.message);
-  //           })
-  //           .catch((err) => console.log(err.message));
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
+    //           setRoles(
+    //             roles.map((el) => {
+    //               if (result.id === el.id) {
+    //                 return result;
+    //               }
 
-  //     setErrors({});
+    //               return el;
+    //             })
+    //           );
+    //           Alert.success("Updated", res.data.message);
+    //         })
+    //         .catch((err) => console.log(err.message));
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   } else {
+    //     try {
+    //       store("roles", data)
+    //         .then((res) => {
+    //           const result = res.data.data;
+    //           setRoles([result, ...roles]);
+    //           Alert.success("Created!!", res.data.message);
+    //         })
+    //         .catch((err) => console.log(err.message));
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
 
-  //     setUpdate(false);
-  //     setState(initialState);
-  //     setOpen(false);
-  //   }
-  // };
+    //   setErrors({});
+
+    //   setUpdate(false);
+    //   setState(initialState);
+    //   setOpen(false);
+    // }
+  };
 
   const getDepartments = async () => {
     const response = await collection("departments");
@@ -168,15 +172,15 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
-                        budget_head_id: 0,
-                        department_id: 0,
+                        budget_head_id: parseInt(""),
+                        department_id: parseInt(""),
                         budgetCode: "",
                         description: "",
                         name: "",
                         type: "",
                         logisticsBudget: true,
                       }}
-                      onSubmit={(values) => console.log(values)}
+                      onSubmit={handleSubmit}
                     >
                       <div className="row">
                         <div className="col-md-4">
@@ -410,7 +414,7 @@ const SubBudgetHeads = () => {
         </>
       )}
 
-      <div class="col-lg-12">
+      <div className="col-lg-12">
         <DataTableComponent
           pageName="Sub Budget Heads"
           columns={columns}

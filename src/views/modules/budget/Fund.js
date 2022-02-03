@@ -3,10 +3,17 @@ import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { fetchCollection } from "../../../services/utils/testControllers";
+import Form from "../../../components/forms/Form";
+import FormInput from "../../../components/forms/FormInput";
+import FormSelect from "../../../components/forms/FormSelect";
+import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+import SubmitButton from "../../../components/forms/SubmitButton";
 
 const Fund = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [creditBudgetHeads, setCreditBudgetHead] = useState([]);
 
   const {
     data: funds,
@@ -16,6 +23,7 @@ const Fund = () => {
 
   useEffect(() => {
     fetch("creditBudgetHeads");
+    getCreditBudgetHeads();
   }, []);
 
   const columns = [
@@ -28,6 +36,13 @@ const Fund = () => {
       key: "approved_amount",
     },
   ];
+
+  const getCreditBudgetHeads = () => {
+    fetch("creditBudgetHeads")
+      .then((res) => setCreditBudgetHead(res.data.data))
+      .catch((err) => console.log("Error", err));
+  };
+
   const handleEdit = (data) => {};
 
   const handleDestroy = (data) => {};
@@ -51,6 +66,216 @@ const Fund = () => {
 
   return (
     <div className="row">
+      <div className="col-md-12">
+        <div className="page-titles">
+          <button
+            className="btn btn-primary"
+            onClick={() => setOpen(!open)}
+            disabled={open}
+          >
+            <i className="fa fa-plus-square"></i> Add Fund
+          </button>
+        </div>
+      </div>
+
+      {open && (
+        <>
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-body">
+                <div className="form-body">
+                  <>
+                    <Form
+                      initialValues={{
+                        sub_budget_head_id: 0,
+                        approved_amount: "",
+                        description: "",
+                      }}
+                      onSubmit={(values) => console.log(values)}
+                    >
+                      <div className="row">
+                        <div className="col-md-6">
+                          <FormSelect
+                            options={creditBudgetHeads}
+                            // placeholder="Enter Role Name"
+                            name="sub_budget_head_id"
+                          />
+                        </div>
+
+                        <div className="col-md-6">
+                          <FormInput
+                            placeholder="Approved amount"
+                            type="text"
+                            name="approved_amount"
+                          />
+                        </div>
+
+                        <div className="col-md-12">
+                          <FormInput
+                            placeholder="Description"
+                            type="text"
+                            name="description"
+                            multiline={true}
+                          />
+                        </div>
+
+                        <div className="mt-3">
+                          <SubmitButton
+                            className="btn btn-primary"
+                            title="Submit"
+                          />
+
+                          {/* <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => {
+                              // setUpdate(false);
+                              // setState(initialState);
+                              setOpen(false);
+                              // setErrors({});
+                            }}
+                          >
+                            Close
+                          </button> */}
+                        </div>
+                      </div>
+                    </Form>
+
+                    {/* <div className="row">
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Enter Role Name"
+                          value={state.name}
+                          onChange={(e) =>
+                            setState({ ...state, name: e.target.value })
+                          }
+                          error={
+                            errors && errors.name && errors.name.length > 0
+                          }
+                          errorMessage={errors && errors.name && errors.name[0]}
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Enter Max Slot"
+                          type="number"
+                          value={state.max_slots}
+                          onChange={(e) =>
+                            setState({ ...state, max_slots: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.max_slots &&
+                            errors.max_slots.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.max_slots && errors.max_slots[0]
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <CustomSelect
+                          defaultText="Is Role Admin?"
+                          options={options}
+                          value={state.isSuper}
+                          onChange={(e) =>
+                            setState({ ...state, isSuper: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.isSuper &&
+                            errors.isSuper.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.isSuper && errors.isSuper[0]
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Start Date"
+                          type="date"
+                          value={state.start_date}
+                          onChange={(e) =>
+                            setState({ ...state, start_date: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.start_date &&
+                            errors.start_date.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.start_date && errors.start_date[0]
+                          }
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Expiry Date"
+                          type="date"
+                          value={state.expiry_date}
+                          onChange={(e) =>
+                            setState({ ...state, expiry_date: e.target.value })
+                          }
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <CustomSelect
+                          defaultText="Cannot Expire?"
+                          options={options}
+                          value={state.cannot_expire}
+                          onChange={(e) =>
+                            setState({
+                              ...state,
+                              cannot_expire: e.target.value,
+                            })
+                          }
+                          error={
+                            errors &&
+                            errors.cannot_expire &&
+                            errors.cannot_expire.length > 0
+                          }
+                          errorMessage={
+                            errors &&
+                            errors.cannot_expire &&
+                            errors.cannot_expire[0]
+                          }
+                        />
+                      </div>
+
+                      <div className="col-md-12 mt-3">
+                        <button type="submit" className="btn btn-primary">
+                          Submit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => {
+                            setUpdate(false);
+                            setState(initialState);
+                            setOpen(false);
+                            setErrors({});
+                          }}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div> */}
+                  </>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="col-md-12">
         <DataTableComponent
           pageName="Credit Sub Budget Head"

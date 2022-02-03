@@ -41,10 +41,16 @@ const FormSelect = ({
                   {option.name}
                 </option>
               );
-            if (option.department_id)
+            if (option.id)
               return (
-                <option key={index} value={option.department_id}>
-                  {option.department_id}
+                <option key={index} value={option.id}>
+                  {option.name}
+                </option>
+              );
+            if (option.sub_budget_head_id)
+              return (
+                <option key={index} value={option.sub_budget_head_id}>
+                  {option.subBudgetHead.name}
                 </option>
               );
           })}

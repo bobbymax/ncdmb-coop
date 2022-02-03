@@ -5,6 +5,7 @@ const SubmitButton = ({
   title,
   type = "button",
   variant = "primary",
+  disabled,
   ...otherProps
 }) => {
   const { handleSubmit } = useFormikContext();
@@ -14,6 +15,7 @@ const SubmitButton = ({
       <button
         type={type}
         className={`btn btn-${variant}`}
+        disabled={disabled}
         onClick={handleSubmit}
         {...otherProps}
       >

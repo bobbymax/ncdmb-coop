@@ -38,6 +38,12 @@ const Expenditures = () => {
     },
   ];
 
+  const handleSubmit = (values) => {
+    store("expenditures", values)
+      .then((res) => console.log(res))
+      .catch((err) => console.log("Error", err));
+  };
+
   const handleEdit = (data) => {};
 
   const handleDestroy = (data) => {};
@@ -65,71 +71,72 @@ const Expenditures = () => {
       collection("subBudgetHeads")
         .then((res) => {
           setSubBudgetHeads(res.data.data);
-          console.log(res.data.data);
+          // console.log(res.data.data);
           setIsLoading(false);
         })
         .catch((err) => console.log(err.message));
     } catch (error) {
       console.log(error);
     }
+
     getDepartments();
   }, []);
 
-  const handleSubmit = (values) => {
-    store("subBudgetHeads", values)
-      .then((res) => console.log("Succcess", res))
-      .catch((err) => console.log(err));
+  // const handleSubmit = (values) => {
+  //   store("subBudgetHeads", values)
+  //     .then((res) => console.log("Succcess", res))
+  //     .catch((err) => console.log(err));
 
-    // console.log(values);
+  //   // console.log(values);
 
-    // const formErrors = validate(rules, data);
-    // setErrors(formErrors);
-    // const status =
-    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+  //   // const formErrors = validate(rules, data);
+  //   // setErrors(formErrors);
+  //   // const status =
+  //   //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
 
-    // if (status) {
-    //   if (update) {
-    //     try {
-    //       alter("roles", state.id, data)
-    //         .then((res) => {
-    //           const result = res.data.data;
+  //   // if (status) {
+  //   //   if (update) {
+  //   //     try {
+  //   //       alter("roles", state.id, data)
+  //   //         .then((res) => {
+  //   //           const result = res.data.data;
 
-    //           setRoles(
-    //             roles.map((el) => {
-    //               if (result.id === el.id) {
-    //                 return result;
-    //               }
+  //   //           setRoles(
+  //   //             roles.map((el) => {
+  //   //               if (result.id === el.id) {
+  //   //                 return result;
+  //   //               }
 
-    //               return el;
-    //             })
-    //           );
-    //           Alert.success("Updated", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     try {
-    //       store("roles", data)
-    //         .then((res) => {
-    //           const result = res.data.data;
-    //           setRoles([result, ...roles]);
-    //           Alert.success("Created!!", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
+  //   //               return el;
+  //   //             })
+  //   //           );
+  //   //           Alert.success("Updated", res.data.message);
+  //   //         })
+  //   //         .catch((err) => console.log(err.message));
+  //   //     } catch (error) {
+  //   //       console.log(error);
+  //   //     }
+  //   //   } else {
+  //   //     try {
+  //   //       store("roles", data)
+  //   //         .then((res) => {
+  //   //           const result = res.data.data;
+  //   //           setRoles([result, ...roles]);
+  //   //           Alert.success("Created!!", res.data.message);
+  //   //         })
+  //   //         .catch((err) => console.log(err.message));
+  //   //     } catch (error) {
+  //   //       console.log(error);
+  //   //     }
+  //   //   }
 
-    //   setErrors({});
+  //   //   setErrors({});
 
-    //   setUpdate(false);
-    //   setState(initialState);
-    //   setOpen(false);
-    // }
-  };
+  //   //   setUpdate(false);
+  //   //   setState(initialState);
+  //   //   setOpen(false);
+  //   // }
+  // };
 
   const getData = (value) => {
     collection(`subBudgetHeads/${value}`)
@@ -146,12 +153,13 @@ const Expenditures = () => {
     console.log(setData(newAmount));
   };
 
-  const onClaimIDChange = (claimId) => {
-    if (claimId === "") return;
-
-    collection(`fetch/claims/${claimId}`)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+  const onClaimIDChange = ({ target }) => {
+    if (target === "" && target.length < 8) return;
+    else {
+      collection(`fetch/claims/${target.value}`)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
   };
 
   const paymentType = [
@@ -186,7 +194,7 @@ const Expenditures = () => {
                 <>
                   <Form
                     initialValues={{
-                      budget_head_id: parseInt(""),
+                      sub_budget_head_id: parseInt(""),
                       claim_id: "",
                       beneficiary: "",
                       amount: "",
@@ -196,7 +204,7 @@ const Expenditures = () => {
                       payment_type,
                     }}
                     // validationSchema={validationSchema}
-                    onSubmit={(values) => console.log(values)}
+                    onSubmit={handleSubmit}
                   >
                     <div className="row">
                       <div className="col-md-4">
@@ -221,7 +229,7 @@ const Expenditures = () => {
                       <div className="col-md-4">
                         <FormInput
                           placeholder="Claim ID"
-                          onChange={(e) => onClaimIDChange(e.target.value)}
+                          onChange={(e) => onClaimIDChange(e)}
                           type="text"
                           name="claim_id"
                           readOnly={payment_type === "third-party"}
@@ -244,7 +252,7 @@ const Expenditures = () => {
                           placeholder="BUDGET CODE"
                           value={data.budgetCode}
                           readOnly={payment_type === "staff-payment"}
-                          name="beneficiary"
+                          name="budgetCode"
                           disabled={disabled}
                         />
                       </div>
@@ -254,7 +262,6 @@ const Expenditures = () => {
                           placeholder="0"
                           value={data.approved_amount}
                           readOnly={payment_type === "staff-payment"}
-                          name="approved_amount"
                           disabled={disabled}
                         />
                       </div>
@@ -275,7 +282,6 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="0"
                           readOnly={payment_type === "staff-payment"}
-                          name="available_amount"
                           disabled={disabled}
                         />
                       </div>

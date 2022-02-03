@@ -13,6 +13,7 @@ import Groups from "./views/modules/administration/Groups";
 import Departments from "./views/modules/administration/Departments";
 import Employees from "./views/modules/administration/Employees";
 import BudgetHeads from "./views/modules/budget/BudgetHeads";
+import Payments from "./views/modules/budget/Payment";
 import SubBudgetHeads from "./views/modules/budget/SubBudgetHeads";
 import Fund from "./views/modules/budget/Fund";
 import Expenditures from "./views/modules/budget/Expenditures";
@@ -148,6 +149,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Claims />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/payments"
+          element={
+            <ProtectedRoute>
+              <Payments />
             </ProtectedRoute>
           }
         />

@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
-import { useFormikContext } from "formik";
 import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
-// import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import * as Yup from "yup";
 
 const Expenditures = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
@@ -143,11 +139,19 @@ const Expenditures = () => {
     console.log(data);
   };
 
-  const updateAmount = () => {
-    const value = parseFloat(data.actual_balance) - parseFloat(data.amount);
+  const updateAmount = (value) => {
+    const newAmount = parseFloat(data.actual_balance) - parseFloat(value);
 
     console.log(data);
-    console.log(setData(value));
+    console.log(setData(newAmount));
+  };
+
+  const onClaimIDChange = (claimId) => {
+    if (claimId === "") return;
+
+    collection(`fetch/claims/${claimId}`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const paymentType = [
@@ -185,20 +189,20 @@ const Expenditures = () => {
                       budget_head_id: parseInt(""),
                       claim_id: "",
                       beneficiary: "",
-                      amount: 0,
+                      amount: "",
                       description: "",
                       additional_info: "",
                       type: "",
-                      payment_type: "",
+                      payment_type,
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values) => console.log(values)}
                   >
                     <div className="row">
                       <div className="col-md-4">
-                        {/* <FormInput name="" /> */}
                         <FormSelect
                           options={paymentType}
+                          // value={payment_type}
                           defaultText="Select Payment Type"
                           onChange={(e) => setPayment_Type(e.target.value)}
                           name="payment_type"
@@ -217,6 +221,7 @@ const Expenditures = () => {
                       <div className="col-md-4">
                         <FormInput
                           placeholder="Claim ID"
+                          onChange={(e) => onClaimIDChange(e.target.value)}
                           type="text"
                           name="claim_id"
                           readOnly={payment_type === "third-party"}
@@ -258,10 +263,11 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="AMOUNT"
                           onChange={(e) => updateAmount(e.target.value)}
-                          readOnly={payment_type === "staff-payment"}
+                          readOnly={
+                            payment_type === "staff-payment" ? true : false
+                          }
                           name="amount"
-                          disabled={disabled}
-                          type="number"
+                          // type="number
                         />
                       </div>
 
@@ -327,128 +333,124 @@ const Expenditures = () => {
                   </Form>
 
                   {/* <div className="row">
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Enter Role Name"
-                          value={state.name}
-                          onChange={(e) =>
-                            setState({ ...state, name: e.target.value })
-                          }
-                          error={
-                            errors && errors.name && errors.name.length > 0
-                          }
-                          errorMessage={errors && errors.name && errors.name[0]}
-                        />
-                      </div>
+                    <div className="col-md-4">
+                      <TextInputField
+                        placeholder="Enter Role Name"
+                        value={state.name}
+                        onChange={(e) =>
+                          setState({ ...state, name: e.target.value })
+                        }
+                        error={errors && errors.name && errors.name.length > 0}
+                        errorMessage={errors && errors.name && errors.name[0]}
+                      />
+                    </div>
 
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Enter Max Slot"
-                          type="number"
-                          value={state.max_slots}
-                          onChange={(e) =>
-                            setState({ ...state, max_slots: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.max_slots &&
-                            errors.max_slots.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.max_slots && errors.max_slots[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <CustomSelect
-                          defaultText="Is Role Admin?"
-                          options={options}
-                          value={state.isSuper}
-                          onChange={(e) =>
-                            setState({ ...state, isSuper: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.isSuper &&
-                            errors.isSuper.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.isSuper && errors.isSuper[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Start Date"
-                          type="date"
-                          value={state.start_date}
-                          onChange={(e) =>
-                            setState({ ...state, start_date: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.start_date &&
-                            errors.start_date.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.start_date && errors.start_date[0]
-                          }
-                        />
-                      </div>
+                    <div className="col-md-4">
+                      <TextInputField
+                        placeholder="Enter Max Slot"
+                        type="number"
+                        value={state.max_slots}
+                        onChange={(e) =>
+                          setState({ ...state, max_slots: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.max_slots &&
+                          errors.max_slots.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.max_slots && errors.max_slots[0]
+                        }
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <CustomSelect
+                        defaultText="Is Role Admin?"
+                        options={options}
+                        value={state.isSuper}
+                        onChange={(e) =>
+                          setState({ ...state, isSuper: e.target.value })
+                        }
+                        error={
+                          errors && errors.isSuper && errors.isSuper.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.isSuper && errors.isSuper[0]
+                        }
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <TextInputField
+                        placeholder="Start Date"
+                        type="date"
+                        value={state.start_date}
+                        onChange={(e) =>
+                          setState({ ...state, start_date: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.start_date &&
+                          errors.start_date.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.start_date && errors.start_date[0]
+                        }
+                      />
+                    </div>
 
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Expiry Date"
-                          type="date"
-                          value={state.expiry_date}
-                          onChange={(e) =>
-                            setState({ ...state, expiry_date: e.target.value })
-                          }
-                        />
-                      </div>
+                    <div className="col-md-4">
+                      <TextInputField
+                        placeholder="Expiry Date"
+                        type="date"
+                        value={state.expiry_date}
+                        onChange={(e) =>
+                          setState({ ...state, expiry_date: e.target.value })
+                        }
+                      />
+                    </div>
 
-                      <div className="col-md-4">
-                        <CustomSelect
-                          defaultText="Cannot Expire?"
-                          options={options}
-                          value={state.cannot_expire}
-                          onChange={(e) =>
-                            setState({
-                              ...state,
-                              cannot_expire: e.target.value,
-                            })
-                          }
-                          error={
-                            errors &&
-                            errors.cannot_expire &&
-                            errors.cannot_expire.length > 0
-                          }
-                          errorMessage={
-                            errors &&
-                            errors.cannot_expire &&
-                            errors.cannot_expire[0]
-                          }
-                        />
-                      </div>
+                    <div className="col-md-4">
+                      <CustomSelect
+                        defaultText="Cannot Expire?"
+                        options={options}
+                        value={state.cannot_expire}
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            cannot_expire: e.target.value,
+                          })
+                        }
+                        error={
+                          errors &&
+                          errors.cannot_expire &&
+                          errors.cannot_expire.length > 0
+                        }
+                        errorMessage={
+                          errors &&
+                          errors.cannot_expire &&
+                          errors.cannot_expire[0]
+                        }
+                      />
+                    </div>
 
-                      <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setUpdate(false);
-                            setState(initialState);
-                            setOpen(false);
-                            setErrors({});
-                          }}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </div> */}
+                    <div className="col-md-12 mt-3">
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          setUpdate(false);
+                          setState(initialState);
+                          setOpen(false);
+                          setErrors({});
+                        }}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div> */}
                 </>
               </div>
             </div>

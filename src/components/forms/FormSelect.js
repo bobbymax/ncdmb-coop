@@ -6,6 +6,7 @@ const FormSelect = ({
   options,
   name,
   defaultText = "Choose Option",
+  onChange = () => {},
   defaultInputValue = 0,
   arrinput = false,
   ...otherProps
@@ -24,7 +25,11 @@ const FormSelect = ({
         <select
           className={arrinput ? `multi-select` : `form-control default-select`}
           value={values[name]}
-          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
+          onChange={(e) => {
+            setFieldValue(name, e.target.value);
+
+            onChange(e);
+          }}
           multiple={arrinput ? "multiple" : ""}
           {...otherProps}
         >

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+import { useFormikContext } from "formik";
 import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
@@ -8,26 +9,20 @@ import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import * as Yup from "yup";
 
-const validationSchema = Yup.object().shape({
-  budget_head_id: Yup.string().required().label("Budget Head"),
-  department_id: Yup.string().required().label("Department"),
-  budgetCode: Yup.string().required().label("Budget Code"),
-  name: Yup.string().required().label("Name"),
-  type: Yup.string().required().label("Type"),
-  logisticsBudget: Yup.mixed().required().label("Logistics Budget"),
-});
-
 const Expenditures = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departmentIDs, setDepartmentIDs] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, setState] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
+  const [disabled, setDisbled] = useState(false);
+  const [payment_type, setPayment_Type] = useState("");
 
-  const [state, setState] = useState();
-  const [update, setUpdate] = useState(false);
-  const [errors, setErrors] = useState({});
+  // const [state, setState] = useState();
+  // const [update, setUpdate] = useState(false);
+  // const [errors, setErrors] = useState({});
 
   // const initialState = {
   //   id: 0,
@@ -82,6 +77,8 @@ const Expenditures = () => {
     }
     getDepartments();
   }, []);
+
+  console.log("INitial State", state);
 
   const handleSubmit = (values) => {
     store("subBudgetHeads", values)
@@ -139,15 +136,20 @@ const Expenditures = () => {
     // }
   };
 
+  const paymentType = [
+    { key: "third-party", value: "Third Party" },
+    { key: "staff-payment", value: "Staff Payment" },
+  ];
+
   const getDepartments = async () => {
     const response = await collection("departments");
     setDepartmentIDs(response.data.data);
   };
 
-  const optionsType = [
-    { key: "capital", value: "Capital" },
-    { key: "recursive", value: "Recursive" },
-    { key: "personnel", value: "Personnel" },
+  const type = [
+    { key: "staff-claim", value: "Staff Claim" },
+    { key: "touring-advance", value: "Touring Advance" },
+    { key: "other", value: "Other" },
   ];
 
   return (
@@ -174,23 +176,24 @@ const Expenditures = () => {
                       type: "",
                       logisticsBudget: true,
                     }}
-                    validationSchema={validationSchema}
+                    // validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                   >
                     <div className="row">
                       <div className="col-md-4">
                         {/* <FormInput name="" /> */}
                         <FormSelect
-                          options={subBudgetHeads}
+                          options={paymentType}
                           defaultText="Payment Type"
-                          // deafultText="Payment type"
+                          onChange={(e) => setPayment_Type(e.target.value)}
                           name="payment_type"
                         />
                       </div>
 
                       <div className="col-md-4">
                         <FormSelect
-                          options={departmentIDs}
+                          options={type}
+                          disabled={payment_type === "third-party"}
                           defaultText="Type"
                           name="type"
                         />
@@ -200,15 +203,17 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="Claim ID"
                           type="text"
-                          name="budgetCode"
+                          name="claim_id"
+                          readOnly={payment_type === "third-party"}
                         />
                       </div>
 
                       <div className="col-md-4">
                         <FormInput
                           placeholder="Beneficiary"
-                          // deafultText="SubbudgetheadId"
+                          readOnly={payment_type === "staff-payment"}
                           name="beneficiary"
+                          disabled={disabled}
                         />
                       </div>
 
@@ -216,7 +221,11 @@ const Expenditures = () => {
                         <FormSelect
                           defaultText="Sub Budget Head"
                           options={departmentIDs}
-                          // type="text"
+                          onChange={(e) => {
+                            collection(`subBudgetHeads/${e.target.value}`)
+                              .then((res) => console.log(res))
+                              .catch((err) => console.log(err));
+                          }}
                           name="sub_budget_head_id"
                         />
                       </div>
@@ -224,6 +233,7 @@ const Expenditures = () => {
                       <div className="col-md-4">
                         <FormInput
                           placeholder="Amount"
+                          readOnly={payment_type === "staff-payment"}
                           type="text"
                           name="amount"
                         />
@@ -233,7 +243,8 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="Description"
                           type="text"
-                          name="amount"
+                          readOnly={payment_type === "staff-payment"}
+                          name="description"
                           multiline
                         />
                       </div>
@@ -242,19 +253,32 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="Additional  Info"
                           type="text"
-                          name="amount"
+                          name="additional_info"
                           multiline
                         />
                       </div>
 
-                      <div className="row">
-                        <div className="col-md-4 mt-3">
+                      <>
+                        <div className="mt-3 ml-3 d-flexs">
                           <SubmitButton
                             className="btn btn-primary"
                             title="Submit"
                           />
+
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-block"
+                            // onClick={() => {
+                            //   // setUpdate(false);
+                            //   // setState(initialState);
+                            //   // setOpen(false);
+                            //   // setErrors({});
+                            // }}
+                          >
+                            Close
+                          </button>
                         </div>
-                      </div>
+                      </>
                     </div>
                   </Form>
 

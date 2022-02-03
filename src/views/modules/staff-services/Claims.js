@@ -49,7 +49,7 @@ const Claims = () => {
       <div className="col-md-12">
         <div className="page-titles">
           <button className="btn btn-success">
-            <i className="fa fa-plus-square"></i> Add Sub budget Head
+            <i className="fa fa-plus-square"></i> Add Claim
           </button>
         </div>
       </div>

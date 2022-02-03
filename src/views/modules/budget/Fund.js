@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
-import { fetchCollection } from "../../../services/utils/testControllers";
+import { collection } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
 import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import SubmitButton from "../../../components/forms/SubmitButton";
+import { store } from "../../../services/utils/controllers";
 
 const Fund = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +20,7 @@ const Fund = () => {
     data: funds,
     request: fetch,
     loading: isLoading,
-  } = useApi(fetchCollection);
+  } = useApi(collection);
 
   useEffect(() => {
     fetch("creditBudgetHeads");
@@ -38,9 +39,16 @@ const Fund = () => {
   ];
 
   const getCreditBudgetHeads = () => {
-    fetch("creditBudgetHeads")
+    fetch("subBudgetHeads")
+      // .then((res) => console.log("Response", res))
       .then((res) => setCreditBudgetHead(res.data.data))
       .catch((err) => console.log("Error", err));
+  };
+
+  const getSubBudgetHeadValue = (id) => {
+    fetch(`subBudgetHeads/${id}`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const handleEdit = (data) => {};
@@ -62,6 +70,62 @@ const Fund = () => {
     } else {
       setResults(funds);
     }
+  };
+
+  const handleSubmit = (values) => {
+    store("creditBudgetHeads", values)
+      .then((res) => console.log("Succcess", res))
+      .catch((err) => console.log(err));
+
+    // console.log(values);
+
+    // const formErrors = validate(rules, data);
+    // setErrors(formErrors);
+    // const status =
+    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+
+    // if (status) {
+    //   if (update) {
+    //     try {
+    //       alter("roles", state.id, data)
+    //         .then((res) => {
+    //           const result = res.data.data;
+
+    //           setRoles(
+    //             roles.map((el) => {
+    //               if (result.id === el.id) {
+    //                 return result;
+    //               }
+
+    //               return el;
+    //             })
+    //           );
+    //           Alert.success("Updated", res.data.message);
+    //         })
+    //         .catch((err) => console.log(err.message));
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   } else {
+    //     try {
+    //       store("roles", data)
+    //         .then((res) => {
+    //           const result = res.data.data;
+    //           setRoles([result, ...roles]);
+    //           Alert.success("Created!!", res.data.message);
+    //         })
+    //         .catch((err) => console.log(err.message));
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+
+    //   setErrors({});
+
+    //   setUpdate(false);
+    //   setState(initialState);
+    //   setOpen(false);
+    // }
   };
 
   return (
@@ -91,12 +155,23 @@ const Fund = () => {
                         approved_amount: "",
                         description: "",
                       }}
-                      onSubmit={(values) => console.log(values)}
+                      onSubmit={handleSubmit}
                     >
                       <div className="row">
                         <div className="col-md-6">
+                          {/* <select>
+                            {creditBudgetHeads.map((sbh) => (
+                              <option
+                                onChange={() => getSubBudgetHeadValue(sbh.id)}
+                              >
+                                {sbh.name}
+                              </option>
+                            ))}
+                          </select> */}
+
                           <FormSelect
                             options={creditBudgetHeads}
+                            // onChange={}
                             // placeholder="Enter Role Name"
                             name="sub_budget_head_id"
                           />
@@ -107,6 +182,25 @@ const Fund = () => {
                             placeholder="Approved amount"
                             type="text"
                             name="approved_amount"
+                          />
+                        </div>
+
+                        <div className="col-md-6">
+                          <FormInput
+                            placeholder="Current Balance"
+                            value="0"
+                            type="text"
+                            name="current_balance"
+                            disabled
+                          />
+                        </div>
+
+                        <div className="col-md-6">
+                          <FormInput
+                            placeholder="New Amount"
+                            type="text"
+                            name="new_amount"
+                            disabled
                           />
                         </div>
 
@@ -125,11 +219,11 @@ const Fund = () => {
                             title="Submit"
                           />
 
-                          {/* <button type="submit" className="btn btn-primary">
+                          <button type="submit" className="btn btn-primary">
                             Submit
                           </button>
 
-                          <button
+                          {/* <button
                             type="button"
                             className="btn btn-danger"
                             onClick={() => {

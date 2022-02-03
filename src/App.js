@@ -15,6 +15,7 @@ import Employees from "./views/modules/administration/Employees";
 import BudgetHeads from "./views/modules/budget/BudgetHeads";
 import SubBudgetHeads from "./views/modules/budget/SubBudgetHeads";
 import Fund from "./views/modules/budget/Fund";
+import Expenditures from "./views/modules/budget/Expenditures";
 
 const App = () => {
   return (
@@ -126,6 +127,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Fund />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/expenditures"
+          element={
+            <ProtectedRoute>
+              <Expenditures />
             </ProtectedRoute>
           }
         />

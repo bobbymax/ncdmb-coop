@@ -17,7 +17,7 @@ const validationSchema = Yup.object().shape({
   logisticsBudget: Yup.mixed().required().label("Logistics Budget"),
 });
 
-const SubBudgetHeads = () => {
+const Expenditures = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departmentIDs, setDepartmentIDs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -154,138 +154,111 @@ const SubBudgetHeads = () => {
     <div className="row">
       <div className="col-md-12">
         <div className="page-titles">
-          <button
-            className="btn btn-success"
-            onClick={() => setOpen(!open)}
-            disabled={open}
-          >
-            <i className="fa fa-plus-square"></i> Add Sub budget Head
-          </button>
+          <h2>New Expenditure</h2>
         </div>
       </div>
 
-      {open && (
-        <>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="form-body">
-                  <>
-                    <Form
-                      initialValues={{
-                        budget_head_id: parseInt(""),
-                        department_id: parseInt(""),
-                        budgetCode: "",
-                        description: "",
-                        name: "",
-                        type: "",
-                        logisticsBudget: true,
-                      }}
-                      validationSchema={validationSchema}
-                      onSubmit={handleSubmit}
-                    >
+      <>
+        <div className="col-md-12">
+          <div className="card">
+            <div className="card-body">
+              <div className="form-body">
+                <>
+                  <Form
+                    initialValues={{
+                      budget_head_id: parseInt(""),
+                      department_id: parseInt(""),
+                      budgetCode: "",
+                      description: "",
+                      name: "",
+                      type: "",
+                      logisticsBudget: true,
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                  >
+                    <div className="row">
+                      <div className="col-md-4">
+                        {/* <FormInput name="" /> */}
+                        <FormSelect
+                          options={subBudgetHeads}
+                          defaultText="Payment Type"
+                          // deafultText="Payment type"
+                          name="payment_type"
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <FormSelect
+                          options={departmentIDs}
+                          defaultText="Type"
+                          name="type"
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <FormInput
+                          placeholder="Claim ID"
+                          type="text"
+                          name="budgetCode"
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <FormInput
+                          placeholder="Beneficiary"
+                          // deafultText="SubbudgetheadId"
+                          name="beneficiary"
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <FormSelect
+                          defaultText="Sub Budget Head"
+                          options={departmentIDs}
+                          // type="text"
+                          name="sub_budget_head_id"
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <FormInput
+                          placeholder="Amount"
+                          type="text"
+                          name="amount"
+                        />
+                      </div>
+
+                      <div className="col-md-6">
+                        <FormInput
+                          placeholder="Description"
+                          type="text"
+                          name="amount"
+                          multiline
+                        />
+                      </div>
+
+                      <div className="col-md-6">
+                        <FormInput
+                          placeholder="Additional  Info"
+                          type="text"
+                          name="amount"
+                          multiline
+                        />
+                      </div>
+
                       <div className="row">
-                        <div className="col-md-4">
-                          <FormSelect
-                            options={subBudgetHeads}
-                            // placeholder="Enter Role Name"
-                            name="budget_head_id"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <FormSelect
-                            options={departmentIDs}
-                            // placeholder="Enter "
-                            name="department_id"
-                            type="number"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <FormInput
-                            placeholder="Budget Code"
-                            type="text"
-                            name="budgetCode"
-                          />
-                        </div>
-
-                        <div className="col-md-12">
-                          <FormInput
-                            placeholder="Description"
-                            type="text"
-                            name="description"
-                            multiline={true}
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <FormInput
-                            placeholder="Name"
-                            type="text"
-                            name="name"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <FormSelect
-                            defaultText="Type"
-                            name="type"
-                            options={optionsType}
-                          />
-                        </div>
-
-                        <div className="col-md-4 mt-2">
-                          <CustomCheckbox
-                            label="Logistics Budget"
-                            name="logisticsBudget"
-                          />
-
-                          {/* <div class="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              role="switch"
-                              id="flexSwitchCheckChecked"
-                              checked
-                            />
-
-                            <label
-                              class="form-check-label"
-                              for="flexSwitchCheckChecked"
-                            >
-                              Logistics Budget
-                            </label>
-                          </div> */}
-                        </div>
-
-                        <div className="mt-3">
+                        <div className="col-md-4 mt-3">
                           <SubmitButton
                             className="btn btn-primary"
                             title="Submit"
                           />
-
-                          {/* <button type="submit" className="btn btn-primary">
-                            Submit
-                          </button>
-
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              // setUpdate(false);
-                              // setState(initialState);
-                              setOpen(false);
-                              // setErrors({});
-                            }}
-                          >
-                            Close
-                          </button> */}
                         </div>
                       </div>
-                    </Form>
+                    </div>
+                  </Form>
 
-                    {/* <div className="row">
+                  {/* <div className="row">
                       <div className="col-md-4">
                         <TextInputField
                           placeholder="Enter Role Name"
@@ -408,17 +381,16 @@ const SubBudgetHeads = () => {
                         </button>
                       </div>
                     </div> */}
-                  </>
-                </div>
+                </>
               </div>
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
 
-      <div className="col-lg-12">
+      {/* <div className="col-lg-12">
         <DataTableComponent
-          pageName="Sub Budget Heads"
+          pageName="Expenditure"
           columns={columns}
           rows={searchTerm.length < 1 ? subBudgetHeads : results}
           handleEdit={handleEdit}
@@ -427,9 +399,9 @@ const SubBudgetHeads = () => {
           searchKeyWord={handleSearch}
           isFetching={isLoading}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default SubBudgetHeads;
+export default Expenditures;

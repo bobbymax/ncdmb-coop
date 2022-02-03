@@ -10,6 +10,7 @@ const FormInput = ({
   multiline = 0,
   error = false,
   additionalClasses = "",
+  ...otherProps
 }) => {
   const { errors, values, setFieldValue } = useFormikContext();
 
@@ -29,6 +30,7 @@ const FormInput = ({
           value={values[name]}
           onChange={({ target: { value: text } }) => setFieldValue(name, text)}
           required={required}
+          {...otherProps}
         />
       ) : (
         <textarea
@@ -38,6 +40,7 @@ const FormInput = ({
           value={values[name]}
           onChange={({ target: { value: text } }) => setFieldValue(name, text)}
           placeholder={placeholder}
+          {...otherProps}
         ></textarea>
       )}
 

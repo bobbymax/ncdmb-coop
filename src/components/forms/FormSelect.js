@@ -6,8 +6,10 @@ const FormSelect = ({
   options,
   name,
   defaultText = "Choose Option",
+  onChange = () => {},
   defaultInputValue = 0,
   arrinput = false,
+  ...otherProps
 }) => {
   const { errors, values, setFieldValue } = useFormikContext();
 
@@ -23,8 +25,13 @@ const FormSelect = ({
         <select
           className={arrinput ? `multi-select` : `form-control default-select`}
           value={values[name]}
-          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
+          onChange={(e) => {
+            setFieldValue(name, e.target.value);
+
+            onChange(e);
+          }}
           multiple={arrinput ? "multiple" : ""}
+          {...otherProps}
         >
           <option value={defaultInputValue}>{defaultText}</option>
 
@@ -41,10 +48,16 @@ const FormSelect = ({
                   {option.name}
                 </option>
               );
-            if (option.department_id)
+            if (option.sub_budget_head_id)
               return (
-                <option key={index} value={option.department_id}>
-                  {option.department_id}
+                <option key={index} value={option.sub_budget_head_id}>
+                  {option.subBudgetHead.name}
+                </option>
+              );
+            if (option.id)
+              return (
+                <option key={index} value={option.id}>
+                  {option.name}
                 </option>
               );
           })}

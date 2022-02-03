@@ -4,12 +4,14 @@ import { useFormikContext } from "formik";
 const FormInput = ({
   label = "",
   name,
+  onChange = () => {},
   type = "text",
   placeholder = "",
   required = false,
   multiline = 0,
   error = false,
   additionalClasses = "",
+  ...otherProps
 }) => {
   const { errors, values, setFieldValue } = useFormikContext();
 
@@ -27,8 +29,12 @@ const FormInput = ({
           className={`form-control ${additionalClasses}`}
           placeholder={placeholder}
           value={values[name]}
-          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
+          onChange={(e) => {
+            setFieldValue(name, e.target.value);
+            onChange(e);
+          }}
           required={required}
+          {...otherProps}
         />
       ) : (
         <textarea
@@ -36,8 +42,12 @@ const FormInput = ({
           row={multiline}
           required={required}
           value={values[name]}
-          onChange={({ target: { value: text } }) => setFieldValue(name, text)}
+          onChange={(e) => {
+            setFieldValue(name, e.target.value);
+            onChange(e);
+          }}
           placeholder={placeholder}
+          {...otherProps}
         ></textarea>
       )}
 

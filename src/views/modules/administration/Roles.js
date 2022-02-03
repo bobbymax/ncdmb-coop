@@ -198,10 +198,6 @@ const Roles = () => {
                     >
                       <div className="row">
                         <div className="col-md-4">
-                          <FormInput
-                            name="name"
-                            placeholder="Enter Role Name"
-                          />
                           <TextInputField
                             placeholder="Enter Role Name"
                             value={state.name}
@@ -330,8 +326,9 @@ const Roles = () => {
                         </div>
                       </div>
 
-                      <SubmitButton />
+                      {/* <SubmitButton /> */}
                     </Form>
+
                     {/* <div className="row">
                       <div className="col-md-4">
                         <TextInputField

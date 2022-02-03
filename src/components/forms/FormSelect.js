@@ -28,11 +28,26 @@ const FormSelect = ({
         >
           <option value={defaultInputValue}>{defaultText}</option>
 
-          {options.map((option, index) => (
-            <option key={index} value={option.key}>
-              {option.label}
-            </option>
-          ))}
+          {options.map((option, index) => {
+            if (option.key)
+              return (
+                <option key={index} value={option.key}>
+                  {option.value}
+                </option>
+              );
+            if (option.budget_head_id)
+              return (
+                <option key={index} value={option.budget_head_id}>
+                  {option.name}
+                </option>
+              );
+            if (option.department_id)
+              return (
+                <option key={index} value={option.department_id}>
+                  {option.department_id}
+                </option>
+              );
+          })}
         </select>
         {errors ? (
           <span style={{ fontSize: 12 }} className="text-danger">

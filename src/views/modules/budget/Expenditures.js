@@ -5,7 +5,7 @@ import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
-import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+// import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import * as Yup from "yup";
 
@@ -13,7 +13,7 @@ const Expenditures = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departmentIDs, setDepartmentIDs] = useState([]);
   const [data, setData] = useState({});
-  const [state, setState] = useState([]);
+  // const [state, setState] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
@@ -183,15 +183,16 @@ const Expenditures = () => {
                   <Form
                     initialValues={{
                       budget_head_id: parseInt(""),
-                      department_id: parseInt(""),
-                      budgetCode: "",
+                      claim_id: "",
+                      beneficiary: "",
+                      amount: 0,
                       description: "",
-                      name: "",
+                      additional_info: "",
                       type: "",
-                      logisticsBudget: true,
+                      payment_type: "",
                     }}
                     // validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={(values) => console.log(values)}
                   >
                     <div className="row">
                       <div className="col-md-4">

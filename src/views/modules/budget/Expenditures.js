@@ -12,6 +12,7 @@ import * as Yup from "yup";
 const Expenditures = () => {
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departmentIDs, setDepartmentIDs] = useState([]);
+  const [data, setData] = useState({});
   const [state, setState] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -78,8 +79,6 @@ const Expenditures = () => {
     getDepartments();
   }, []);
 
-  console.log("INitial State", state);
-
   const handleSubmit = (values) => {
     store("subBudgetHeads", values)
       .then((res) => console.log("Succcess", res))
@@ -136,6 +135,21 @@ const Expenditures = () => {
     // }
   };
 
+  const getData = (value) => {
+    collection(`subBudgetHeads/${value}`)
+      .then((res) => setData(res.data.data))
+      .catch((err) => console.log("Error reading data", err));
+
+    console.log(data);
+  };
+
+  const updateAmount = () => {
+    const value = parseFloat(data.actual_balance) - parseFloat(data.amount);
+
+    console.log(data);
+    console.log(setData(value));
+  };
+
   const paymentType = [
     { key: "third-party", value: "Third Party" },
     { key: "staff-payment", value: "Staff Payment" },
@@ -184,7 +198,7 @@ const Expenditures = () => {
                         {/* <FormInput name="" /> */}
                         <FormSelect
                           options={paymentType}
-                          defaultText="Payment Type"
+                          defaultText="Select Payment Type"
                           onChange={(e) => setPayment_Type(e.target.value)}
                           name="payment_type"
                         />
@@ -208,34 +222,63 @@ const Expenditures = () => {
                         />
                       </div>
 
-                      <div className="col-md-4">
+                      <div className="col-md-12">
+                        <FormSelect
+                          defaultText="Sub Budget Head"
+                          options={departmentIDs}
+                          onChange={(e) => {
+                            getData(e.target.value);
+                          }}
+                          name="sub_budget_head_id"
+                        />
+                      </div>
+
+                      <div className="col-md-6">
                         <FormInput
-                          placeholder="Beneficiary"
+                          placeholder="BUDGET CODE"
+                          value={data.budgetCode}
                           readOnly={payment_type === "staff-payment"}
                           name="beneficiary"
                           disabled={disabled}
                         />
                       </div>
 
-                      <div className="col-md-4">
-                        <FormSelect
-                          defaultText="Sub Budget Head"
-                          options={departmentIDs}
-                          onChange={(e) => {
-                            collection(`subBudgetHeads/${e.target.value}`)
-                              .then((res) => console.log(res))
-                              .catch((err) => console.log(err));
-                          }}
-                          name="sub_budget_head_id"
+                      <div className="col-md-6">
+                        <FormInput
+                          placeholder="0"
+                          value={data.approved_amount}
+                          readOnly={payment_type === "staff-payment"}
+                          name="approved_amount"
+                          disabled={disabled}
                         />
                       </div>
 
-                      <div className="col-md-4">
+                      <div className="col-md-6">
                         <FormInput
-                          placeholder="Amount"
+                          placeholder="AMOUNT"
+                          onChange={(e) => updateAmount(e.target.value)}
                           readOnly={payment_type === "staff-payment"}
-                          type="text"
                           name="amount"
+                          disabled={disabled}
+                          type="number"
+                        />
+                      </div>
+
+                      <div className="col-md-6">
+                        <FormInput
+                          placeholder="0"
+                          readOnly={payment_type === "staff-payment"}
+                          name="available_amount"
+                          disabled={disabled}
+                        />
+                      </div>
+
+                      <div className="col-md-12">
+                        <FormInput
+                          placeholder="Beneficiary"
+                          readOnly={payment_type === "staff-payment"}
+                          name="beneficiary"
+                          disabled={disabled}
                         />
                       </div>
 
@@ -259,7 +302,7 @@ const Expenditures = () => {
                       </div>
 
                       <>
-                        <div className="mt-3 ml-3 d-flexs">
+                        <div className="mt-3 ml-3 d-flex">
                           <SubmitButton
                             className="btn btn-primary"
                             title="Submit"
@@ -411,7 +454,6 @@ const Expenditures = () => {
           </div>
         </div>
       </>
-
       {/* <div className="col-lg-12">
         <DataTableComponent
           pageName="Expenditure"

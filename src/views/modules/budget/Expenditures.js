@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
@@ -6,30 +6,37 @@ import FormSelect from "../../../components/forms/FormSelect";
 import SubmitButton from "../../../components/forms/SubmitButton";
 
 const Expenditures = () => {
+  const initialState = {
+    available_balance: 0,
+    budgetCode: "",
+    beneficiary: "",
+    new_balance: 0,
+    claim: null,
+    sub_budget_head_id: 0,
+    claim_id: 0,
+    beneficiary: "",
+    amount: "",
+    description: "",
+    additional_info: "",
+    status: "cleared",
+    type: "",
+    payment_type: "",
+  };
+
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departmentIDs, setDepartmentIDs] = useState([]);
-  const [data, setData] = useState({});
-  // const [state, setState] = useState([]);
+  const [data, setData] = useState(initialState);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [disabled, setDisbled] = useState(false);
   const [payment_type, setPayment_Type] = useState("");
+  const [claimData, setClaimData] = useState({});
 
-  // const [state, setState] = useState();
+  const [state, setState] = useState(initialState);
   // const [update, setUpdate] = useState(false);
   // const [errors, setErrors] = useState({});
-
-  // const initialState = {
-  //   id: 0,
-  //   name: "",
-  //   max_slots: 0,
-  //   isSuper: 0,
-  //   start_date: "",
-  //   expiry_date: "",
-  //   cannot_expire: 0,
-  // };
 
   const columns = [
     {
@@ -39,9 +46,11 @@ const Expenditures = () => {
   ];
 
   const handleSubmit = (values) => {
-    store("expenditures", values)
-      .then((res) => console.log(res))
-      .catch((err) => console.log("Error", err));
+    console.log(values);
+
+    // store("expenditures", values)
+    //   .then((res) => console.log(res))
+    //   .catch((err) => console.log("Error", err));
   };
 
   const handleEdit = (data) => {};
@@ -80,6 +89,7 @@ const Expenditures = () => {
     }
 
     getDepartments();
+    updateAmount();
   }, []);
 
   // const handleSubmit = (values) => {
@@ -140,24 +150,31 @@ const Expenditures = () => {
 
   const getData = (value) => {
     collection(`subBudgetHeads/${value}`)
-      .then((res) => setData(res.data.data))
+      .then((res) => setState({ ...state, sub_budget_head_id: res.data.data }))
       .catch((err) => console.log("Error reading data", err));
-
-    console.log(data);
   };
 
-  const updateAmount = (value) => {
-    const newAmount = parseFloat(data.actual_balance) - parseFloat(value);
+  const updateAmount = () => {
+    if (state.available_balance > 0 && state.amount > 0) {
+      const value =
+        parseFloat(state.available_balance) - parseFloat(state.amount);
 
-    console.log(data);
-    console.log(setData(newAmount));
+      setState({
+        ...state,
+        new_balance: value,
+      });
+    }
   };
 
-  const onClaimIDChange = ({ target }) => {
-    if (target === "" && target.length < 8) return;
-    else {
-      collection(`fetch/claims/${target.value}`)
-        .then((res) => console.log(res))
+  const onClaimIDChange = (value) => {
+    if (value.length === 8) {
+      collection(`fetch/claims/${value}`)
+        .then((res) =>
+          setClaimData({
+            ...state,
+            ...res.data.data,
+          })
+        )
         .catch((err) => console.log(err));
     }
   };
@@ -193,16 +210,7 @@ const Expenditures = () => {
               <div className="form-body">
                 <>
                   <Form
-                    initialValues={{
-                      sub_budget_head_id: parseInt(""),
-                      claim_id: "",
-                      beneficiary: "",
-                      amount: "",
-                      description: "",
-                      additional_info: "",
-                      type: "",
-                      payment_type,
-                    }}
+                    initialValues={state}
                     // validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                   >
@@ -229,7 +237,7 @@ const Expenditures = () => {
                       <div className="col-md-4">
                         <FormInput
                           placeholder="Claim ID"
-                          onChange={(e) => onClaimIDChange(e)}
+                          onChange={(e) => onClaimIDChange(e.target.value)}
                           type="text"
                           name="claim_id"
                           readOnly={payment_type === "third-party"}
@@ -250,7 +258,7 @@ const Expenditures = () => {
                       <div className="col-md-6">
                         <FormInput
                           placeholder="BUDGET CODE"
-                          value={data.budgetCode}
+                          value={state.budgetCode}
                           readOnly={payment_type === "staff-payment"}
                           name="budgetCode"
                           disabled={disabled}
@@ -270,6 +278,7 @@ const Expenditures = () => {
                         <FormInput
                           placeholder="AMOUNT"
                           onChange={(e) => updateAmount(e.target.value)}
+                          value={state.claim}
                           readOnly={
                             payment_type === "staff-payment" ? true : false
                           }

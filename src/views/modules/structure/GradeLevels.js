@@ -4,8 +4,8 @@ import BasicTable from "../../../components/commons/tables/BasicTable";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import CustomSelect from "../../../components/forms/CustomSelect";
-import TextInputField from "../../../components/forms/TextInputField";
+// import CustomSelect from "../../../components/forms/CustomSelect";
+// import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
 import * as Yup from "yup";
 import {
@@ -15,6 +15,12 @@ import {
   destroy,
 } from "../../../services/utils/controllers";
 import useApi from "../../../services/hooks/useApi";
+import { formRef } from "../../../services/hooks/formRef";
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required().label("Grade Level Name"),
+  code: Yup.string().required().label("Grade Level Code"),
+});
 
 const GradeLevels = () => {
   const { request, data: gradeLevels } = useApi(collection);
@@ -24,9 +30,10 @@ const GradeLevels = () => {
   }, []);
 
   const initialStateRef = useRef();
+  // const initialState = initialStateRef?.current.initialValues;
 
   const [roles, setRoles] = useState([]);
-  const [state, setState] = useState(initialStateRef.current.values);
+  const [state, setState] = useState();
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(true);
   // const [status, setStatus] = useState(false)
@@ -136,9 +143,9 @@ const GradeLevels = () => {
                         code: "",
                         name: "",
                       }}
-                      innerRef={initialStateRef}
-                      o
+                      innerRef={formRef}
                       onSubmit={handleSubmit}
+                      validationSchema={validationSchema}
                     >
                       <div className="row">
                         <div className="col-md-6">

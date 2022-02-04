@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
@@ -8,10 +9,12 @@ import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
 import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import { store } from "../../../services/utils/controllers";
+import { store, alter } from "../../../services/utils/controllers";
+import Alert from "../../../services/classes/Alert";
 
 const Fund = () => {
   const initialState = {
+    id: 0,
     sub_budget_head_id: 0,
     approved_amount: 0,
     description: "",
@@ -20,26 +23,27 @@ const Fund = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [state, setState] = useState(initialState);
   const [results, setResults] = useState([]);
+  const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
   const [creditBudgetHeads, setCreditBudgetHead] = useState([]);
-  const [budget, setBudget] = useState({});
+  // const [budget, setBudget] = useState({});
 
   const {
     data: funds,
     request: fetch,
     loading: isLoading,
+    setData: setFunds,
   } = useApi(collection);
 
   useEffect(() => {
     fetch("creditBudgetHeads");
     getCreditBudgetHeads();
-    // getSubBudgetHeadValue(2);
   }, []);
 
   const columns = [
     {
       label: "Sub Budget Head",
-      key: "sub_budget_head_id",
+      key: "name",
     },
     {
       label: "Amount",
@@ -56,13 +60,20 @@ const Fund = () => {
 
   const getSubBudgetHeadValue = (id) => {
     collection(`subBudgetHeads/${id}`)
-      .then((res) =>
-        setBudget({ ...state, approved_amount: res.data.data.approved_amount })
-      )
+      .then((res) => {
+        const result = res.data.data;
+        console.log(result);
+
+        // setBudget([...creditBudgetHeads], res);
+      })
       .catch((err) => console.log(err));
   };
 
-  const handleEdit = (data) => {};
+  const handleEdit = (data) => {
+    setState(data);
+    setUpdate(true);
+    setOpen(true);
+  };
 
   const handleDestroy = (data) => {};
 
@@ -84,59 +95,59 @@ const Fund = () => {
   };
 
   const handleSubmit = (values) => {
-    store("creditBudgetHeads", values)
-      .then((res) => console.log("Succcess", res))
-      .catch((err) => console.log(err));
+    // store("creditBudgetHeads", values)
+    //   .then((res) => console.log("Succcess", res))
+    //   .catch((err) => console.log(err));
 
     // console.log(values);
+    if (update) {
+      try {
+        alter("creditBudgetHeads", state.id, values)
+          .then((res) => {
+            const result = res.data.data;
 
-    // const formErrors = validate(rules, data);
-    // setErrors(formErrors);
-    // const status =
-    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+            setFunds(
+              funds.map((el) => {
+                if (result.id === el.id) {
+                  return result;
+                }
 
-    // if (status) {
-    //   if (update) {
-    //     try {
-    //       alter("roles", state.id, data)
-    //         .then((res) => {
-    //           const result = res.data.data;
+                return el;
+              })
+            );
 
-    //           setRoles(
-    //             roles.map((el) => {
-    //               if (result.id === el.id) {
-    //                 return result;
-    //               }
+            Alert.success("Updated", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      store("creditBudgetHeads", values)
+        .then((res) => {
+          const result = res.data.data;
 
-    //               return el;
-    //             })
-    //           );
-    //           Alert.success("Updated", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     try {
-    //       store("roles", data)
-    //         .then((res) => {
-    //           const result = res.data.data;
-    //           setRoles([result, ...roles]);
-    //           Alert.success("Created!!", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
+          setFunds([result, ...funds]);
+          Alert.success("Created!!", res.data.message);
+        })
+        .catch((err) => console.log(err));
 
-    //   setErrors({});
+      //  try {
+      //    store("roles", data)
+      //      .then((res) => {
+      //        const result = res.data.data;
+      //        setRoles([result, ...roles]);
+      //        Alert.success("Created!!", res.data.message);
+      //      })
+      //      .catch((err) => console.log(err.message));
+      //  } catch (error) {
+      //    console.log(error);
+      //  }
 
-    //   setUpdate(false);
-    //   setState(initialState);
-    //   setOpen(false);
-    // }
+      setUpdate(false);
+      setState(initialState);
+      setOpen(false);
+    }
   };
 
   return (
@@ -160,23 +171,21 @@ const Fund = () => {
               <div className="card-body">
                 <div className="form-body">
                   <>
-                    <Form initialValues={initialState} onSubmit={handleSubmit}>
+                    <Form
+                      initialValues={{
+                        id: state.id,
+                        sub_budget_head_id: state.sub_budget_head_id,
+                        approved_amount: state.approved_amount,
+                        description: state.description,
+                      }}
+                      onSubmit={handleSubmit}
+                    >
                       <div className="row">
                         <div className="col-md-6">
-                          {/* <select>
-                            {creditBudgetHeads.map((sbh) => (
-                              <option
-                                onChange={() => getSubBudgetHeadValue(sbh.id)}
-                              >
-                                {sbh.name}
-                              </option>
-                            ))}
-                          </select> */}
-
                           <FormSelect
                             options={creditBudgetHeads}
                             onChange={(e) =>
-                              getSubBudgetHeadValue(e.currentTarget.value)
+                              getSubBudgetHeadValue(e.target.value)
                             }
                             // placeholder="Enter Role Name"
                             name="sub_budget_head_id"
@@ -186,7 +195,7 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Approved amount"
-                            value={state.actual_balance}
+                            // value={state.actual_balance}
                             type="text"
                             name="approved_amount"
                           />
@@ -221,17 +230,17 @@ const Fund = () => {
                           />
                         </div>
 
-                        <div className="mt-3">
+                        <div className="mt-3 d-flex ml-3">
                           <SubmitButton
                             className="btn btn-primary"
                             title="Submit"
                           />
 
-                          <button type="submit" className="btn btn-primary">
+                          {/* <button type="submit" className="btn btn-primary">
                             Submit
-                          </button>
+                          </button> */}
 
-                          {/* <button
+                          <button
                             type="button"
                             className="btn btn-danger"
                             onClick={() => {
@@ -242,7 +251,7 @@ const Fund = () => {
                             }}
                           >
                             Close
-                          </button> */}
+                          </button>
                         </div>
                       </div>
                     </Form>

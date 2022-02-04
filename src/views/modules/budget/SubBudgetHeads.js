@@ -27,17 +27,6 @@ const SubBudgetHeads = () => {
 
   const [state, setState] = useState();
   const [update, setUpdate] = useState(false);
-  const [errors, setErrors] = useState({});
-
-  // const initialState = {
-  //   id: 0,
-  //   name: "",
-  //   max_slots: 0,
-  //   isSuper: 0,
-  //   start_date: "",
-  //   expiry_date: "",
-  //   cannot_expire: 0,
-  // };
 
   const columns = [
     {
@@ -46,7 +35,9 @@ const SubBudgetHeads = () => {
     },
   ];
 
-  const handleEdit = (data) => {};
+  const handleEdit = (data) => {
+    setUpdate(true);
+  };
 
   const handleDestroy = (data) => {};
 
@@ -90,46 +81,40 @@ const SubBudgetHeads = () => {
 
     // console.log(values);
 
-    // const formErrors = validate(rules, data);
-    // setErrors(formErrors);
-    // const status =
-    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+    if (update) {
+      try {
+        alter("roles", state.id, data)
+          .then((res) => {
+            const result = res.data.data;
 
-    // if (status) {
-    //   if (update) {
-    //     try {
-    //       alter("roles", state.id, data)
-    //         .then((res) => {
-    //           const result = res.data.data;
+            setRoles(
+              roles.map((el) => {
+                if (result.id === el.id) {
+                  return result;
+                }
 
-    //           setRoles(
-    //             roles.map((el) => {
-    //               if (result.id === el.id) {
-    //                 return result;
-    //               }
-
-    //               return el;
-    //             })
-    //           );
-    //           Alert.success("Updated", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     try {
-    //       store("roles", data)
-    //         .then((res) => {
-    //           const result = res.data.data;
-    //           setRoles([result, ...roles]);
-    //           Alert.success("Created!!", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
+                return el;
+              })
+            );
+            Alert.success("Updated", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        store("roles", data)
+          .then((res) => {
+            const result = res.data.data;
+            setRoles([result, ...roles]);
+            Alert.success("Created!!", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     //   setErrors({});
 
@@ -240,35 +225,13 @@ const SubBudgetHeads = () => {
                             label="Logistics Budget"
                             name="logisticsBudget"
                           />
-
-                          {/* <div class="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              role="switch"
-                              id="flexSwitchCheckChecked"
-                              checked
-                            />
-
-                            <label
-                              class="form-check-label"
-                              for="flexSwitchCheckChecked"
-                            >
-                              Logistics Budget
-                            </label>
-                          </div> */}
                         </div>
 
-                        <div className="mt-3">
+                        <div className="mt-3 d-flex ml-3">
                           <SubmitButton
                             className="btn btn-primary"
                             title="Submit"
                           />
-
-                          {/* <button type="submit" className="btn btn-primary">
-                            Submit
-                          </button>
-
                           <button
                             type="button"
                             className="btn btn-danger"
@@ -280,7 +243,7 @@ const SubBudgetHeads = () => {
                             }}
                           >
                             Close
-                          </button> */}
+                          </button>{" "}
                         </div>
                       </div>
                     </Form>

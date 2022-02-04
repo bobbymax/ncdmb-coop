@@ -18,7 +18,7 @@ const useApi = (apiFunc) => {
     return response;
   };
 
-  return { data, request, loading };
+  return { data, request, loading, setData };
 };
 
 export default useApi;

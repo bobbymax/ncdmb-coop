@@ -15,7 +15,6 @@ import {
   destroy,
 } from "../../../services/utils/controllers";
 import useApi from "../../../services/hooks/useApi";
-import { formRef } from "../../../services/hooks/formRef";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Grade Level Name"),
@@ -23,13 +22,13 @@ const validationSchema = Yup.object().shape({
 });
 
 const GradeLevels = () => {
+  const initialStateRef = useRef(null);
   const { request, data: gradeLevels } = useApi(collection);
 
   useEffect(() => {
     request("gradeLevels");
   }, []);
 
-  const initialStateRef = useRef();
   // const initialState = initialStateRef?.current.initialValues;
 
   const [roles, setRoles] = useState([]);
@@ -94,7 +93,7 @@ const GradeLevels = () => {
     }
 
     setUpdate(false);
-    setState(initialStateRef.current.values);
+    // setState(initialStateRef.current.values);
     // setOpen(false);
 
     resetForm();
@@ -143,9 +142,8 @@ const GradeLevels = () => {
                         code: "",
                         name: "",
                       }}
-                      innerRef={formRef}
+                      innerRef={initialStateRef}
                       onSubmit={handleSubmit}
-                      validationSchema={validationSchema}
                     >
                       <div className="row">
                         <div className="col-md-6">

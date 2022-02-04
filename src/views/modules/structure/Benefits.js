@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
-// import CustomSelect from "../../../components/forms/CustomSelect";
-// import TextInputField from "../../../components/forms/TextInputField";
+import CustomSelect from "../../../components/forms/CustomSelect";
+import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
 import * as Yup from "yup";
 import {
@@ -19,18 +19,23 @@ import useApi from "../../../services/hooks/useApi";
 import FormSelect from "../../../components/forms/FormSelect";
 
 const validationSchema = Yup.object().shape({
-  benefit_id: Yup.string().required().label("Benefit ID"),
-  amount: Yup.number().required().label("Amount"),
+  name: Yup.string().required().label("Name"),
+  label: Yup.string().required().label("Label"),
+  parentId: Yup.number().label("Parent"),
+  depends: Yup.number().required().label("Depends"),
+  description: Yup.string().required().label("Description"),
 });
 
-const Wages = () => {
+const Benefits = () => {
   const initialState = {
-    id: 0,
-    benefit_id: 0,
-    amount: 0,
     showForm: false,
+    id: 0,
+    name: "",
+    label: "",
+    parentId: 0,
+    depends: 0,
+    description: "",
     isUpdating: false,
-    dependencies: [],
   };
 
   const [state, setState] = useState(initialState);
@@ -46,7 +51,6 @@ const Wages = () => {
     request("priceLists");
     getBenefits();
   }, []);
-
   // const [status, setStatus] = useState(false)
 
   const columns = [
@@ -72,9 +76,8 @@ const Wages = () => {
       .catch((err) => console.log("Error", err));
   };
 
-  const handleSubmit = (data, { resetForm, setFormikState }) => {
-    const obj = data;
-
+  const handleSubmit = (data, { resetForm }) => {
+    console.log(data);
     return;
 
     if (update) {
@@ -116,7 +119,7 @@ const Wages = () => {
     setState(initialState);
     // setOpen(false)
 
-    // resetForm();
+    resetForm();
   };
 
   const handleDestroy = (data) => {
@@ -146,7 +149,7 @@ const Wages = () => {
             disabled={open}
           >
             <i className="fa fa-plus-square"></i>{" "}
-            {state.isUpdating ? "Update" : "Add"} Price Lists
+            {state.isUpdating ? "Update" : "Add"} Benefit
           </button>
         </div>
       </div>
@@ -161,23 +164,59 @@ const Wages = () => {
                     <Form
                       onSubmit={handleSubmit}
                       validationSchema={validationSchema}
-                      initialValues={initialState}
-                      // enableReinitialize={true}
+                      initialValues={{
+                        showForm: false,
+                        id: 0,
+                        name: "",
+                        label: "",
+                        parentId: 0,
+                        depends: 0,
+                        description: "",
+                        isUpdating: false,
+                      }}
                     >
                       <div className="row">
-                        <div className="col-md-6">
-                          <FormSelect
-                            defaultText="Enter Role Name"
-                            options={benefits}
-                            name="benefit_id"
+                        <div className="col-md-4">
+                          <FormInput
+                            label="Benefit Title"
+                            name="name"
+                            placeholder="Enter Benefit"
+                            // type="number"
                           />
                         </div>
 
-                        <div className="col-md-6">
-                          <FormInput
+                        <div className="col-md-4">
+                          <FormSelect
+                            label="Select Parent"
+                            defaultText="None"
+                            defaultInputValue="None"
+                            options={benefits}
+                            name="parentId"
+                          />
+                        </div>
+
+                        <div className="col-md-4">
+                          <FormSelect
+                            options={[
+                              { value: "None", key: 1 },
+                              {
+                                value: "Number of days",
+                                key: 2,
+                              },
+                            ]}
                             placeholder="Amount"
-                            type="number"
-                            name="amount"
+                            label="Requirement"
+                            // type="number"
+                            name="depends"
+                          />
+                        </div>
+
+                        <div className="col-md-12">
+                          <FormInput
+                            placeholder="Description"
+                            name="description"
+                            label="Description"
+                            multiline
                           />
                         </div>
 
@@ -211,17 +250,17 @@ const Wages = () => {
         </>
       )}
 
-      <div className="col-lg-12">
+      {/* <div className="col-lg-12">
         <BasicTable
-          page="Price Lists"
+          page="Benefits"
           columns={columns}
           rows={wages}
           handleEdit={handleUpdate}
           handleDelete={handleDestroy}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default Wages;
+export default Benefits;

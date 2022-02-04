@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,13 @@ import Form from "../../components/forms/Form";
 import { authenticate } from "../../features/auth/userSlice";
 import { login } from "../../services/utils/auth/auth.controller";
 import FormInput from "../../components/forms/FormInput";
+
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  staff_no: Yup.string().required().label("STAFF NO"),
+  password: Yup.string().required().label("Password"),
+});
 
 const Login = () => {
   const naviagate = useNavigate();
@@ -47,12 +54,13 @@ const Login = () => {
                       <Form
                         initialValues={{ staff_no: "", password: "" }}
                         onSubmit={handleSubmit}
+                        // validationSchema={validationSchema}
                       >
                         <FormInput
                           label="Staff Number"
                           placeholder="Enter Staff Number"
                           name="staff_no"
-                          required={true}
+                          // required={true}
                           type="text"
                         />
 
@@ -61,7 +69,7 @@ const Login = () => {
                           name="password"
                           type="password"
                           placeholder="Enter Password"
-                          required
+                          // required
                         />
 
                         <SubmitButton title="Sign Me In" />

@@ -6,6 +6,7 @@ const AppForm = ({
   onSubmit,
   validationSchema,
   innerRef,
+  ...otherProps
 }) => {
   return (
     <Formik
@@ -13,6 +14,7 @@ const AppForm = ({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
       innerRef={innerRef}
+      {...otherProps}
     >
       {() => <>{children}</>}
     </Formik>

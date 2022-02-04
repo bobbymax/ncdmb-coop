@@ -39,6 +39,7 @@ const BasicTable = ({
                         columns.map((col, index) => (
                           <td key={index}>{row[col.key]}</td>
                         ))}
+
                       {handleEdit !== undefined && (
                         <td>
                           <span>

@@ -10,6 +10,7 @@ const FormInput = ({
   required = false,
   multiline = 0,
   error = false,
+  defaultInputValue = 0,
   additionalClasses = "",
   ...otherProps
 }) => {

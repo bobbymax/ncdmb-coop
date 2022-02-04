@@ -150,7 +150,9 @@ const Expenditures = () => {
 
   const getData = (value) => {
     collection(`subBudgetHeads/${value}`)
-      .then((res) => setState({ ...state, sub_budget_head_id: res.data.data }))
+      .then((res) =>
+        setState({ ...state, sub_budget_head_id: res.data.data.id })
+      )
       .catch((err) => console.log("Error reading data", err));
   };
 

@@ -11,10 +11,18 @@ import SubmitButton from "../../../components/forms/SubmitButton";
 import { store } from "../../../services/utils/controllers";
 
 const Fund = () => {
+  const initialState = {
+    sub_budget_head_id: 0,
+    approved_amount: 0,
+    description: "",
+  };
+
   const [searchTerm, setSearchTerm] = useState("");
+  const [state, setState] = useState(initialState);
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [creditBudgetHeads, setCreditBudgetHead] = useState([]);
+  const [budget, setBudget] = useState({});
 
   const {
     data: funds,
@@ -25,6 +33,7 @@ const Fund = () => {
   useEffect(() => {
     fetch("creditBudgetHeads");
     getCreditBudgetHeads();
+    // getSubBudgetHeadValue(2);
   }, []);
 
   const columns = [
@@ -46,8 +55,10 @@ const Fund = () => {
   };
 
   const getSubBudgetHeadValue = (id) => {
-    fetch(`subBudgetHeads/${id}`)
-      .then((res) => console.log(res))
+    collection(`subBudgetHeads/${id}`)
+      .then((res) =>
+        setBudget({ ...state, approved_amount: res.data.data.approved_amount })
+      )
       .catch((err) => console.log(err));
   };
 
@@ -149,14 +160,7 @@ const Fund = () => {
               <div className="card-body">
                 <div className="form-body">
                   <>
-                    <Form
-                      initialValues={{
-                        sub_budget_head_id: 0,
-                        approved_amount: "",
-                        description: "",
-                      }}
-                      onSubmit={handleSubmit}
-                    >
+                    <Form initialValues={initialState} onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-md-6">
                           {/* <select>
@@ -171,7 +175,9 @@ const Fund = () => {
 
                           <FormSelect
                             options={creditBudgetHeads}
-                            // onChange={}
+                            onChange={(e) =>
+                              getSubBudgetHeadValue(e.currentTarget.value)
+                            }
                             // placeholder="Enter Role Name"
                             name="sub_budget_head_id"
                           />
@@ -180,6 +186,7 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Approved amount"
+                            value={state.actual_balance}
                             type="text"
                             name="approved_amount"
                           />
@@ -188,8 +195,9 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Current Balance"
-                            value="0"
-                            type="text"
+                            // value={
+                            //   funds.budget ? funds.budget.actual_balance : 0
+                            // }
                             name="current_balance"
                             disabled
                           />

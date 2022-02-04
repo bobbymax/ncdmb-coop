@@ -5,9 +5,10 @@ import Form from "../../../components/forms/Form";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
+import BasicTable from "../../../components/commons/tables/BasicTable";
 
 const Claims = () => {
-  const { loading: isLoading, request, data: claims } = useApi(collection);
+  const { request, data: claims } = useApi(collection);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
@@ -108,13 +109,12 @@ const Claims = () => {
       )}
 
       <div className="col-lg-12">
-        <DataTableComponent
+        <BasicTable
           pageName="Claims"
           columns={columns}
-          rows={searchTerm.length < 1 ? claims : results}
+          rows={claims}
           term={searchTerm}
-          searchKeyWord={handleSearch}
-          isFetching={isLoading}
+          // searchKeyWord={handleSearch}
         />
       </div>
     </div>

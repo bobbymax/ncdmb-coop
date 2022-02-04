@@ -1,13 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+import useApi from "../../../services/hooks/useApi";
+import { collection } from "../../../services/utils/controllers";
+// import { Button, Col, Row, Table } from "react-bootstrap";
 // import { connect, useSelector } from "react-redux";
-import { index } from "../../../redux/actions";
-import * as broadcast from "../../../redux/accessControl/types";
+// import { index } from "../../../redux/actions";
+// import * as broadcast from "../../../redux/accessControl/types";
 // import { FiPrinter } from "react-icons/fi";
-import BatchPrintOut from "./BatchPrintOut";
+// import BatchPrintOut from "./BatchPrintOut";
 
 const Payments = (props) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState([]);
+  const { request, data: payments, loading } = useApi(collection);
+
   const initialState = {
     batch: null,
     isPrinting: false,
@@ -37,103 +45,100 @@ const Payments = (props) => {
   ];
 
   const [state, setState] = useState(initialState);
-  const auth = useSelector((state) => state.access.staff.authenticatedUser);
+
+  // const auth = useSelector((state) => state.access.staff.authenticatedUser);
 
   const currentStat = (stat) => {
     const curr = stats.filter((s) => stat === s.value);
     return curr[0].label;
   };
 
-  const handleBatchPrint = (batch) => {
-    setState({
-      ...state,
-      batch,
-      isPrinting: !state.isPrinting,
-    });
-  };
+  // const handleBatchPrint = (batch) => {
+  //   setState({
+  //     ...state,
+  //     batch,
+  //     isPrinting: !state.isPrinting,
+  //   });
+  // };
 
-  const printingDone = () => {
-    setState({
-      ...state,
-      batch: null,
-      isPrinting: !state.isPrinting,
-    });
-  };
+  // const printingDone = () => {
+  //   setState({
+  //     ...state,
+  //     batch: null,
+  //     isPrinting: !state.isPrinting,
+  //   });
+  // };
 
   useEffect(() => {
-    props.index("batches", {
-      success: broadcast.FETCHED_BATCHES,
-      failed: broadcast.FETCHED_BATCHES_FAILED,
-    });
+    request("batches")
+      .then((res) => console.log("Response", res))
+      .catch((err) => console.log("Error", err));
   }, []);
+
+  const columns = [
+    { key: "batch_no", label: "Budget Code" },
+    { key: "amount", label: "Amount" },
+    { key: "status", label: "Status" },
+  ];
+
+  const handleSearch = (str) => {
+    setSearchTerm(str);
+
+    if (str !== "") {
+      const filtered = payments.filter((row) => {
+        return Object.values(row)
+          .join(" ")
+          .toLowerCase()
+          .includes(str.toLowerCase());
+      });
+
+      setResults(filtered);
+    } else {
+      setResults(payments);
+    }
+  };
 
   return (
     <>
-      {!state.isPrinting ? (
-        <>
-          <h4 className="mb-4">Payments</h4>
-          <Row>
-            <Col>
-              <Table striped hover>
-                <thead>
-                  <tr>
-                    <td></td>
-                    <td>Budget Code</td>
-                    <td>Amount</td>
-                    <td>Status</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {props.batches.length !== 0
-                    ? props.batches.map((batch) => {
-                        return (
-                          <tr key={batch.id}>
-                            <td>
-                              <Button
-                                variant="success"
-                                className="btn-sm"
-                                onClick={() => handleBatchPrint(batch)}
-                              >
-                                <FiPrinter />
-                              </Button>
-                            </td>
-                            <td>{batch.batch_no}</td>
-                            <td>{`NGN ${new Intl.NumberFormat().format(
-                              batch.amount
-                            )}`}</td>
-                            <td>
-                              <span
-                                className={
-                                  "badge badge-" + currentStat(batch.status)
-                                }
-                              >
-                                {batch.status}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
-        </>
-      ) : (
-        <BatchPrintOut batch={state.batch} onClose={printingDone} auth={auth} />
-      )}
+      {
+        !state.isPrinting ? (
+          <>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="page-titles">
+                  <h2>Payments</h2>
+                </div>
+              </div>
+
+              <div className="col-md-12">
+                <DataTableComponent
+                  pageName="Payments"
+                  columns={columns}
+                  rows={searchTerm.length < 1 ? payments : results}
+                  // handleEdit={handleEdit}
+                  // handleDelete={handleDestroy}
+                  term={searchTerm}
+                  searchKeyWord={handleSearch}
+                  isFetching={loading}
+                />
+              </div>
+            </div>
+          </>
+        ) : null
+        // <BatchPrintOut batch={state.batch} onClose={printingDone} auth={auth} />
+      }
     </>
   );
 };
 
-const mapStateToProps = (state) => ({
-  batches: state.budgetting.batches.collection,
-});
+// const mapStateToProps = (state) => ({
+//   batches: state.budgetting.batches.collection,
+// });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    index: (entity, broadcast) => dispatch(index(entity, broadcast)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     index: (entity, broadcast) => dispatch(index(entity, broadcast)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Payments);
+export default Payments;

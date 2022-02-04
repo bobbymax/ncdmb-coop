@@ -8,7 +8,7 @@ import SubmitButton from "../../../components/forms/SubmitButton";
 const Expenditures = () => {
   const initialState = {
     available_balance: 0,
-    budgetCode: "",
+    budget_code: "",
     beneficiary: "",
     new_balance: 0,
     claim: null,
@@ -258,7 +258,7 @@ const Expenditures = () => {
                       <div className="col-md-6">
                         <FormInput
                           placeholder="BUDGET CODE"
-                          value={state.budgetCode}
+                          value={state.budget}
                           readOnly={payment_type === "staff-payment"}
                           name="budgetCode"
                           disabled={disabled}

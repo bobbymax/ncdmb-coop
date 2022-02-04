@@ -19,6 +19,7 @@ import Fund from "./views/modules/budget/Fund";
 import Expenditures from "./views/modules/budget/Expenditures";
 import Claims from "./views/modules/staff-services/Claims";
 import GradeLevels from "./views/modules/structure/GradeLevels";
+import Wages from "./views/modules/structure/Wages";
 
 const App = () => {
   return (
@@ -170,6 +171,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <GradeLevels />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/benefit/wages"
+          element={
+            <ProtectedRoute>
+              <Wages />
             </ProtectedRoute>
           }
         />

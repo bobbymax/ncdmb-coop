@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import BasicTable from "../../../components/commons/tables/BasicTable";
+import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+// import BasicTable from "../../../components/commons/tables/BasicTable";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
-// import CustomSelect from "../../../components/forms/CustomSelect";
-// import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
 import * as Yup from "yup";
 import {
@@ -20,14 +19,14 @@ import FormSelect from "../../../components/forms/FormSelect";
 
 const validationSchema = Yup.object().shape({
   benefit_id: Yup.string().required().label("Benefit ID"),
-  amount: Yup.number().required().label("Amount"),
+  amount: Yup.string().required().max(25).label("Amount"),
 });
 
 const Wages = () => {
   const initialState = {
     id: 0,
     benefit_id: 0,
-    amount: 0,
+    amount: parseInt(state.amount),
     showForm: false,
     isUpdating: false,
     dependencies: [],
@@ -36,11 +35,18 @@ const Wages = () => {
   const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState([]);
   // const [errors, setErrors] = useState({});
   // const [roles, setRoles] = useState([]);
   const [benefits, setBenefits] = useState([]);
 
-  const { request, data: wages, setData: setWages } = useApi(collection);
+  const {
+    request,
+    data: wages,
+    setData: setWages,
+    loading,
+  } = useApi(collection);
 
   useEffect(() => {
     request("priceLists");
@@ -64,6 +70,23 @@ const Wages = () => {
     setState(data);
     setUpdate(true);
     setOpen(true);
+  };
+
+  const handleSearch = (str) => {
+    setSearchTerm(str);
+
+    if (str !== "") {
+      const filtered = wages.filter((row) => {
+        return Object.values(row)
+          .join(" ")
+          .toLowerCase()
+          .includes(str.toLowerCase());
+      });
+
+      setResults(filtered);
+    } else {
+      setResults(wages);
+    }
   };
 
   const getBenefits = async () => {
@@ -120,7 +143,7 @@ const Wages = () => {
     setUpdate(false);
     resetForm();
     setState(initialState);
-    setOpen(false);
+    // setOpen(false);
     // }
   };
   const handleDestroy = (data) => {
@@ -189,10 +212,13 @@ const Wages = () => {
                         </div>
 
                         <div className="col-md-12 mt-3 d-flex">
-                          <SubmitButton title="Submit" />
-                          {/* <button type="submit" className="btn btn-primary">
+                          <SubmitButton
+                            title="Submit"
+                            // onClick={() => setOpen(false)}
+                          />
+                          <button type="submit" className="btn btn-primary">
                             Submit
-                          </button> */}
+                          </button>
 
                           <button
                             type="button"
@@ -219,11 +245,14 @@ const Wages = () => {
       )}
 
       <div className="col-lg-12">
-        <BasicTable
-          page="Price Lists"
+        <DataTableComponent
+          pageName="Price Listing"
           columns={columns}
-          rows={wages}
+          term={searchTerm}
+          rows={searchTerm.length < 1 ? wages : results}
           handleEdit={handleUpdate}
+          isFetching={loading}
+          searchKeyWord={handleSearch}
           handleDelete={handleDestroy}
         />
       </div>

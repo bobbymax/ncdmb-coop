@@ -11,7 +11,7 @@ const FormSelect = ({
   arrinput = false,
   ...otherProps
 }) => {
-  const { errors, values, setFieldValue } = useFormikContext();
+  const { errors, values, setFieldValue, setErrors } = useFormikContext();
 
   return (
     <>
@@ -28,7 +28,7 @@ const FormSelect = ({
           onChange={(e) => {
             setFieldValue(name, e.target.value);
 
-            onChange(e);
+            // onChange(e);
           }}
           multiple={arrinput ? "multiple" : ""}
           {...otherProps}

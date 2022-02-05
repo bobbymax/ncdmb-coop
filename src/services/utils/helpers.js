@@ -1,4 +1,14 @@
 import moment from "moment";
+import { ToWords } from "to-words";
+
+const toWords = new ToWords({
+  localeCode: "en-NG",
+  converterOptions: {
+    currency: true,
+    ignoreDecimal: false,
+    ignoreZeroCurrency: false,
+  },
+});
 
 export const formatConfig = (arr) => {
   const obt = {};
@@ -54,4 +64,8 @@ export const getPaymentType = (code) => {
 
 export const formatDate = (date) => {
   return moment(date).format("DD-MMM-YY");
+};
+
+export const amountToWords = (amount) => {
+  return toWords.convert(amount);
 };

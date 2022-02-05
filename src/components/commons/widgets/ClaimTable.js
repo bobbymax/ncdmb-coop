@@ -10,15 +10,16 @@ const ClaimTable = ({
 }) => {
   return (
     <>
-      <div className="card">
-        {/* <div className="card-header">
+      {claims && (
+        <div className="card">
+          {/* <div className="card-header">
           <h4 className="card-title">{page}</h4>
         </div> */}
 
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered table-striped verticle-middle table-responsive-sm">
-              {/* <thead>
+          <div className="card-body">
+            <div className="table-responsive">
+              <table className="table table-bordered table-striped verticle-middle table-responsive-sm">
+                {/* <thead>
                  <tr>
                   {columns &&
                     columns.length > 0 &&
@@ -31,70 +32,71 @@ const ClaimTable = ({
                 </tr> 
               </thead> */}
 
-              <tbody>
-                {claims.map((claim) => (
-                  <tr>
-                    <td>{claim.title}</td>
-                    <td>{`NGN ${new Intl.NumberFormat().format(
-                      claim.total_amount
-                    )}`}</td>
-                    <td>
-                      {claim.status === "registered" ||
-                      claim.status === "cleared" ||
-                      claim.status === "batched" ? (
-                        <button
-                          className="btn-sm btn btn-primary"
-                          onClick={() => onView(claim)}
-                        >
-                          VIEW CLAIM
-                        </button>
-                      ) : (
-                        <>
+                <tbody>
+                  {claims.map((claim) => (
+                    <tr>
+                      <td>{claim.title}</td>
+                      <td>{`NGN ${new Intl.NumberFormat().format(
+                        claim.total_amount
+                      )}`}</td>
+                      <td>
+                        {claim.status === "registered" ||
+                        claim.status === "cleared" ||
+                        claim.status === "batched" ? (
                           <button
-                            className="btn btn-success btn-sm"
-                            onClick={() => addDetails(claim)}
-                            disabled={
-                              claim.status === "registered" ||
-                              claim.status === "unregistered"
-                            }
+                            className="btn-sm btn btn-primary"
+                            onClick={() => onView(claim)}
                           >
-                            ADD DETAILS
+                            VIEW CLAIM
                           </button>
+                        ) : (
+                          <>
+                            <button
+                              className="btn btn-success btn-sm"
+                              onClick={() => addDetails(claim)}
+                              disabled={
+                                claim.status === "registered" ||
+                                claim.status === "unregistered"
+                              }
+                            >
+                              ADD DETAILS
+                            </button>
 
-                          <button
-                            onClick={() => onEdit(claim)}
-                            className="btn btn-warning btn-sm"
-                            disabled={
-                              claim.status === "registered" ||
-                              claim.status === "unregistered"
-                            }
-                          >
-                            Edit
-                            {/* <FiEdit /> */}
-                          </button>
+                            <button
+                              onClick={() => onEdit(claim)}
+                              className="btn btn-warning btn-sm"
+                              disabled={
+                                claim.status === "registered" ||
+                                claim.status === "unregistered"
+                              }
+                            >
+                              Edit
+                              {/* <FiEdit /> */}
+                            </button>
 
-                          <button
-                            type="button"
-                            className="btn btn-danger btn-sm"
-                            onClick={() => onDestroy(claim)}
-                            disabled={
-                              claim.status === "registered" ||
-                              claim.status === "unregistered"
-                            }
-                          >
-                            Delete
-                            {/* <FiTrash2 /> */}
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm"
+                              onClick={() => onDestroy(claim)}
+                              disabled={
+                                claim.status === "registered" ||
+                                claim.status === "unregistered"
+                              }
+                            >
+                              Delete
+                              {/* <FiTrash2 /> */}
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

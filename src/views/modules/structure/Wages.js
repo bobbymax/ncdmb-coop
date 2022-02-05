@@ -14,7 +14,7 @@ import {
   store,
   destroy,
 } from "../../../services/utils/controllers";
-import { validate } from "../../../services/utils/validation";
+// import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
 import FormSelect from "../../../components/forms/FormSelect";
 
@@ -36,11 +36,11 @@ const Wages = () => {
   const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [roles, setRoles] = useState([]);
+  // const [errors, setErrors] = useState({});
+  // const [roles, setRoles] = useState([]);
   const [benefits, setBenefits] = useState([]);
 
-  const { request, data: wages } = useApi(collection);
+  const { request, data: wages, setData: setWages } = useApi(collection);
 
   useEffect(() => {
     request("priceLists");
@@ -72,53 +72,57 @@ const Wages = () => {
       .catch((err) => console.log("Error", err));
   };
 
-  const handleSubmit = (data, { resetForm, setFormikState }) => {
-    const obj = data;
+  const handleSubmit = (values, { resetForm }) => {
+    // store("subBudgetHeads", values)
+    //   .then((res) => console.log("Succcess", res))
+    //   .catch((err) => console.log(err));
+    // values.logisticsBudget ?
 
-    return;
+    console.log(values);
 
     if (update) {
       try {
-        alter("priceLists", state.id, data)
+        alter("priceLists", state.id, values)
           .then((res) => {
+            // console.log(res);
             const result = res.data.data;
-
-            setRoles(
-              wages.map((el) => {
-                if (result.id === el.id) {
-                  return result;
-                }
-
-                return el;
-              })
-            );
+            console.log(result);
+            setWages.map((el) => {
+              if (result.id === el.id) {
+                return result;
+              }
+              return el;
+            });
             Alert.success("Updated", res.data.message);
           })
-          .catch((err) => console.log(err.message));
+          .catch((err) => {
+            console.log(err.message);
+          });
       } catch (error) {
         console.log(error);
       }
     } else {
       try {
-        store("priceLists", data)
+        store("priceLists", values)
           .then((res) => {
             const result = res.data.data;
-            setRoles([result, ...wages]);
+            setWages([result, ...wages]);
             Alert.success("Created!!", res.data.message);
           })
-          .catch((err) => console.log(err.message));
+          .catch((err) => {
+            console.log(err.message);
+          });
       } catch (error) {
         console.log(error);
       }
     }
 
     setUpdate(false);
+    resetForm();
     setState(initialState);
-    // setOpen(false)
-
-    // resetForm();
+    setOpen(false);
+    // }
   };
-
   const handleDestroy = (data) => {
     Alert.flash(
       "Are you sure?",
@@ -128,7 +132,7 @@ const Wages = () => {
       if (result.isConfirmed) {
         destroy("roles", data.label)
           .then((res) => {
-            setRoles([...wages.filter((role) => role.id !== res.data.data.id)]);
+            setWages([...wages.filter((role) => role.id !== res.data.data.id)]);
             Alert.success("Deleted!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -161,7 +165,10 @@ const Wages = () => {
                     <Form
                       onSubmit={handleSubmit}
                       validationSchema={validationSchema}
-                      initialValues={initialState}
+                      initialValues={{
+                        benefit_id: state.benefit_id,
+                        amount: state.amount,
+                      }}
                       // enableReinitialize={true}
                     >
                       <div className="row">

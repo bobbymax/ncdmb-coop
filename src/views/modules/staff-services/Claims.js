@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import ClaimTable from "../../../components/commons/widgets/ClaimTable";
+import { connect } from "react-redux";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import useApi from "../../../services/hooks/useApi";
-import { collection, store } from "../../../services/utils/controllers";
+import {
+  collection,
+  store,
+  destroy,
+  alter,
+  fetch,
+} from "../../../services/utils/controllers";
 
 const Claims = (props) => {
-  // console.log("Props", props);
-
   const initialState = {
     id: 0,
     title: "",
@@ -92,7 +97,7 @@ const Claims = (props) => {
   };
 
   const handlePrintOut = (claim) => {
-    props.history.push({
+    props.history.navigate({
       pathname: `/claims/${claim.reference_no}/print`,
       state: {
         claim: claim,
@@ -110,6 +115,8 @@ const Claims = (props) => {
       formDisplay: true,
       isUpdating: true,
     });
+
+    setOpen(true);
   };
 
   // const handleAddDetails = (claim) => {
@@ -151,13 +158,18 @@ const Claims = (props) => {
 
   useEffect(() => {
     request("claims");
+    console.log(props);
   }, []);
 
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="page-titles">
-          <button className="btn btn-success" onClick={() => setOpen(true)}>
+          <button
+            className="btn btn-success"
+            disabled={open}
+            onClick={() => setOpen(true)}
+          >
             <i className="fa fa-plus-square"></i> Add Claim
           </button>
         </div>
@@ -226,4 +238,21 @@ const Claims = (props) => {
   );
 };
 
-export default Claims;
+const mapStateToProps = (state) => ({
+  // auth: state.access.staff.authenticatedUser,
+  claims: state.claims,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    index: (entity, broadcast) => dispatch(fetch(entity, broadcast)),
+    store: (entity, body, broadcast) =>
+      dispatch(store(entity, body, broadcast)),
+    update: (entity, id, body, broadcast) =>
+      dispatch(alter(entity, id, body, broadcast)),
+    destroy: (entity, id, broadcast) =>
+      dispatch(destroy(entity, id, broadcast)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Claims);

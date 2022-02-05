@@ -21,6 +21,7 @@
     "react-thunk": "^1.0.0",
     "react-to-pdf": "^0.0.14",
     "sweetalert2": "^11.3.10",
+    "to-words": "^3.0.3",
     "web-vitals": "^2.1.0",
     "yup": "^0.32.11"
   },

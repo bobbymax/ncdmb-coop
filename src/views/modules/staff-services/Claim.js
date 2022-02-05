@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 // import { Col, Row, Table, Button } from "react-bootstrap";
-import { amountToWords } from "../../../services/helpers/functions";
+// import { amountToWords } from "../../../services/helpers/functions";
 // import { FiPrinter } from "react-icons/fi";
 // import ExportClaim from "./ExportClaim";
 // import ClaimDetails from "../../widgets/ClaimDetails";
 import ClaimDetails from "../../../components/commons/widgets/ClaimDetails";
+import { amountToWords } from "../../../services/utils/helpers";
 
 export const Claim = (props) => {
   const initialState = {

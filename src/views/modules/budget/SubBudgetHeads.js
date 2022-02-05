@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
-import { collection, store } from "../../../services/utils/controllers";
+import {
+  alter,
+  collection,
+  destroy,
+  store,
+} from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
 import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+import Alert from "../../../services/classes/Alert";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
   budget_head_id: Yup.string().required().label("Budget Head"),
   department_id: Yup.string().required().label("Department"),
+  description: Yup.string().required().label("Description"),
   budgetCode: Yup.string().required().label("Budget Code"),
   name: Yup.string().required().label("Name"),
   type: Yup.string().required().label("Type"),
@@ -25,7 +32,18 @@ const SubBudgetHeads = () => {
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const [state, setState] = useState();
+  const initialState = {
+    id: 0,
+    budget_head_id: 0,
+    department_id: 0,
+    budgetCode: "",
+    description: "",
+    name: "",
+    type: "",
+    logisticsBudget: false,
+  };
+
+  const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
 
   const columns = [
@@ -36,11 +54,29 @@ const SubBudgetHeads = () => {
   ];
 
   const handleEdit = (data) => {
+    setState(data);
     setUpdate(true);
+    setOpen(true);
   };
 
-  const handleDestroy = (data) => {};
-
+  const handleDestroy = (data) => {
+    Alert.flash(
+      "Are you sure?",
+      "warning",
+      "You would not be able to revert this!!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        destroy("subBudgetHeads", data.id)
+          .then((res) => {
+            setSubBudgetHeads([
+              ...subBudgetHeads.filter((sb) => sb.id !== res.data.data.id),
+            ]);
+            Alert.success("Deleted!!", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      }
+    });
+  };
   const handleSearch = (str) => {
     setSearchTerm(str);
 
@@ -64,7 +100,7 @@ const SubBudgetHeads = () => {
       collection("subBudgetHeads")
         .then((res) => {
           setSubBudgetHeads(res.data.data);
-          console.log(res.data.data);
+          // console.log(res.data.data);
           setIsLoading(false);
         })
         .catch((err) => console.log(err.message));
@@ -74,28 +110,30 @@ const SubBudgetHeads = () => {
     getDepartments();
   }, []);
 
-  const handleSubmit = (values) => {
-    store("subBudgetHeads", values)
-      .then((res) => console.log("Succcess", res))
-      .catch((err) => console.log(err));
+  const handleSubmit = (values, { resetForm }) => {
+    // store("subBudgetHeads", values)
+    //   .then((res) => console.log("Succcess", res))
+    //   .catch((err) => console.log(err));
 
     // console.log(values);
 
     if (update) {
       try {
-        alter("roles", state.id, data)
+        alter("subBudgetHeads", state.id, values)
           .then((res) => {
             const result = res.data.data;
+            console.log(result);
 
-            setRoles(
-              roles.map((el) => {
-                if (result.id === el.id) {
-                  return result;
-                }
+            // setSubBudgetHeads(
+            //   subBudgetHeads.map((el) => {
+            //     if (result.id === el.id) {
+            //       return result;
+            //     }
 
-                return el;
-              })
-            );
+            //     return el;
+            //   })
+            // );
+
             Alert.success("Updated", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -104,10 +142,10 @@ const SubBudgetHeads = () => {
       }
     } else {
       try {
-        store("roles", data)
+        store("subBudgetHeads", values)
           .then((res) => {
             const result = res.data.data;
-            setRoles([result, ...roles]);
+            setSubBudgetHeads([result, ...subBudgetHeads]);
             Alert.success("Created!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -116,10 +154,9 @@ const SubBudgetHeads = () => {
       }
     }
 
-    //   setErrors({});
-
-    //   setUpdate(false);
-    //   setState(initialState);
+    setUpdate(false);
+    resetForm();
+    // setState(initialState);
     //   setOpen(false);
     // }
   };
@@ -158,13 +195,14 @@ const SubBudgetHeads = () => {
                   <>
                     <Form
                       initialValues={{
-                        budget_head_id: parseInt(""),
-                        department_id: parseInt(""),
-                        budgetCode: "",
-                        description: "",
-                        name: "",
-                        type: "",
-                        logisticsBudget: true,
+                        id: state.id,
+                        budget_head_id: state.budget_head_id,
+                        department_id: state.department_id,
+                        budgetCode: state.budgetCode,
+                        description: state.description,
+                        name: state.name,
+                        type: state.type,
+                        logisticsBudget: state.logisticsBudget,
                       }}
                       validationSchema={validationSchema}
                       onSubmit={handleSubmit}
@@ -237,7 +275,7 @@ const SubBudgetHeads = () => {
                             className="btn btn-danger"
                             onClick={() => {
                               // setUpdate(false);
-                              // setState(initialState);
+                              setState(initialState);
                               setOpen(false);
                               // setErrors({});
                             }}

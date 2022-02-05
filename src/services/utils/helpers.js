@@ -44,3 +44,8 @@ export const returnArr = (arrs) => {
 
   return arr;
 };
+
+export const getPaymentType = (code) => {
+  const type = code.substring(0, 2);
+  return type === "SP" ? "STAFF PAYMENT" : "THIRD PARTY PAYMENT";
+};

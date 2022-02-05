@@ -17,6 +17,7 @@ const Fund = () => {
     id: 0,
     sub_budget_head_id: 0,
     approved_amount: 0,
+    new_balance: 0,
     description: "",
   };
 
@@ -38,7 +39,17 @@ const Fund = () => {
   useEffect(() => {
     fetch("creditBudgetHeads");
     getCreditBudgetHeads();
-  }, []);
+
+    if (state.available_balance > 0 && state.amount > 0) {
+      const value =
+        parseFloat(state.available_balance) - parseFloat(state.amount);
+
+      setState({
+        ...state,
+        new_balance: value,
+      });
+    }
+  }, [state.available_balance, state.approved_amount]);
 
   const columns = [
     {
@@ -94,7 +105,7 @@ const Fund = () => {
     }
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values, { resetForm }) => {
     // store("creditBudgetHeads", values)
     //   .then((res) => console.log("Succcess", res))
     //   .catch((err) => console.log(err));
@@ -131,23 +142,12 @@ const Fund = () => {
           Alert.success("Created!!", res.data.message);
         })
         .catch((err) => console.log(err));
-
-      //  try {
-      //    store("roles", data)
-      //      .then((res) => {
-      //        const result = res.data.data;
-      //        setRoles([result, ...roles]);
-      //        Alert.success("Created!!", res.data.message);
-      //      })
-      //      .catch((err) => console.log(err.message));
-      //  } catch (error) {
-      //    console.log(error);
-      //  }
-
-      setUpdate(false);
-      setState(initialState);
-      setOpen(false);
     }
+
+    setUpdate(false);
+    setState(initialState);
+    resetForm();
+    setOpen(false);
   };
 
   return (
@@ -173,7 +173,6 @@ const Fund = () => {
                   <>
                     <Form
                       initialValues={{
-                        id: state.id,
                         sub_budget_head_id: state.sub_budget_head_id,
                         approved_amount: state.approved_amount,
                         description: state.description,

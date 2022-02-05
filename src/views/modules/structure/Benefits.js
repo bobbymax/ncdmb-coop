@@ -41,15 +41,12 @@ const Benefits = () => {
   const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [roles, setRoles] = useState([]);
-  const [benefits, setBenefits] = useState([]);
+  // const [benefits, setBenefits] = useState([]);
 
-  const { request, data: wages } = useApi(collection);
+  const { request, data: benefits, setData: setBenefits } = useApi(collection);
 
   useEffect(() => {
-    request("priceLists");
-    getBenefits();
+    request("benefits");
   }, []);
   // const [status, setStatus] = useState(false)
 
@@ -70,24 +67,15 @@ const Benefits = () => {
     setOpen(true);
   };
 
-  const getBenefits = async () => {
-    collection("benefits")
-      .then((res) => setBenefits(res.data.data))
-      .catch((err) => console.log("Error", err));
-  };
-
   const handleSubmit = (data, { resetForm }) => {
-    console.log(data);
-    return;
-
     if (update) {
       try {
-        alter("priceLists", state.id, data)
+        alter("benefits", state.id, data)
           .then((res) => {
             const result = res.data.data;
 
-            setRoles(
-              wages.map((el) => {
+            setBenefits(
+              benefits.map((el) => {
                 if (result.id === el.id) {
                   return result;
                 }
@@ -103,10 +91,10 @@ const Benefits = () => {
       }
     } else {
       try {
-        store("priceLists", data)
+        store("benefits", data)
           .then((res) => {
             const result = res.data.data;
-            setRoles([result, ...wages]);
+            setBenefits([result, ...benefits]);
             Alert.success("Created!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -131,7 +119,9 @@ const Benefits = () => {
       if (result.isConfirmed) {
         destroy("roles", data.label)
           .then((res) => {
-            setRoles([...wages.filter((role) => role.id !== res.data.data.id)]);
+            setBenefits([
+              ...benefits.filter((role) => role.id !== res.data.data.id),
+            ]);
             Alert.success("Deleted!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -250,15 +240,15 @@ const Benefits = () => {
         </>
       )}
 
-      {/* <div className="col-lg-12">
+      <div className="col-lg-12">
         <BasicTable
           page="Benefits"
           columns={columns}
-          rows={wages}
+          rows={benefits}
           handleEdit={handleUpdate}
           handleDelete={handleDestroy}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

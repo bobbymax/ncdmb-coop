@@ -1,10 +1,10 @@
 import React from "react";
 import "./batch.css";
 import Pdf from "react-to-pdf";
-import { FiPrinter, FiX } from "react-icons/fi";
-import logo from "../../../assets/images/batch_logo.png";
-import { Row, Col, Table } from "react-bootstrap";
-import { getPaymentType } from "../../../services/helpers/functions";
+// import { FiPrinter, FiX } from "react-icons/fi";
+import logo from "../../assets/images/batch_logo.png";
+// import { Row, Col, Table } from "react-bootstrap";
+import { getPaymentType } from "../../services/utils/helpers";
 
 const ref = React.createRef();
 
@@ -20,7 +20,8 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
       <Pdf targetRef={ref} filename="claim.pdf" options={options}>
         {({ toPdf }) => (
           <button className="btn btn-success mb-4" onClick={toPdf}>
-            <FiPrinter style={{ marginRight: 12 }} />
+            <i className="fa fa-printer" style={{ marginRight: 12 }}></i>
+            {/* <FiPrinter style={{ marginRight: 12 }} /> */}
             Print
           </button>
         )}
@@ -31,7 +32,7 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
         style={{ marginLeft: 4 }}
         onClick={() => onClose()}
       >
-        <FiX style={{ marginRight: 5 }} />
+        {/* <FiX style={{ marginRight: 5 }} /> */}
         Close
       </button>
       <div id="batch" ref={ref}>
@@ -49,11 +50,11 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
                 </div>
               </div>
 
-              <Col md={4}>
+              <div className="col-md-4">
                 <h5 className="header-topper">{`BATCH NO: ${
                   batch ? batch.batch_no : null
                 }`}</h5>
-              </Col>
+              </div>
             </>
           </div>
 
@@ -73,74 +74,84 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
             </div>
 
             <div className="row">
-              <Col md={4}>
+              <div className="col-md-4">
                 <h5 className="aligner">DIRECTORATE:</h5>
-              </Col>
-              <Col md={8}>
+              </div>
+
+              <div className="col-md-8">
                 <div className="boax-enter">
                   {batch && batch.controller.originator.type === "directorate"
                     ? batch.controller.originator.name.toUpperCase()
                     : null}
                 </div>
-              </Col>
+              </div>
             </div>
             {batch &&
             getPaymentType(batch.batch_no) === "THIRD PARTY PAYMENT" ? (
               <>
-                <Row>
-                  <Col md={4}>
+                <div className="row">
+                  <div className="col-md-4">
                     <h5 className="aligner">PURPOSE:</h5>
-                  </Col>
-                  <Col md={8}>
+                  </div>
+
+                  <div className="col-md-8">
                     <div className="boax-enter">
                       {batch
                         ? batch.expenditures[0].description.toUpperCase()
                         : null}
                     </div>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={4}>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-4">
                     <h5 className="aligner">BUDGET HEAD:</h5>
-                  </Col>
-                  <Col md={8}>
+                  </div>
+
+                  <div className="col-md-8">
                     <div className="boax-enter">
                       {batch
                         ? batch.expenditures[0].subBudgetHead.name.toUpperCase()
                         : null}
                     </div>
-                  </Col>
-                </Row>
+                  </div>
+                </div>
               </>
             ) : null}
-            <Row>
-              <Col md={4}>
+
+            <div className="row">
+              <div className="col-md-4">
                 <h5 className="aligner">BUDGET PERIOD:</h5>
-              </Col>
-              <Col md={8}>
+              </div>
+
+              <div className="col-md-8">
                 <div className="boax-enter">{"2021"}</div>
-              </Col>
-            </Row>
+              </div>
+            </div>
+
             {batch && getPaymentType(batch.batch_no) === "STAFF PAYMENT" ? (
-              <Row>
-                <Col md={4}>
+              <div className="row">
+                <div className="col-md-4">
                   <h5 className="aligner">NO OF CLAIMS IN BATCH:</h5>
-                </Col>
-                <Col md={8}>
+                </div>
+
+                <div className="col-md-8">
                   <div className="boax-enter">
                     {batch ? batch.noOfClaim : 0}
                   </div>
-                </Col>
-              </Row>
+                </div>
+              </div>
             ) : null}
+
             {batch &&
             getPaymentType(batch.batch_no) === "THIRD PARTY PAYMENT" ? (
               <>
-                <Row>
-                  <Col md={4}>
+                <div className="row">
+                  <div className="col-md-4">
                     <h5 className="aligner">AMOUNT:</h5>
-                  </Col>
-                  <Col md={8}>
+                  </div>
+
+                  <div className="col-md-8">
                     <div className="boax-enter">
                       {batch
                         ? new Intl.NumberFormat().format(
@@ -148,26 +159,27 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
                           )
                         : null}
                     </div>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={4}>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-4">
                     <h5 className="aligner">BENEFICIARY:</h5>
-                  </Col>
-                  <Col md={8}>
+                  </div>
+
+                  <div className="col-md-8">
                     <div className="boax-enter">
                       {batch
                         ? batch.expenditures[0].beneficiary.toUpperCase()
                         : null}
                     </div>
-                  </Col>
-                </Row>
+                  </div>
+                </div>
               </>
             ) : null}
 
             {batch && getPaymentType(batch.batch_no) === "STAFF PAYMENT" ? (
               <div className="staff-list">
-                <Table striped bordered responsive size="sm">
+                <table className="striped bordered responsive table-sm">
                   <thead id="top-headers-table">
                     <tr>
                       <th>SN</th>
@@ -178,6 +190,7 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
                       <th>PV NUMBER</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {batch && batch.expenditures.length !== 0
                       ? batch.expenditures.map((expenditure) => (
@@ -199,7 +212,7 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
                         ))
                       : null}
                   </tbody>
-                </Table>
+                </table>
 
                 <div className="grandTotal">
                   <h5>
@@ -214,49 +227,58 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
               <h4>APPROVALS</h4>
             </div>
             <div className="signatures">
-              <div className="row mb-3"></div>
-              <Row className="mb-3">
-                <Col md={4}>
+              <div className="row mb-3">
+                <div className="col-md-4">
                   <h6>Head of Originating Division:</h6>
-                </Col>
-                <Col md={4}>
+                </div>
+
+                <div className="col-md-4">
                   <div className="signature-lines"></div>
-                </Col>
-                <Col md={1}>
+                </div>
+
+                <div className="col-md-1">
                   <h6>Date:</h6>
-                </Col>
-                <Col md={3}>
+                </div>
+
+                <div className="col-md-3">
                   <div className="signature-lines"></div>
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col md={1}>
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-1">
                   <h6>Director:</h6>
-                </Col>
-                <Col md={7}>
+                </div>
+
+                <div className="col-md-7">
                   <div className="signature-lines"></div>
-                </Col>
-                <Col md={1}>
+                </div>
+
+                <div className="col-md-1">
                   <h6>Date:</h6>
-                </Col>
-                <Col md={3}>
+                </div>
+
+                <div className="col-md-3">
                   <div className="signature-lines"></div>
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col md={3}>
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-md-3">
                   <h6>Executive Secretary:</h6>
-                </Col>
-                <Col md={5}>
+                </div>
+
+                <div classNae="col-md-5">
                   <div className="signature-lines"></div>
-                </Col>
-                <Col md={1}>
+                </div>
+
+                <div className="col-md-1">
                   <h6>Date:</h6>
-                </Col>
-                <Col md={3}>
+                </div>
+
+                <div className="col-md-3">
                   <div className="signature-lines"></div>
-                </Col>
-              </Row>
+                </div>
+              </div>
             </div>
           </div>
         </div>

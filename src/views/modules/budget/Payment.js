@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import BatchPrintOut from "../../../components/commons/BatchPrintOut";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
@@ -14,7 +15,8 @@ import { collection } from "../../../services/utils/controllers";
 const Payments = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const { request, data: payments, loading } = useApi(collection);
+
+  const { request, data: batches, loading } = useApi(collection);
 
   const initialState = {
     batch: null,
@@ -53,26 +55,24 @@ const Payments = (props) => {
     return curr[0].label;
   };
 
-  // const handleBatchPrint = (batch) => {
-  //   setState({
-  //     ...state,
-  //     batch,
-  //     isPrinting: !state.isPrinting,
-  //   });
-  // };
+  const handleBatchPrint = (batch) => {
+    setState({
+      ...state,
+      batch,
+      isPrinting: !state.isPrinting,
+    });
+  };
 
-  // const printingDone = () => {
-  //   setState({
-  //     ...state,
-  //     batch: null,
-  //     isPrinting: !state.isPrinting,
-  //   });
-  // };
+  const printingDone = () => {
+    setState({
+      ...state,
+      batch: null,
+      isPrinting: !state.isPrinting,
+    });
+  };
 
   useEffect(() => {
-    request("batches")
-      .then((res) => console.log("Response", res))
-      .catch((err) => console.log("Error", err));
+    request("batches");
   }, []);
 
   const columns = [
@@ -85,7 +85,7 @@ const Payments = (props) => {
     setSearchTerm(str);
 
     if (str !== "") {
-      const filtered = payments.filter((row) => {
+      const filtered = batches.filter((row) => {
         return Object.values(row)
           .join(" ")
           .toLowerCase()
@@ -94,39 +94,34 @@ const Payments = (props) => {
 
       setResults(filtered);
     } else {
-      setResults(payments);
+      setResults(batches);
     }
   };
 
   return (
     <>
-      {
-        !state.isPrinting ? (
-          <>
-            <div className="row">
-              <div className="col-md-12">
-                <div className="page-titles">
-                  <h2>Payments</h2>
-                </div>
-              </div>
+      {!state.isPrinting ? (
+        <>
+          <div className="row">
+            {/* <div className="col-md-12"></div> */}
 
-              <div className="col-md-12">
-                <DataTableComponent
-                  pageName="Payments"
-                  columns={columns}
-                  rows={searchTerm.length < 1 ? payments : results}
-                  // handleEdit={handleEdit}
-                  // handleDelete={handleDestroy}
-                  term={searchTerm}
-                  searchKeyWord={handleSearch}
-                  isFetching={loading}
-                />
-              </div>
+            <div className="col-md-12">
+              <DataTableComponent
+                pageName="Payments"
+                columns={columns}
+                rows={searchTerm.length < 1 ? batches : results}
+                // handleEdit={handleEdit}
+                // handleDelete={handleDestroy}
+                term={searchTerm}
+                searchKeyWord={handleSearch}
+                isFetching={loading}
+              />
             </div>
-          </>
-        ) : null
-        // <BatchPrintOut batch={state.batch} onClose={printingDone} auth={auth} />
-      }
+          </div>
+        </>
+      ) : (
+        <BatchPrintOut batch={state.batch} onClose={printingDone} />
+      )}
     </>
   );
 };

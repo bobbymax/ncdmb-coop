@@ -8,6 +8,7 @@ import TableLoader from "./TableLoader";
 const DataTableComponent = ({
   pageName,
   columns,
+  batch,
   rows,
   handleEdit = undefined,
   handleDelete = undefined,

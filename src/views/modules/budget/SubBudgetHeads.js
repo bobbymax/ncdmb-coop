@@ -54,6 +54,7 @@ const SubBudgetHeads = () => {
   ];
 
   const handleEdit = (data) => {
+    console.log(data);
     setState(data);
     setUpdate(true);
     setOpen(true);
@@ -114,29 +115,30 @@ const SubBudgetHeads = () => {
     // store("subBudgetHeads", values)
     //   .then((res) => console.log("Succcess", res))
     //   .catch((err) => console.log(err));
+    // values.logisticsBudget ?
 
-    // console.log(values);
+    console.log(values);
 
     if (update) {
       try {
         alter("subBudgetHeads", state.id, values)
           .then((res) => {
+            // console.log(res);
             const result = res.data.data;
             console.log(result);
-
-            // setSubBudgetHeads(
-            //   subBudgetHeads.map((el) => {
-            //     if (result.id === el.id) {
-            //       return result;
-            //     }
-
-            //     return el;
-            //   })
-            // );
-
+            setSubBudgetHeads(
+              subBudgetHeads.map((el) => {
+                if (result.id === el.id) {
+                  return result;
+                }
+                return el;
+              })
+            );
             Alert.success("Updated", res.data.message);
           })
-          .catch((err) => console.log(err.message));
+          .catch((err) => {
+            console.log(err.message);
+          });
       } catch (error) {
         console.log(error);
       }
@@ -148,7 +150,9 @@ const SubBudgetHeads = () => {
             setSubBudgetHeads([result, ...subBudgetHeads]);
             Alert.success("Created!!", res.data.message);
           })
-          .catch((err) => console.log(err.message));
+          .catch((err) => {
+            console.log(err.message);
+          });
       } catch (error) {
         console.log(error);
       }
@@ -156,8 +160,8 @@ const SubBudgetHeads = () => {
 
     setUpdate(false);
     resetForm();
-    // setState(initialState);
-    //   setOpen(false);
+    setState(initialState);
+    setOpen(false);
     // }
   };
 

@@ -197,6 +197,7 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Approved amount"
+                            // value={state.approved_amount}
                             type="text"
                             name="approved_amount"
                           />

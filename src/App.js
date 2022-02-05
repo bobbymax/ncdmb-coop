@@ -21,7 +21,8 @@ import Claims from "./views/modules/staff-services/Claims";
 import GradeLevels from "./views/modules/structure/GradeLevels";
 import Wages from "./views/modules/structure/Wages";
 import Benefits from "./views/modules/structure/Benefits";
-import { Instructions } from "./views/modules/staff-services/Instructions";
+// import { Instructions } from "./views/modules/staff-services/Instructions";
+import Claim from "./views/modules/staff-services/Claim";
 
 const App = () => {
   return (
@@ -149,10 +150,10 @@ const App = () => {
 
         <Route
           exact
-          path="/claims/:id/add/details"
+          path="/claims/:id/print"
           element={
             <ProtectedRoute>
-              <Instructions />
+              <Claim />
             </ProtectedRoute>
           }
         />

@@ -8,7 +8,9 @@ import SubmitButton from "../../../components/forms/SubmitButton";
 import useApi from "../../../services/hooks/useApi";
 import { collection, store } from "../../../services/utils/controllers";
 
-const Claims = () => {
+const Claims = (props) => {
+  // console.log("Props", props);
+
   const initialState = {
     id: 0,
     title: "",
@@ -88,6 +90,37 @@ const Claims = () => {
     //   setOpen(false);
     // }
   };
+
+  const handlePrintOut = (claim) => {
+    props.history.push({
+      pathname: `/claims/${claim.reference_no}/print`,
+      state: {
+        claim: claim,
+        actionType: "print",
+      },
+    });
+  };
+
+  const loadClaim = (data) => {
+    setState({
+      ...state,
+      id: data.id,
+      title: data.title,
+      type: data.type,
+      formDisplay: true,
+      isUpdating: true,
+    });
+  };
+
+  // const handleAddDetails = (claim) => {
+  //   props.history.push({
+  //     pathname: `/claims/${claim.reference_no}/add/details`,
+  //     state: {
+  //       claim: claim,
+  //       actionType: "update",
+  //     },
+  //   });
+  // };
 
   // console.log(claims);
 
@@ -183,7 +216,11 @@ const Claims = () => {
       )}
 
       <div className="col-lg-12">
-        <ClaimTable claims={claims} />
+        <ClaimTable
+          claims={claims}
+          onView={handlePrintOut}
+          onEdit={loadClaim}
+        />
       </div>
     </div>
   );

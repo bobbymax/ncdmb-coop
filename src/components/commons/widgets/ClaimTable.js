@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
+const ClaimTable = ({
+  claims,
+  onEdit,
+  onDestroy,
+  onView = () => {},
+  addDetails,
+}) => {
   return (
     <>
       <div className="card">

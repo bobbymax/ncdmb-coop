@@ -24,7 +24,7 @@ const Expenditures = () => {
   };
 
   const [subBudgetHeads, setSubBudgetHeads] = useState([]);
-  const [departmentIDs, setDepartmentIDs] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [data, setData] = useState(initialState);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -171,12 +171,19 @@ const Expenditures = () => {
   const onClaimIDChange = (value) => {
     if (value.length === 8) {
       collection(`fetch/claims/${value}`)
-        .then((res) =>
-          setClaimData({
+        .then((res) => {
+          const claim = res.data.data;
+          // console.log(claim);
+
+          setState({
             ...state,
-            ...res.data.data,
-          })
-        )
+            claim: claim.claim,
+            title: claim.title,
+            beneficiary: claim.owner.name.toUpperCase(),
+            amount: claim.total_amount,
+            claim_id: claim.id,
+          });
+        })
         .catch((err) => console.log(err));
     }
   };
@@ -188,7 +195,7 @@ const Expenditures = () => {
 
   const getDepartments = async () => {
     const response = await collection("departments");
-    setDepartmentIDs(response.data.data);
+    setDepartments(response.data.data);
   };
 
   const type = [
@@ -249,7 +256,7 @@ const Expenditures = () => {
                       <div className="col-md-12">
                         <FormSelect
                           defaultText="Sub Budget Head"
-                          options={departmentIDs}
+                          options={departments}
                           onChange={(e) => {
                             getData(e.target.value);
                           }}

@@ -6026,6 +6026,11 @@ mkdirp@^0.5.5, mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+moment@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
@@ -8316,6 +8321,11 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+to-words@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/to-words/-/to-words-3.0.3.tgz#8b102de80124656aa40aa35fca8a99f7a5b58970"
+  integrity sha512-f9JuVhDnMkv1bnzo2MNsyDD/uFGeKknRrl/Lo8C0A0AEZE8y5/8V2vvkRcYpEo1uITJKvGNkZ5qDFFz6AX4dAg==
 
 toidentifier@1.0.1:
   version "1.0.1"

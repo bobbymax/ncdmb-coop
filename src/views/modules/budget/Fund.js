@@ -15,10 +15,13 @@ import Alert from "../../../services/classes/Alert";
 const Fund = () => {
   const initialState = {
     id: 0,
-    sub_budget_head_id: 0,
+    sub_budget_id: 0,
     approved_amount: 0,
-    new_balance: 0,
+    available_balance: 0,
     description: "",
+    subBudgetHeads: [],
+    name: "",
+    previousAmount: 0,
   };
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,9 +43,9 @@ const Fund = () => {
     fetch("creditBudgetHeads");
     getCreditBudgetHeads();
 
-    if (state.available_balance > 0 && state.amount > 0) {
+    if (state.available_balance > 0 && state.approved_amount > 0) {
       const value =
-        parseFloat(state.available_balance) - parseFloat(state.amount);
+        parseFloat(state.available_balance) - parseFloat(state.approved_amount);
 
       setState({
         ...state,
@@ -73,7 +76,7 @@ const Fund = () => {
     collection(`subBudgetHeads/${id}`)
       .then((res) => {
         const result = res.data.data;
-        console.log(result);
+        setState({ ...state, result });
 
         // setBudget([...creditBudgetHeads], res);
       })
@@ -194,7 +197,6 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Approved amount"
-                            // value={state.actual_balance}
                             type="text"
                             name="approved_amount"
                           />
@@ -203,10 +205,7 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormInput
                             placeholder="Current Balance"
-                            // value={
-                            //   funds.budget ? funds.budget.actual_balance : 0
-                            // }
-                            name="current_balance"
+                            name="new_value"
                             disabled
                           />
                         </div>

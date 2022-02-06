@@ -26,11 +26,23 @@ const CustomSelect = ({
           multiple={arrinput ? "multiple" : ""}
         >
           <option value={defaultInputValue}>{defaultText}</option>
-          {options.map((option, index) => (
-            <option key={index} value={option.key}>
-              {option.label}
-            </option>
-          ))}
+          {options.map((option, index) => {
+            if (option.key) {
+              return (
+                <option key={index} value={option.key}>
+                  {option.label}
+                </option>
+              );
+            }
+
+            if (option.name) {
+              return (
+                <option key={index} value={option.id}>
+                  {option.name}
+                </option>
+              );
+            }
+          })}
         </select>
         {errorMessage ? (
           <span style={{ fontSize: 12 }} className="text-danger">

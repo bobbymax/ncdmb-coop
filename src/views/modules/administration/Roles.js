@@ -16,15 +16,6 @@ import {
 } from "../../../services/utils/controllers";
 import { validate } from "../../../services/utils/validation";
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label("Role name"),
-  max_slots: Yup.string().required().label("Max slot"),
-  isSuper: Yup.string().required().label("Role Admin"),
-  expiry_date: Yup.string().required().label("Expiry date"),
-  start_date: Yup.string().required().label("Start date"),
-  cannot_expire: Yup.string().required().label("Cannot expire"),
-});
-
 const Roles = () => {
   const initialState = {
     id: 0,
@@ -184,150 +175,133 @@ const Roles = () => {
               <div className="card-body">
                 <div className="form-body">
                   <form onSubmit={handleSubmit}>
-                    <Form
-                      validationSchema={validationSchema}
-                      initialValues={{
-                        id: 0,
-                        name: "",
-                        max_slots: 0,
-                        isSuper: 0,
-                        start_date: "",
-                        expiry_date: "",
-                        cannot_expire: 0,
-                      }}
-                    >
-                      <div className="row">
-                        <div className="col-md-4">
-                          <TextInputField
-                            placeholder="Enter Role Name"
-                            value={state.name}
-                            onChange={(e) =>
-                              setState({ ...state, name: e.target.value })
-                            }
-                            error={
-                              errors && errors.name && errors.name.length > 0
-                            }
-                            errorMessage={
-                              errors && errors.name && errors.name[0]
-                            }
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <TextInputField
-                            placeholder="Enter Max Slot"
-                            type="number"
-                            value={state.max_slots}
-                            onChange={(e) =>
-                              setState({ ...state, max_slots: e.target.value })
-                            }
-                            error={
-                              errors &&
-                              errors.max_slots &&
-                              errors.max_slots.length > 0
-                            }
-                            errorMessage={
-                              errors && errors.max_slots && errors.max_slots[0]
-                            }
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <CustomSelect
-                            defaultText="Is Role Admin?"
-                            options={options}
-                            value={state.isSuper}
-                            onChange={(e) =>
-                              setState({ ...state, isSuper: e.target.value })
-                            }
-                            error={
-                              errors &&
-                              errors.isSuper &&
-                              errors.isSuper.length > 0
-                            }
-                            errorMessage={
-                              errors && errors.isSuper && errors.isSuper[0]
-                            }
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <TextInputField
-                            placeholder="Start Date"
-                            type="date"
-                            value={state.start_date}
-                            onChange={(e) =>
-                              setState({ ...state, start_date: e.target.value })
-                            }
-                            error={
-                              errors &&
-                              errors.start_date &&
-                              errors.start_date.length > 0
-                            }
-                            errorMessage={
-                              errors &&
-                              errors.start_date &&
-                              errors.start_date[0]
-                            }
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <TextInputField
-                            placeholder="Expiry Date"
-                            type="date"
-                            value={state.expiry_date}
-                            onChange={(e) =>
-                              setState({
-                                ...state,
-                                expiry_date: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <CustomSelect
-                            defaultText="Cannot Expire?"
-                            options={options}
-                            value={state.cannot_expire}
-                            onChange={(e) =>
-                              setState({
-                                ...state,
-                                cannot_expire: e.target.value,
-                              })
-                            }
-                            error={
-                              errors &&
-                              errors.cannot_expire &&
-                              errors.cannot_expire.length > 0
-                            }
-                            errorMessage={
-                              errors &&
-                              errors.cannot_expire &&
-                              errors.cannot_expire[0]
-                            }
-                          />
-                        </div>
-
-                        <div className="col-md-12 mt-3">
-                          <button type="submit" className="btn btn-primary">
-                            Submit
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              setUpdate(false);
-                              setState(initialState);
-                              setOpen(false);
-                              setErrors({});
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
+                    <div className="row">
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Enter Role Name"
+                          value={state.name}
+                          onChange={(e) =>
+                            setState({ ...state, name: e.target.value })
+                          }
+                          error={
+                            errors && errors.name && errors.name.length > 0
+                          }
+                          errorMessage={errors && errors.name && errors.name[0]}
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Enter Max Slot"
+                          type="number"
+                          value={state.max_slots}
+                          onChange={(e) =>
+                            setState({ ...state, max_slots: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.max_slots &&
+                            errors.max_slots.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.max_slots && errors.max_slots[0]
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <CustomSelect
+                          defaultText="Is Role Admin?"
+                          options={options}
+                          value={state.isSuper}
+                          onChange={(e) =>
+                            setState({ ...state, isSuper: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.isSuper &&
+                            errors.isSuper.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.isSuper && errors.isSuper[0]
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Start Date"
+                          type="date"
+                          value={state.start_date}
+                          onChange={(e) =>
+                            setState({ ...state, start_date: e.target.value })
+                          }
+                          error={
+                            errors &&
+                            errors.start_date &&
+                            errors.start_date.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.start_date && errors.start_date[0]
+                          }
+                        />
                       </div>
 
-                      {/* <SubmitButton /> */}
-                    </Form>
+                      <div className="col-md-4">
+                        <TextInputField
+                          placeholder="Expiry Date"
+                          type="date"
+                          value={state.expiry_date}
+                          onChange={(e) =>
+                            setState({
+                              ...state,
+                              expiry_date: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <CustomSelect
+                          defaultText="Cannot Expire?"
+                          options={options}
+                          value={state.cannot_expire}
+                          onChange={(e) =>
+                            setState({
+                              ...state,
+                              cannot_expire: e.target.value,
+                            })
+                          }
+                          error={
+                            errors &&
+                            errors.cannot_expire &&
+                            errors.cannot_expire.length > 0
+                          }
+                          errorMessage={
+                            errors &&
+                            errors.cannot_expire &&
+                            errors.cannot_expire[0]
+                          }
+                        />
+                      </div>
+
+                      <div className="col-md-12 mt-3">
+                        <button type="submit" className="btn btn-primary">
+                          Submit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => {
+                            setUpdate(false);
+                            setState(initialState);
+                            setOpen(false);
+                            setErrors({});
+                          }}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* <SubmitButton /> */}
 
                     {/* <div className="row">
                       <div className="col-md-4">

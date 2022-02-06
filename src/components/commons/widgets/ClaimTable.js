@@ -14,23 +14,18 @@ const ClaimTable = ({
         <div className="card">
           {/* <div className="card-header">
           <h4 className="card-title">{page}</h4>
-        </div> */}
+           </div> */}
 
           <div className="card-body">
             <div className="table-responsive">
               <table className="table table-bordered table-striped verticle-middle table-responsive-sm">
-                {/* <thead>
-                 <tr>
-                  {columns &&
-                    columns.length > 0 &&
-                    columns.map((col, index) => (
-                      <th scope="col" key={index}>
-                        {col.label}
-                      </th>
-                    ))}
-                  {handleEdit !== undefined && <th scope="col">Action</th>}
-                </tr> 
-              </thead> */}
+                <thead>
+                  <tr>
+                    <th>DESCRIPTION</th>
+                    <th>AMOUNT</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
 
                 <tbody>
                   {claims.map((claim) => (
@@ -91,6 +86,14 @@ const ClaimTable = ({
                       </td>
                     </tr>
                   ))}
+
+                  {claims.length <= 0 && (
+                    <tr>
+                      <td colSpan="3" className="text-danger">
+                        {"No Data Found!!"}
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

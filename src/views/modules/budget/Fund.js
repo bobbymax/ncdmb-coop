@@ -52,7 +52,7 @@ const Fund = () => {
         new_balance: value,
       });
     }
-  }, [state.available_balance, state.approved_amount, creditBudgetHeads]);
+  }, [state.available_balance, state.approved_amount]);
 
   const columns = [
     {
@@ -72,13 +72,11 @@ const Fund = () => {
       .catch((err) => console.log("Error", err));
   };
 
-  const getSubBudgetHeads = (id) => {
+  const getSubBudgetHeadValue = (id) => {
     collection(`subBudgetHeads/${id}`)
       .then((res) => {
         const result = res.data.data;
-
-        setState({ ...state, subBudgetHeads: result });
-        // console.log(result.data.data);
+        setState({ ...state, result });
 
         // setBudget([...creditBudgetHeads], res);
       })
@@ -188,8 +186,9 @@ const Fund = () => {
                         <div className="col-md-6">
                           <FormSelect
                             options={creditBudgetHeads}
-                            onChange={(e) => getSubBudgetHeads(e.target.value)}
-                            // value={state.sub_budget_id}
+                            onChange={(e) =>
+                              getSubBudgetHeadValue(e.target.value)
+                            }
                             // placeholder="Enter Role Name"
                             name="sub_budget_head_id"
                           />

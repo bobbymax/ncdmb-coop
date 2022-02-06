@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import BasicTable from "../../../components/commons/tables/BasicTable";
-import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+import { useNavigate } from "react-router-dom";
+// import BasicTable from "../../../components/commons/tables/BasicTable";
+// import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import ClaimTable from "../../../components/commons/widgets/ClaimTable";
 import { connect } from "react-redux";
 import Form from "../../../components/forms/Form";
@@ -16,6 +17,8 @@ import {
 } from "../../../services/utils/controllers";
 
 const Claims = (props) => {
+  const navigate = useNavigate();
+
   const initialState = {
     id: 0,
     title: "",
@@ -97,13 +100,17 @@ const Claims = (props) => {
   };
 
   const handlePrintOut = (claim) => {
-    props.history.navigate({
-      pathname: `/claims/${claim.reference_no}/print`,
-      state: {
-        claim: claim,
-        actionType: "print",
-      },
-    });
+    fetch("claims", claim.reference_no)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    // navigate({
+    //   pathname: `/claims/${claim.reference_no}/print`,
+    //   state: {
+    //     claim: claim,
+    //     actionType: "print",
+    //   },
+    // });
   };
 
   const loadClaim = (data) => {

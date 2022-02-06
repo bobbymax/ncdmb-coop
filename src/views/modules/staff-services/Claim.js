@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetch } from "../../../services/utils/controllers";
 // import { Col, Row, Table, Button } from "react-bootstrap";
 // import { amountToWords } from "../../../services/helpers/functions";
 // import { FiPrinter } from "react-icons/fi";
@@ -10,6 +12,9 @@ import ClaimDetails from "../../../components/commons/widgets/ClaimDetails";
 import { amountToWords } from "../../../services/utils/helpers";
 
 export const Claim = (props) => {
+  const params = useParams();
+  console.log(params.id);
+
   const initialState = {
     claim: null,
     printed: false,
@@ -26,6 +31,10 @@ export const Claim = (props) => {
 
     props.history.push("/claims");
   };
+
+  // const getClaim = () => {
+  //   fetch('/claims', id).then(res => console.log(res)).catch(err => console.lo)
+  // }
 
   useEffect(() => {
     if (props.location && props.location.state) {

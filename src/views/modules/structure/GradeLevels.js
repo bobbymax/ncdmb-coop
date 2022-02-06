@@ -22,19 +22,25 @@ const validationSchema = Yup.object().shape({
 });
 
 const GradeLevels = () => {
-  const initialStateRef = useRef(null);
-  const { request, data: gradeLevels } = useApi(collection);
+  const {
+    request,
+    data: gradeLevels,
+    setData: setGradeLevels,
+  } = useApi(collection);
 
   useEffect(() => {
     request("gradeLevels");
   }, []);
 
-  // const initialState = initialStateRef?.current.initialValues;
+  const initialState = {
+    id: 0,
+    name: "",
+    code: "",
+  };
 
-  const [roles, setRoles] = useState([]);
-  const [state, setState] = useState();
+  const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   // const [status, setStatus] = useState(false)
 
   const columns = [
@@ -49,8 +55,8 @@ const GradeLevels = () => {
   ];
 
   const handleUpdate = (data) => {
+    // console.log(data);
     setState(data);
-    console.log(data);
     setUpdate(true);
     setOpen(true);
   };
@@ -62,8 +68,8 @@ const GradeLevels = () => {
           .then((res) => {
             const result = res.data.data;
 
-            setRoles(
-              roles.map((el) => {
+            setGradeLevels(
+              gradeLevels.map((el) => {
                 if (result.id === el.id) {
                   return result;
                 }
@@ -83,7 +89,7 @@ const GradeLevels = () => {
           .then((res) => {
             const result = res.data.data;
 
-            setRoles([result, ...roles]);
+            setGradeLevels([result, ...gradeLevels]);
             Alert.success("Created!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -93,10 +99,10 @@ const GradeLevels = () => {
     }
 
     setUpdate(false);
-    // setState(initialStateRef.current.values);
-    // setOpen(false);
+    setState(initialState);
+    setOpen(false);
 
-    resetForm();
+    // resetForm();
   };
 
   const handleDestroy = (data) => {
@@ -108,7 +114,9 @@ const GradeLevels = () => {
       if (result.isConfirmed) {
         destroy("roles", data.label)
           .then((res) => {
-            setRoles([...roles.filter((role) => role.id !== res.data.data.id)]);
+            setGradeLevels([
+              ...gradeLevels.filter((role) => role.id !== res.data.data.id),
+            ]);
             Alert.success("Deleted!!", res.data.message);
           })
           .catch((err) => console.log(err.message));
@@ -125,7 +133,7 @@ const GradeLevels = () => {
             onClick={() => setOpen(!open)}
             disabled={open}
           >
-            <i className="fa fa-plus-square"></i> Add Role
+            <i className="fa fa-plus-square"></i> Add Grade Level
           </button>
         </div>
       </div>
@@ -139,10 +147,9 @@ const GradeLevels = () => {
                   <form onSubmit={(values) => console.log(values)}>
                     <Form
                       initialValues={{
-                        code: "",
-                        name: "",
+                        code: state.code,
+                        name: state.name,
                       }}
-                      innerRef={initialStateRef}
                       onSubmit={handleSubmit}
                     >
                       <div className="row">
@@ -171,7 +178,7 @@ const GradeLevels = () => {
                             className="btn btn-danger"
                             onClick={() => {
                               setUpdate(false);
-                              setState(initialStateRef.current.values);
+                              setState(initialState);
                               setOpen(false);
                             }}
                           >
@@ -190,11 +197,11 @@ const GradeLevels = () => {
 
       <div className="col-lg-12">
         <BasicTable
-          page="Roles"
+          page="Grade Levels"
           columns={columns}
           rows={gradeLevels}
           handleEdit={handleUpdate}
-          // handleDelete={handleDestroy}
+          handleDelete={handleDestroy}
         />
       </div>
     </div>

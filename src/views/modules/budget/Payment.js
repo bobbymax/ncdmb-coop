@@ -81,32 +81,53 @@ const Payments = (props) => {
     { key: "status", label: "Status" },
   ];
 
-  const handleSearch = (str) => {
-    setSearchTerm(str);
-
-    if (str !== "") {
-      const filtered = batches.filter((row) => {
-        return Object.values(row)
-          .join(" ")
-          .toLowerCase()
-          .includes(str.toLowerCase());
-      });
-
-      setResults(filtered);
-    } else {
-      setResults(batches);
-    }
-  };
-
   return (
     <>
       {!state.isPrinting ? (
         <>
-          <div className="row">
-            {/* <div className="col-md-12"></div> */}
-
+          <>
             <div className="col-md-12">
-              <DataTableComponent
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Payments</h4>
+                </div>
+
+                <div className="card-body">
+                  <div className="table-responsive">
+                    <table className="table table-bordered table-striped vertical middle table reponsive-sm">
+                      <thead>
+                        <th>BUDGET CODE</th>
+                        <th>AMOUNT</th>
+                        <th>STATUS</th>
+                      </thead>
+
+                      <tbody>
+                        {batches.map((batch) => (
+                          <tr key={batch.id}>
+                            <td>
+                              <button
+                                className="btn btn-success"
+                                onClick={() => handleBatchPrint(batch)}
+                              >
+                                <i className="fa fa-print"></i>
+                                {/* <FiPrinter /> */}
+                              </button>
+                            </td>
+
+                            <td>{batch.batch_no}</td>
+                            <td>{`NGN ${new Intl.NumberFormat().format(
+                              batch.amount
+                            )}`}</td>
+                            <td>{batch.status}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* <DataTableComponent
                 pageName="Payments"
                 columns={columns}
                 rows={searchTerm.length < 1 ? batches : results}
@@ -115,9 +136,9 @@ const Payments = (props) => {
                 term={searchTerm}
                 searchKeyWord={handleSearch}
                 isFetching={loading}
-              />
+              /> */}
             </div>
-          </div>
+          </>
         </>
       ) : (
         <BatchPrintOut batch={state.batch} onClose={printingDone} />

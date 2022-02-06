@@ -66,6 +66,8 @@ const Benefits = () => {
   ];
 
   const handleModalEvent = (data) => {
+    console.log(data);
+
     setModalShow({
       ...modalShow,
       entity: data,

@@ -38,6 +38,7 @@ const DataTableComponent = ({
         <div className="card-header">
           <h4 className="card-title">{pageName}</h4>
         </div>
+
         <div className="card-body">
           <div className="searchable">
             <div className="row">

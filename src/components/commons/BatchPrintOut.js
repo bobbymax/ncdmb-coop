@@ -9,19 +9,18 @@ import { getPaymentType } from "../../services/utils/helpers";
 const ref = React.createRef();
 
 const options = {
-  orientation: "potrait",
+  orientation: "portrait",
   unit: "in",
   format: [8.27, 11.69],
 };
 
-const BatchPrintOut = ({ batch, auth, onClose }) => {
+const BatchPrintOut = ({ batch, onClose }) => {
   return (
     <>
       <Pdf targetRef={ref} filename="claim.pdf" options={options}>
         {({ toPdf }) => (
           <button className="btn btn-success mb-4" onClick={toPdf}>
-            <i className="fa fa-printer" style={{ marginRight: 12 }}></i>
-            {/* <FiPrinter style={{ marginRight: 12 }} /> */}
+            <i className="fa fa-print" style={{ marginRight: 12 }}></i>
             Print
           </button>
         )}
@@ -35,6 +34,7 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
         {/* <FiX style={{ marginRight: 5 }} /> */}
         Close
       </button>
+
       <div id="batch" ref={ref}>
         <div className="outer">
           <div className="brandSection">
@@ -43,17 +43,16 @@ const BatchPrintOut = ({ batch, auth, onClose }) => {
             <>
               <div className="row">
                 <div className="col-md-8">
-                  {" "}
                   <h4 className="top-header-name">{`NCDF ${
                     batch ? getPaymentType(batch.batch_no) : null
                   } APPROVAL FORM`}</h4>
                 </div>
-              </div>
 
-              <div className="col-md-4">
-                <h5 className="header-topper">{`BATCH NO: ${
-                  batch ? batch.batch_no : null
-                }`}</h5>
+                <div className="col-md-4">
+                  <h5 className="header-topper">{`BATCH NO: ${
+                    batch ? batch.batch_no : null
+                  }`}</h5>
+                </div>
               </div>
             </>
           </div>

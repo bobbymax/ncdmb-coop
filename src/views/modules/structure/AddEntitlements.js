@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { customTheme, filterByRef } from "../../../services/helpers/functions";
+// import { customTheme, filterByRef } from "../../../services/helpers/functions";
 
 const AddEntitlements = (props) => {
   const defaultState = {
@@ -30,24 +30,25 @@ const AddEntitlements = (props) => {
   };
 
   return (
-    <div className="modal">
-      <div
-        className="modal-content"
-        {...props}
-        // size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <div className="modal-dialog">
-          <form onSubmit={handleModalStateChange}>
-            <div className="modal-header">
-              <h5 className="modal-title" id="contained-modal-title-vcenter">
-                Add Entitlements
-              </h5>
-            </div>
+    <>
+      <div className="modal">
+        <div
+          className="modal-content"
+          {...props}
+          // size="lg"
+          // aria-labelledby="contained-modal-title-vcenter"
+          // centered
+        >
+          <div className="modal-dialog">
+            <form onSubmit={handleModalStateChange}>
+              <div className="modal-header">
+                <h5 className="modal-title" id="contained-modal-title-vcenter">
+                  Add Entitlements
+                </h5>
+              </div>
 
-            <div className="modal-body">
-              {/* <Container fluid>
+              <div className="modal-body">
+                {/* <Container fluid>
                 <div className="row" style={{ marginBottom: 20 }}>
                   <Col>
                     <Form.Group>
@@ -112,19 +113,20 @@ const AddEntitlements = (props) => {
                   </Col>
                 </Row>
               </Container> */}
-            </div>
+              </div>
 
-            <div className="modal-footer">
-              <button className="btn btn-success" type="submit">
-                Submit
-              </button>
+              <div className="modal-footer">
+                <button className="btn btn-success" type="submit">
+                  Submit
+                </button>
 
-              <button className="btn btn-danger">Close</button>
-            </div>
-          </form>
+                <button className="btn btn-danger">Close</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,21 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ClaimTable = ({
-  claims,
-  onEdit,
-  onDestroy,
-  onView = () => {},
-  addDetails,
-}) => {
+const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
   return (
     <>
       {claims && (
         <div className="card">
-          {/* <div className="card-header">
-          <h4 className="card-title">{page}</h4>
-           </div> */}
-
           <div className="card-body">
             <div className="table-responsive">
               <table className="table table-bordered table-striped verticle-middle table-responsive-sm">

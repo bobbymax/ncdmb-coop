@@ -8,6 +8,7 @@ import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import useApi from "../../../services/hooks/useApi";
+import Alert from "../../../services/classes/Alert";
 import {
   collection,
   store,
@@ -100,17 +101,22 @@ const Claims = (props) => {
   };
 
   const handlePrintOut = (claim) => {
-    fetch("claims", claim.reference_no)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    // return (
+    //   <Navigate
+    //     to={`/claims/${claim.reference_no}/print`}
+    //     state={{
+    //       claim: claim,
+    //       actionType: "print",
+    //     }}
+    //   />
+    // );
 
-    // navigate({
-    //   pathname: `/claims/${claim.reference_no}/print`,
-    //   state: {
-    //     claim: claim,
-    //     actionType: "print",
-    //   },
-    // });
+    navigate(`/claims/${claim.reference_no}/print`, {
+      state: {
+        claim: claim,
+        actionType: "print",
+      },
+    });
   };
 
   const loadClaim = (data) => {
@@ -145,6 +151,24 @@ const Claims = (props) => {
   // const handleDestroy = data => {
 
   // }
+
+  const deleteClaim = (claim) => {
+    Alert.flash(
+      "Are you sure?",
+      "warning",
+      "You would not be able to revert this!!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        console.log(claim);
+        // destroy("claims", data.id)
+        //   .then((res) => {
+        //     setRoles([...roles.filter((role) => role.id !== res.data.data.id)]);
+        //     Alert.success("Deleted!!", res.data.message);
+        //   })
+        //   .catch((err) => console.log(err.message));
+      }
+    });
+  };
 
   // const handleSearch = (str) => {
   //   setSearchTerm(str);
@@ -239,27 +263,28 @@ const Claims = (props) => {
           claims={claims}
           onView={handlePrintOut}
           onEdit={loadClaim}
+          onDestroy={deleteClaim}
         />
       </div>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({
-  // auth: state.access.staff.authenticatedUser,
-  claims: state.claims,
-});
+// const mapStateToProps = (state) => ({
+//   // auth: state.access.staff.authenticatedUser,
+//   claims: state.claims,
+// });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    index: (entity, broadcast) => dispatch(fetch(entity, broadcast)),
-    store: (entity, body, broadcast) =>
-      dispatch(store(entity, body, broadcast)),
-    update: (entity, id, body, broadcast) =>
-      dispatch(alter(entity, id, body, broadcast)),
-    destroy: (entity, id, broadcast) =>
-      dispatch(destroy(entity, id, broadcast)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     index: (entity, broadcast) => dispatch(fetch(entity, broadcast)),
+//     store: (entity, body, broadcast) =>
+//       dispatch(store(entity, body, broadcast)),
+//     update: (entity, id, body, broadcast) =>
+//       dispatch(alter(entity, id, body, broadcast)),
+//     destroy: (entity, id, broadcast) =>
+//       dispatch(destroy(entity, id, broadcast)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Claims);
+export default Claims;

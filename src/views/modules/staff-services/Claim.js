@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { uselo, useLocation, useMatch, useParams } from "react-router-dom";
 import { fetch } from "../../../services/utils/controllers";
 // import { Col, Row, Table, Button } from "react-bootstrap";
 // import { amountToWords } from "../../../services/helpers/functions";
@@ -12,8 +12,7 @@ import ClaimDetails from "../../../components/commons/widgets/ClaimDetails";
 import { amountToWords } from "../../../services/utils/helpers";
 
 export const Claim = (props) => {
-  const params = useParams();
-  console.log(params.id);
+  const params = useLocation();
 
   const initialState = {
     claim: null,
@@ -37,8 +36,10 @@ export const Claim = (props) => {
   // }
 
   useEffect(() => {
-    if (props.location && props.location.state) {
-      const claim = props.location.state.claim;
+    if (params.pathname && params.state) {
+      const claim = params.state.claim;
+      console.log(claim);
+
       setState({
         ...state,
         claim,
@@ -73,7 +74,7 @@ export const Claim = (props) => {
             </button>
 
             <div className="card mt-5">
-              <table className="bordered striped hover">
+              <table className="table table-bordered table-striped hover">
                 <thead>
                   <tr>
                     <th>DATE</th>

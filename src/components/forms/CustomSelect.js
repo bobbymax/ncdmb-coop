@@ -27,6 +27,8 @@ const CustomSelect = ({
         >
           <option value={defaultInputValue}>{defaultText}</option>
           {options.map((option, index) => {
+            // console.log(option.budgetHead.name);
+
             if (option.key) {
               return (
                 <option key={index} value={option.key}>
@@ -43,9 +45,11 @@ const CustomSelect = ({
               );
             }
 
-            if (option.budget_head_id) {
+            if (option.id) {
+              console.log("Budget head id", option.id);
+
               return (
-                <option key={index} value={option.budget_head_id}>
+                <option key={index} value={option.id}>
                   {option.budgetHead.name}
                 </option>
               );

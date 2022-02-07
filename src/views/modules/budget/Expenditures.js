@@ -4,30 +4,32 @@ import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
 import SubmitButton from "../../../components/forms/SubmitButton";
+import CustomSelect from "../../../components/forms/CustomSelect";
+import TextInputField from "../../../components/forms/TextInputField";
+import Alert from "../../../services/classes/Alert";
 
 const Expenditures = () => {
   const initialState = {
-    available_balance: 0,
-    budget_code: "",
-    beneficiary: "",
-    new_balance: 0,
     claim: null,
-    sub_budget_head_id: 0,
-    claim_id: 0,
+    code: "",
+    title: "",
     beneficiary: "",
-    amount: "",
-    description: "",
-    additional_info: "",
-    status: "cleared",
+    amount: 0,
+    sub_budget_head_id: 0,
+    available_balance: 0,
+    new_balance: 0,
+    budget_code: "",
+    claim_id: 0,
     type: "",
     payment_type: "",
+    status: "cleared",
+    additional_info: "",
+    subBudgetHeads: [],
   };
 
-  const [subBudgetHeads, setSubBudgetHeads] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [data, setData] = useState(initialState);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [disabled, setDisbled] = useState(false);
@@ -35,15 +37,8 @@ const Expenditures = () => {
   const [claimData, setClaimData] = useState({});
 
   const [state, setState] = useState(initialState);
-  // const [update, setUpdate] = useState(false);
-  // const [errors, setErrors] = useState({});
-
-  const columns = [
-    {
-      label: "Name",
-      key: "name",
-    },
-  ];
+  const [update, setUpdate] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (values) => {
     console.log(values);
@@ -53,43 +48,14 @@ const Expenditures = () => {
     //   .catch((err) => console.log("Error", err));
   };
 
-  const handleEdit = (data) => {};
+  const getSubBudgetHeads = async () => {
+    const res = await collection("subBudgetHeads");
 
-  const handleDestroy = (data) => {};
-
-  const handleSearch = (str) => {
-    setSearchTerm(str);
-
-    if (str !== "") {
-      const filtered = subBudgetHeads.filter((row) => {
-        return Object.values(row)
-          .join(" ")
-          .toLowerCase()
-          .includes(str.toLowerCase());
-      });
-
-      setResults(filtered);
-    } else {
-      setResults(subBudgetHeads);
-    }
+    setState({ ...state, subBudgetHeads: res.data.data });
   };
 
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      collection("subBudgetHeads")
-        .then((res) => {
-          setSubBudgetHeads(res.data.data);
-          // console.log(res.data.data);
-          setIsLoading(false);
-        })
-        .catch((err) => console.log(err.message));
-    } catch (error) {
-      console.log(error);
-    }
-
-    getDepartments();
-    updateAmount();
+    getSubBudgetHeads();
   }, []);
 
   // const handleSubmit = (values) => {
@@ -148,12 +114,25 @@ const Expenditures = () => {
   //   // }
   // };
 
-  const getData = (value) => {
-    collection(`subBudgetHeads/${value}`)
-      .then((res) =>
-        setState({ ...state, sub_budget_head_id: res.data.data.id })
-      )
-      .catch((err) => console.log("Error reading data", err));
+  const handleChange = (value) => {
+    if (value.length === 8) {
+      collection(`subBudgetHeads/${value}`);
+      //  .then((res) =>
+      //   //  setState({ ...state, sub_budget_head_id: )
+      //  )
+      //  .catch((err) => console.log("Error reading data", err));
+    }
+  };
+
+  const fetchSubBudgetHead = (value) => {
+    if (value > 0) {
+      collection("subBudgetHeads", value)
+        .then((res) => {
+          console.log(res);
+          // setState({ ...state, sub_budget_head_id: res.data.data.id });
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const updateAmount = () => {
@@ -189,20 +168,20 @@ const Expenditures = () => {
   };
 
   const paymentType = [
-    { key: "third-party", value: "Third Party" },
-    { key: "staff-payment", value: "Staff Payment" },
+    { key: "staff-claim", label: "STAFF CLAIM" },
+    { key: "touring-advance", label: "TOURING ADVANCE" },
+    { key: "other", label: "OTHER" },
+  ];
+
+  const options = [
+    { key: "staff-payment", label: "STAFF PAYMENT" },
+    { key: "third-payment", label: "THIRD PARTY" },
   ];
 
   const getDepartments = async () => {
     const response = await collection("departments");
     setDepartments(response.data.data);
   };
-
-  const type = [
-    { key: "staff-claim", value: "Staff Claim" },
-    { key: "touring-advance", value: "Touring Advance" },
-    { key: "other", value: "Other" },
-  ];
 
   return (
     <div className="row">
@@ -217,159 +196,102 @@ const Expenditures = () => {
           <div className="card">
             <div className="card-body">
               <div className="form-body">
-                <>
-                  <Form
-                    initialValues={state}
-                    // validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                  >
-                    <div className="row">
-                      <div className="col-md-4">
-                        <FormSelect
-                          options={paymentType}
-                          // value={payment_type}
-                          defaultText="Select Payment Type"
-                          onChange={(e) => setPayment_Type(e.target.value)}
-                          name="payment_type"
-                        />
-                      </div>
-
-                      <div className="col-md-4">
-                        <FormSelect
-                          options={type}
-                          disabled={payment_type === "third-party"}
-                          defaultText="Type"
-                          name="type"
-                        />
-                      </div>
-
-                      <div className="col-md-4">
-                        <FormInput
-                          placeholder="Claim ID"
-                          onChange={(e) => onClaimIDChange(e.target.value)}
-                          type="text"
-                          name="claim_id"
-                          readOnly={payment_type === "third-party"}
-                        />
-                      </div>
-
-                      <div className="col-md-12">
-                        <FormSelect
-                          defaultText="Sub Budget Head"
-                          options={departments}
-                          onChange={(e) => {
-                            getData(e.target.value);
-                          }}
-                          name="sub_budget_head_id"
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="BUDGET CODE"
-                          value={state.budget}
-                          readOnly={payment_type === "staff-payment"}
-                          name="budgetCode"
-                          disabled={disabled}
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="0"
-                          value={data.approved_amount}
-                          readOnly={payment_type === "staff-payment"}
-                          disabled={disabled}
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="AMOUNT"
-                          onChange={(e) => updateAmount(e.target.value)}
-                          value={state.claim}
-                          readOnly={
-                            payment_type === "staff-payment" ? true : false
-                          }
-                          name="amount"
-                          // type="number
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="0"
-                          readOnly={payment_type === "staff-payment"}
-                          disabled={disabled}
-                        />
-                      </div>
-
-                      <div className="col-md-12">
-                        <FormInput
-                          placeholder="Beneficiary"
-                          readOnly={payment_type === "staff-payment"}
-                          name="beneficiary"
-                          disabled={disabled}
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="Description"
-                          type="text"
-                          readOnly={payment_type === "staff-payment"}
-                          name="description"
-                          multiline
-                        />
-                      </div>
-
-                      <div className="col-md-6">
-                        <FormInput
-                          placeholder="Additional  Info"
-                          type="text"
-                          name="additional_info"
-                          multiline
-                        />
-                      </div>
-
-                      <>
-                        <div className="mt-3 ml-3 d-flex">
-                          <SubmitButton
-                            className="btn btn-primary"
-                            title="Submit"
-                          />
-
-                          <button
-                            type="button"
-                            className="btn btn-danger btn-block"
-                            // onClick={() => {
-                            //   // setUpdate(false);
-                            //   // setState(initialState);
-                            //   // setOpen(false);
-                            //   // setErrors({});
-                            // }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </>
-                    </div>
-                  </Form>
-
-                  {/* <div className="row">
+                <form onSubmit={handleSubmit}>
+                  <div className="row">
                     <div className="col-md-4">
-                      <TextInputField
-                        placeholder="Enter Role Name"
-                        value={state.name}
+                      <CustomSelect
+                        options={options}
+                        defaultInputValue="SELECT PAYMENT TYPE"
+                        placeholder="STAFF PAYMENT"
+                        type="text"
+                        value={state.payment_type}
                         onChange={(e) =>
-                          setState({ ...state, name: e.target.value })
+                          setState({ ...state, payment_type: e.target.value })
                         }
-                        error={errors && errors.name && errors.name.length > 0}
-                        errorMessage={errors && errors.name && errors.name[0]}
+                        error={
+                          errors &&
+                          errors.payment_type &&
+                          errors.payment_type.length > 0
+                        }
+                        errorMessage={
+                          errors &&
+                          errors.payment_type &&
+                          errors.payment_type[0]
+                        }
                       />
                     </div>
 
                     <div className="col-md-4">
+                      <CustomSelect
+                        options={paymentType}
+                        placeholder="STAFF PAYMENT TYPE"
+                        value={state.type}
+                        onChange={(e) =>
+                          setState({ ...state, type: e.target.value })
+                        }
+                        error={errors && errors.type && errors.type.length > 0}
+                        errorMessage={errors && errors.type && errors.type[0]}
+                        disabled={state.payment_type === "third-party"}
+                      />
+                    </div>
+
+                    <div className="col-md-4">
+                      <TextInputField
+                        placeholder="CLAIM ID"
+                        type="number"
+                        value={state.claim_id}
+                        onChange={(e) =>
+                          setState({ ...state, claim_id: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.claim_id &&
+                          errors.claim_id.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.claim_id && errors.claim_id[0]
+                        }
+                      />
+                    </div>
+
+                    <div className="col-md-12">
+                      <CustomSelect
+                        defaultText="SELECT SUB BUDGET HEAD"
+                        options={state.subBudgetHeads}
+                        value={state.sub_budget_head_id}
+                        onChange={(e) => {
+                          setState({ ...state, isSuper: e.target.value });
+                          fetchSubBudgetHead(e.target.value);
+                        }}
+                        error={
+                          errors && errors.isSuper && errors.isSuper.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.isSuper && errors.isSuper[0]
+                        }
+                      />
+                    </div>
+
+                    <div className="col-md-6">
+                      <TextInputField
+                        placeholder="BUDGET CODE"
+                        type="text"
+                        value={state.budget_code}
+                        onChange={(e) =>
+                          setState({ ...state, budget_code: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.budget_code &&
+                          errors.budget_code.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.budget_code && errors.budget_code[0]
+                        }
+                      />
+                    </div>
+
+                    <div className="col-md-6">
                       <TextInputField
                         placeholder="Enter Max Slot"
                         type="number"
@@ -387,23 +309,45 @@ const Expenditures = () => {
                         }
                       />
                     </div>
-                    <div className="col-md-4">
-                      <CustomSelect
-                        defaultText="Is Role Admin?"
-                        options={options}
-                        value={state.isSuper}
+                    <div className="col-md-6">
+                      <TextInputField
+                        placeholder="Enter Max Slot"
+                        type="number"
+                        value={state.max_slots}
                         onChange={(e) =>
-                          setState({ ...state, isSuper: e.target.value })
+                          setState({ ...state, max_slots: e.target.value })
                         }
                         error={
-                          errors && errors.isSuper && errors.isSuper.length > 0
+                          errors &&
+                          errors.max_slots &&
+                          errors.max_slots.length > 0
                         }
                         errorMessage={
-                          errors && errors.isSuper && errors.isSuper[0]
+                          errors && errors.max_slots && errors.max_slots[0]
                         }
                       />
                     </div>
-                    <div className="col-md-4">
+
+                    <div className="col-md-6">
+                      <TextInputField
+                        placeholder="Enter Max Slot"
+                        type="number"
+                        value={state.max_slots}
+                        onChange={(e) =>
+                          setState({ ...state, max_slots: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.max_slots &&
+                          errors.max_slots.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.max_slots && errors.max_slots[0]
+                        }
+                      />
+                    </div>
+
+                    <div className="col-md-6">
                       <TextInputField
                         placeholder="Start Date"
                         type="date"
@@ -422,7 +366,7 @@ const Expenditures = () => {
                       />
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <TextInputField
                         placeholder="Expiry Date"
                         type="date"
@@ -433,7 +377,7 @@ const Expenditures = () => {
                       />
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-127">
                       <CustomSelect
                         defaultText="Cannot Expire?"
                         options={options}
@@ -474,25 +418,13 @@ const Expenditures = () => {
                         Close
                       </button>
                     </div>
-                  </div> */}
-                </>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </>
-      {/* <div className="col-lg-12">
-        <DataTableComponent
-          pageName="Expenditure"
-          columns={columns}
-          rows={searchTerm.length < 1 ? subBudgetHeads : results}
-          handleEdit={handleEdit}
-          handleDelete={handleDestroy}
-          term={searchTerm}
-          searchKeyWord={handleSearch}
-          isFetching={isLoading}
-        />
-      </div> */}
     </div>
   );
 };

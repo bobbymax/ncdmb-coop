@@ -42,6 +42,14 @@ const CustomSelect = ({
                 </option>
               );
             }
+
+            if (option.sub_budget_head_id) {
+              return (
+                <option key={index} value={option.sub_budget_head_id}>
+                  {option.subBudgetHead.name}
+                </option>
+              );
+            }
           })}
         </select>
         {errorMessage ? (

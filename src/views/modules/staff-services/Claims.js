@@ -101,16 +101,6 @@ const Claims = (props) => {
   };
 
   const handlePrintOut = (claim) => {
-    // return (
-    //   <Navigate
-    //     to={`/claims/${claim.reference_no}/print`}
-    //     state={{
-    //       claim: claim,
-    //       actionType: "print",
-    //     }}
-    //   />
-    // );
-
     navigate(`/claims/${claim.reference_no}/print`, {
       state: {
         claim: claim,
@@ -132,15 +122,14 @@ const Claims = (props) => {
     setOpen(true);
   };
 
-  // const handleAddDetails = (claim) => {
-  //   props.history.push({
-  //     pathname: `/claims/${claim.reference_no}/add/details`,
-  //     state: {
-  //       claim: claim,
-  //       actionType: "update",
-  //     },
-  //   });
-  // };
+  const handleAddDetails = (claim) => {
+    navigate(`/claims/${claim.reference_no}/add/details`, {
+      state: {
+        claim: claim,
+        actionType: "update",
+      },
+    });
+  };
 
   // console.log(claims);
 
@@ -263,6 +252,7 @@ const Claims = (props) => {
           claims={claims}
           onView={handlePrintOut}
           onEdit={loadClaim}
+          addDetails={handleAddDetails}
           onDestroy={deleteClaim}
         />
       </div>

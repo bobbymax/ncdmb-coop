@@ -23,6 +23,7 @@ import Wages from "./views/modules/structure/Wages";
 import Benefits from "./views/modules/structure/Benefits";
 // import { Instructions } from "./views/modules/staff-services/Instructions";
 import Claim from "./views/modules/staff-services/Claim";
+import Instructions from "./views/modules/staff-services/Instructions";
 
 const App = () => {
   return (
@@ -154,6 +155,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Claim />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/claims/:id/add/details"
+          element={
+            <ProtectedRoute>
+              <Instructions />
             </ProtectedRoute>
           }
         />

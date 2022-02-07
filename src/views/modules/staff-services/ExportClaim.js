@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { FiPrinter, FiX } from "react-icons/fi";
 import Pdf from "react-to-pdf";
-import logo from "../../../assets/images/claim_logo.png";
-import { formatDate, amountToWords } from "../../../services/helpers/functions";
+import logo from "../../../assets/images/batch_logo.png";
+import { formatDate, amountToWords } from "../../../services/utils/helpers";
 import "./Claim.css";
 
 const ref = React.createRef();
+
 const options = {
   orientation: "potrait",
   unit: "in",
@@ -75,19 +75,20 @@ const ExportClaim = ({ claim, auth, onClose }) => {
       <Pdf targetRef={ref} filename="claim.pdf" options={options}>
         {({ toPdf }) => (
           <button className="btn btn-success mb-4" onClick={toPdf}>
-            <FiPrinter style={{ marginRight: 12 }} />
-            Print
+            <i className="fa fa-print"></i> Print
           </button>
         )}
       </Pdf>
+
       <button
         className="btn btn-danger mb-4"
         style={{ marginLeft: 4 }}
         onClick={() => onClose()}
       >
-        <FiX style={{ marginRight: 5 }} />
+        {/* <FiX style={{ marginRight: 5 }} /> */}
         Close
       </button>
+
       <div className="claim" ref={ref} style={styles.container}>
         <div className="claimBackground" style={styles.outter}>
           <div style={styles.topSection}>

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
-import BenefitsWidget from "../../../components/commons/widgets/BenefitsWidget";
+// import BenefitsWidget from "../../../components/commons/widgets/BenefitsWidget";
+import BenefitsWidget from "./BenefitsWidget";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
@@ -173,7 +174,7 @@ const Benefits = () => {
         </div>
       </div>
 
-      <AddEntitlements show={modalShow.visibility} />
+      {/* <AddEntitlements show={modalShow.visibility} /> */}
 
       {open && (
         <>

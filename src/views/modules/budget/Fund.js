@@ -154,6 +154,14 @@ const Fund = () => {
     setOpen(false);
   };
 
+  const fetchSubBudgetHead = (id) => {
+    if (id > 0) {
+      fetch("subBudgetHeads", id)
+        .then((res) => console.log(res))
+        .catch((err) => console.log("Error getting the subdget heads", err));
+    }
+  };
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -186,6 +194,8 @@ const Fund = () => {
                                 ...state,
                                 sub_budget_id: e.target.value,
                               });
+                              console.log(e.target.value);
+                              fetchSubBudgetHead(e.target.value);
                             }}
                             // placeholder="Enter Role Name"
                           />
@@ -223,7 +233,13 @@ const Fund = () => {
                         <div className="col-md-6">
                           <TextInputField
                             placeholder="New Amount"
-                            value={state.available_balance}
+                            value={state.new_amount}
+                            onChange={(e) => {
+                              setState({
+                                ...state,
+                                new_balance: e.target.value,
+                              });
+                            }}
                             type="text"
                             name="new_amount"
                             disabled
@@ -233,6 +249,13 @@ const Fund = () => {
                         <div className="col-md-12">
                           <TextInputField
                             placeholder="Description"
+                            value={state.description}
+                            onChange={(e) => {
+                              setState({
+                                ...state,
+                                description: e.target.value,
+                              });
+                            }}
                             type="text"
                             name="description"
                             multiline={true}

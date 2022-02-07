@@ -11,6 +11,7 @@ const TextInputField = ({
   error = false,
   errorMessage = null,
   additionalClasses = "",
+  ...otherProps
 }) => {
   // const { errors, touched, values, setFieldValue, setFieldTouched } =
   //   useFormikContext();
@@ -31,6 +32,7 @@ const TextInputField = ({
           value={value}
           onChange={onChange}
           required={required}
+          {...otherProps}
         />
       ) : (
         <textarea
@@ -40,6 +42,7 @@ const TextInputField = ({
           onChange={onChange}
           placeholder={placeholder}
           value={value}
+          {...otherProps}
         ></textarea>
       )}
       {errorMessage ? (

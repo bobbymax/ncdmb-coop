@@ -18,7 +18,7 @@ const Fund = () => {
     id: 0,
     sub_budget_id: 0,
     approved_amount: 0,
-    available_balance: 0,
+    amount: 0,
     new_balance: 0,
     description: "",
     subBudgetHeads: [],
@@ -47,48 +47,35 @@ const Fund = () => {
   }, []);
 
   useEffect(() => {
-    fetch("creditBudgetHeads");
-    // getCreditBudgetHeads();
-
-    if (state.available_balance > 0 && state.approved_amount > 0) {
+    if (state.amount > 0 && state.approved_amount > 0) {
       const value =
-        parseFloat(state.available_balance) - parseFloat(state.approved_amount);
+        parseFloat(state.approved_amount) - parseFloat(state.amount);
 
       setState({
         ...state,
         new_balance: value,
       });
     }
-  }, [state.available_balance, state.approved_amount]);
+  }, [state.amount, state.approved_amount]);
 
   const columns = [
     {
-      label: "Sub Budget Head",
-      key: "name",
+      label: "Budget Code",
+      key: "budgetCode",
     },
     {
-      label: "Amount",
+      label: "Sub Budget Head",
+      key: "sub_budget_head_name",
+    },
+    {
+      label: "Department",
+      key: "department",
+    },
+    {
+      label: "Approved Amount",
       key: "approved_amount",
     },
   ];
-
-  // const getCreditBudgetHeads = () => {
-  //   fetch("subBudgetHeads")
-  //     // .then((res) => console.log("Response", res))
-  //     .then((res) => setCreditBudgetHead(res.data.data))
-  //     .catch((err) => console.log("Error", err));
-  // };
-
-  const getSubBudgetHeadValue = (id) => {
-    collection(`subBudgetHeads/${id}`)
-      .then((res) => {
-        const result = res.data.data;
-        setState({ ...state, result });
-
-        // setBudget([...creditBudgetHeads], res);
-      })
-      .catch((err) => console.log(err));
-  };
 
   const handleEdit = (data) => {
     setState(data);
@@ -163,7 +150,9 @@ const Fund = () => {
   const fetchSubBudgetHead = (id) => {
     if (id > 0) {
       collection(`subBudgetHeads/${id}`)
-        .then((res) => console.log(res))
+        .then((res) =>
+          setState({ ...state, approved_amount: res.data.data.approved_amount })
+        )
         .catch((err) => console.log("Error getting the subdget heads", err));
     }
   };
@@ -193,31 +182,15 @@ const Fund = () => {
                       <div className="row">
                         <div className="col-md-6">
                           <CustomSelect
-                            options={creditBudgetHeads}
+                            options={funds}
                             value={state.sub_budget_id}
                             onChange={(e) => {
                               setState({
                                 ...state,
                                 sub_budget_id: e.target.value,
                               });
-                              console.log(e.target.value);
                               fetchSubBudgetHead(e.target.value);
                             }}
-                            // placeholder="Enter Role Name"
-                          />
-                        </div>
-
-                        <div className="col-md-6">
-                          <TextInputField
-                            type="number"
-                            placeholder="ENTER AMOUNT"
-                            value={state.approved_amount}
-                            onChange={(e) =>
-                              setState({
-                                ...state,
-                                approved_amount: e.target.value,
-                              })
-                            }
                           />
                         </div>
 
@@ -225,21 +198,35 @@ const Fund = () => {
                           <TextInputField
                             type="text"
                             placeholder="AVAILABLE BALANCE"
-                            value={state.available_balance}
+                            value={state.approved_amount}
                             onChange={(e) =>
                               setState({
                                 ...state,
-                                available_balance: e.target.value,
+                                approved_amount: e.target.value,
                               })
                             }
-                            disabled
+                            readOnly
+                          />
+                        </div>
+
+                        <div className="col-md-6">
+                          <TextInputField
+                            type="number"
+                            placeholder="ENTER AMOUNT"
+                            value={state.amount}
+                            onChange={(e) => {
+                              setState({
+                                ...state,
+                                amount: e.target.value,
+                              });
+                            }}
                           />
                         </div>
 
                         <div className="col-md-6">
                           <TextInputField
                             placeholder="New Amount"
-                            value={state.new_amount}
+                            value={state.new_balance}
                             onChange={(e) => {
                               setState({
                                 ...state,
@@ -269,129 +256,6 @@ const Fund = () => {
                         </div>
                       </div>
                     </form>
-                    {/* <div className="row">
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Enter Role Name"
-                          value={state.name}
-                          onChange={(e) =>
-                            setState({ ...state, name: e.target.value })
-                          }
-                          error={
-                            errors && errors.name && errors.name.length > 0
-                          }
-                          errorMessage={errors && errors.name && errors.name[0]}
-                        />
-                      </div>
-
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Enter Max Slot"
-                          type="number"
-                          value={state.max_slots}
-                          onChange={(e) =>
-                            setState({ ...state, max_slots: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.max_slots &&
-                            errors.max_slots.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.max_slots && errors.max_slots[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <CustomSelect
-                          defaultText="Is Role Admin?"
-                          options={options}
-                          value={state.isSuper}
-                          onChange={(e) =>
-                            setState({ ...state, isSuper: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.isSuper &&
-                            errors.isSuper.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.isSuper && errors.isSuper[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Start Date"
-                          type="date"
-                          value={state.start_date}
-                          onChange={(e) =>
-                            setState({ ...state, start_date: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.start_date &&
-                            errors.start_date.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.start_date && errors.start_date[0]
-                          }
-                        />
-                      </div>
-
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Expiry Date"
-                          type="date"
-                          value={state.expiry_date}
-                          onChange={(e) =>
-                            setState({ ...state, expiry_date: e.target.value })
-                          }
-                        />
-                      </div>
-
-                      <div className="col-md-4">
-                        <CustomSelect
-                          defaultText="Cannot Expire?"
-                          options={options}
-                          value={state.cannot_expire}
-                          onChange={(e) =>
-                            setState({
-                              ...state,
-                              cannot_expire: e.target.value,
-                            })
-                          }
-                          error={
-                            errors &&
-                            errors.cannot_expire &&
-                            errors.cannot_expire.length > 0
-                          }
-                          errorMessage={
-                            errors &&
-                            errors.cannot_expire &&
-                            errors.cannot_expire[0]
-                          }
-                        />
-                      </div>
-
-                      <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setUpdate(false);
-                            setState(initialState);
-                            setOpen(false);
-                            setErrors({});
-                          }}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </div> */}
                   </>
                 </div>
               </div>
@@ -405,7 +269,7 @@ const Fund = () => {
           pageName="Credit Sub Budget Head"
           columns={columns}
           rows={searchTerm.length < 1 ? funds : results}
-          handleEdit={handleEdit}
+          // handleEdit={handleEdit}
           handleDelete={handleDestroy}
           term={searchTerm}
           searchKeyWord={handleSearch}

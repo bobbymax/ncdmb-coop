@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
+import TextInputField from "../../../components/forms/TextInputField";
 import FormSelect from "../../../components/forms/FormSelect";
 import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+import CustomSelect from "../../../components/forms/CustomSelect";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import { store, alter } from "../../../services/utils/controllers";
 import Alert from "../../../services/classes/Alert";
@@ -174,46 +175,55 @@ const Fund = () => {
               <div className="card-body">
                 <div className="form-body">
                   <>
-                    <Form
-                      initialValues={{
-                        sub_budget_head_id: state.sub_budget_head_id,
-                        approved_amount: state.approved_amount,
-                        description: state.description,
-                      }}
-                      onSubmit={handleSubmit}
-                    >
+                    <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-md-6">
-                          <FormSelect
+                          <CustomSelect
                             options={creditBudgetHeads}
-                            onChange={(e) =>
-                              getSubBudgetHeadValue(e.target.value)
-                            }
+                            value={state.sub_budget_id}
+                            onChange={(e) => {
+                              setState({
+                                ...state,
+                                sub_budget_id: e.target.value,
+                              });
+                            }}
                             // placeholder="Enter Role Name"
-                            name="sub_budget_head_id"
                           />
                         </div>
 
                         <div className="col-md-6">
-                          <FormInput
-                            placeholder="Approved amount"
-                            // value={state.approved_amount}
+                          <TextInputField
+                            type="number"
+                            placeholder="ENTER AMOUNT"
+                            value={state.approved_amount}
+                            onChange={(e) =>
+                              setState({
+                                ...state,
+                                approved_amount: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        <div className="col-md-6">
+                          <TextInputField
                             type="text"
-                            name="approved_amount"
-                          />
-                        </div>
-
-                        <div className="col-md-6">
-                          <FormInput
-                            placeholder="Current Balance"
-                            name="new_value"
+                            placeholder="AVAILABLE BALANCE"
+                            value={state.available_balance}
+                            onChange={(e) =>
+                              setState({
+                                ...state,
+                                available_balance: e.target.value,
+                              })
+                            }
                             disabled
                           />
                         </div>
 
                         <div className="col-md-6">
-                          <FormInput
+                          <TextInputField
                             placeholder="New Amount"
+                            value={state.available_balance}
                             type="text"
                             name="new_amount"
                             disabled
@@ -221,40 +231,15 @@ const Fund = () => {
                         </div>
 
                         <div className="col-md-12">
-                          <FormInput
+                          <TextInputField
                             placeholder="Description"
                             type="text"
                             name="description"
                             multiline={true}
                           />
                         </div>
-
-                        <div className="mt-3 d-flex ml-3">
-                          <SubmitButton
-                            className="btn btn-primary"
-                            title="Submit"
-                          />
-
-                          {/* <button type="submit" className="btn btn-primary">
-                            Submit
-                          </button> */}
-
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              // setUpdate(false);
-                              // setState(initialState);
-                              setOpen(false);
-                              // setErrors({});
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
                       </div>
-                    </Form>
-
+                    </form>
                     {/* <div className="row">
                       <div className="col-md-4">
                         <TextInputField

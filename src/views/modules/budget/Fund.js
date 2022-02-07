@@ -19,6 +19,7 @@ const Fund = () => {
     sub_budget_id: 0,
     approved_amount: 0,
     available_balance: 0,
+    new_balance: 0,
     description: "",
     subBudgetHeads: [],
     name: "",
@@ -42,7 +43,12 @@ const Fund = () => {
 
   useEffect(() => {
     fetch("creditBudgetHeads");
-    getCreditBudgetHeads();
+    // getCreditBudgetHeads();
+  }, []);
+
+  useEffect(() => {
+    fetch("creditBudgetHeads");
+    // getCreditBudgetHeads();
 
     if (state.available_balance > 0 && state.approved_amount > 0) {
       const value =
@@ -66,12 +72,12 @@ const Fund = () => {
     },
   ];
 
-  const getCreditBudgetHeads = () => {
-    fetch("subBudgetHeads")
-      // .then((res) => console.log("Response", res))
-      .then((res) => setCreditBudgetHead(res.data.data))
-      .catch((err) => console.log("Error", err));
-  };
+  // const getCreditBudgetHeads = () => {
+  //   fetch("subBudgetHeads")
+  //     // .then((res) => console.log("Response", res))
+  //     .then((res) => setCreditBudgetHead(res.data.data))
+  //     .catch((err) => console.log("Error", err));
+  // };
 
   const getSubBudgetHeadValue = (id) => {
     collection(`subBudgetHeads/${id}`)
@@ -156,7 +162,7 @@ const Fund = () => {
 
   const fetchSubBudgetHead = (id) => {
     if (id > 0) {
-      fetch("subBudgetHeads", id)
+      collection(`subBudgetHeads/${id}`)
         .then((res) => console.log(res))
         .catch((err) => console.log("Error getting the subdget heads", err));
     }

@@ -4,10 +4,10 @@ import BasicTable from "../../../components/commons/tables/BasicTable";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import SubmitButton from "../../../components/forms/SubmitButton";
-// import CustomSelect from "../../../components/forms/CustomSelect";
-// import TextInputField from "../../../components/forms/TextInputField";
+import CustomSelect from "../../../components/forms/CustomSelect";
+import TextInputField from "../../../components/forms/TextInputField";
+import { validate } from "../../../services/utils/validation";
 import Alert from "../../../services/classes/Alert";
-import * as Yup from "yup";
 import {
   collection,
   alter,
@@ -15,11 +15,6 @@ import {
   destroy,
 } from "../../../services/utils/controllers";
 import useApi from "../../../services/hooks/useApi";
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label("Grade Level Name"),
-  code: Yup.string().required().label("Grade Level Code"),
-});
 
 const GradeLevels = () => {
   const {
@@ -38,10 +33,15 @@ const GradeLevels = () => {
     code: "",
   };
 
+  const rules = [
+    { name: "name", rules: ["required", "string"] },
+    { name: "code", rules: ["required", "string"] },
+  ];
+
   const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
-  // const [status, setStatus] = useState(false)
+  const [errors, setErrors] = useState({});
 
   const columns = [
     {
@@ -61,48 +61,62 @@ const GradeLevels = () => {
     setOpen(true);
   };
 
-  const handleSubmit = (data, { resetForm }) => {
-    if (update) {
-      try {
-        alter("gradeLevels", state.id, data)
-          .then((res) => {
-            const result = res.data.data;
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-            setGradeLevels(
-              gradeLevels.map((el) => {
-                if (result.id === el.id) {
-                  return result;
-                }
+    const data = {
+      name: state.name,
+      code: state.code,
+    };
 
-                return el;
-              })
-            );
-            Alert.success("Updated", res.data.message);
-          })
-          .catch((err) => console.log(err.message));
-      } catch (error) {
-        console.log(error);
+    const formErrors = validate(rules, data);
+    setErrors(formErrors);
+
+    const status =
+      Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+
+    if (status) {
+      if (update) {
+        try {
+          alter("gradeLevels", state.id, data)
+            .then((res) => {
+              const result = res.data.data;
+
+              setGradeLevels(
+                gradeLevels.map((el) => {
+                  if (result.id === el.id) {
+                    return result;
+                  }
+
+                  return el;
+                })
+              );
+              Alert.success("Updated", res.data.message);
+            })
+            .catch((err) => console.log(err.message));
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          store("gradeLevels", data)
+            .then((res) => {
+              const result = res.data.data;
+              setGradeLevels([result, ...gradeLevels]);
+              Alert.success("Created!!", res.data.message);
+            })
+            .catch((err) => console.log(err.message));
+        } catch (error) {
+          console.log(error);
+        }
       }
-    } else {
-      try {
-        store("gradeLevels", data)
-          .then((res) => {
-            const result = res.data.data;
 
-            setGradeLevels([result, ...gradeLevels]);
-            Alert.success("Created!!", res.data.message);
-          })
-          .catch((err) => console.log(err.message));
-      } catch (error) {
-        console.log(error);
-      }
+      setErrors({});
+
+      setUpdate(false);
+      setState(initialState);
+      // setOpen(false);
     }
-
-    setUpdate(false);
-    setState(initialState);
-    setOpen(false);
-
-    // resetForm();
   };
 
   const handleDestroy = (data) => {
@@ -144,49 +158,58 @@ const GradeLevels = () => {
             <div className="card">
               <div className="card-body">
                 <div className="form-body">
-                  <form onSubmit={(values) => console.log(values)}>
-                    <Form
-                      initialValues={{
-                        code: state.code,
-                        name: state.name,
-                      }}
-                      onSubmit={handleSubmit}
-                    >
-                      <div className="row">
-                        <div className="col-md-6">
-                          <FormInput
-                            name="name"
-                            placeholder="Grade Level Name"
-                          />
-                        </div>
-
-                        <div className="col-md-6">
-                          <FormInput
-                            name="code"
-                            placeholder="Grade Level Code"
-                          />
-                        </div>
-
-                        <div className="col-md-12 mt-3 d-flex">
-                          <SubmitButton title="Submit" />
-                          {/* <button type="submit" className="btn btn-primary">
-                            Submit
-                          </button> */}
-
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              setUpdate(false);
-                              setState(initialState);
-                              setOpen(false);
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
+                  <form onSubmit={handleSubmit}>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <TextInputField
+                          value={state.name}
+                          type="text"
+                          onChange={(e) =>
+                            setState({ ...state, name: e.target.value })
+                          }
+                          name="name"
+                          placeholder="Grade Level Name"
+                          error={
+                            errors && errors.name && errors.name.length > 0
+                          }
+                          errorMessage={errors && errors.name && errors.name[0]}
+                        />
                       </div>
-                    </Form>
+
+                      <div className="col-md-6">
+                        <TextInputField
+                          value={state.code}
+                          type="text"
+                          onChange={(e) =>
+                            setState({ ...state, code: e.target.value })
+                          }
+                          name="code"
+                          placeholder="Grade Level Code"
+                          error={
+                            errors && errors.code && errors.code.length > 0
+                          }
+                          errorMessage={errors && errors.code && errors.code[0]}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12 mt-3 d-flex">
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          setUpdate(false);
+                          setState(initialState);
+                          setOpen(false);
+                        }}
+                      >
+                        Close
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>

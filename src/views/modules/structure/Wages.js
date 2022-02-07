@@ -46,7 +46,7 @@ const Wages = () => {
   };
 
   const rules = [
-    { name: "benefit_id", rules: ["required", "string"] },
+    { name: "benefit_id", rules: ["required", "integar"] },
     { name: "amount", rules: ["required", "integar"] },
   ];
 
@@ -110,7 +110,7 @@ const Wages = () => {
 
       setUpdate(false);
       setState(initialState);
-      setOpen(false);
+      // setOpen(false);
     }
   };
 

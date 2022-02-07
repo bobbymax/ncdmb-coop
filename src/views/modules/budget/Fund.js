@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
-import { collection } from "../../../services/utils/controllers";
+import { collection, destroy } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
 import TextInputField from "../../../components/forms/TextInputField";
@@ -16,22 +16,20 @@ import Alert from "../../../services/classes/Alert";
 const Fund = () => {
   const initialState = {
     id: 0,
-    sub_budget_id: 0,
+    sub_budget_head_id: 0,
     approved_amount: 0,
     amount: 0,
     new_balance: 0,
     description: "",
-    subBudgetHeads: [],
-    name: "",
-    previousAmount: 0,
   };
 
   const [searchTerm, setSearchTerm] = useState("");
   const [state, setState] = useState(initialState);
   const [results, setResults] = useState([]);
+  const [subBudgetHeads, setBudgetHeads] = useState([]);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
-  const [creditBudgetHeads, setCreditBudgetHead] = useState([]);
+
   // const [budget, setBudget] = useState({});
 
   const {
@@ -40,23 +38,6 @@ const Fund = () => {
     loading: isLoading,
     setData: setFunds,
   } = useApi(collection);
-
-  useEffect(() => {
-    fetch("creditBudgetHeads");
-    // getCreditBudgetHeads();
-  }, []);
-
-  useEffect(() => {
-    if (state.amount > 0 && state.approved_amount > 0) {
-      const value =
-        parseFloat(state.approved_amount) - parseFloat(state.amount);
-
-      setState({
-        ...state,
-        new_balance: value,
-      });
-    }
-  }, [state.amount, state.approved_amount]);
 
   const columns = [
     {
@@ -83,14 +64,29 @@ const Fund = () => {
     setOpen(true);
   };
 
-  const handleDestroy = (data) => {};
+  const handleDestroy = (data) => {
+    Alert.flash(
+      "Are you sure?",
+      "warning",
+      "You would not be able to revert this!!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        destroy("creditBudgetHeads", data.id)
+          .then((res) => {
+            setFunds([...funds.filter((role) => role.id !== res.data.data.id)]);
+            Alert.success("Deleted!!", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      }
+    });
+  };
 
   const handleSearch = (str) => {
     setSearchTerm(str);
 
     if (str !== "") {
       const filtered = funds.filter((row) => {
-        return Object.values(row)
+        return Object.data(row)
           .join(" ")
           .toLowerCase()
           .includes(str.toLowerCase());
@@ -102,60 +98,80 @@ const Fund = () => {
     }
   };
 
-  const handleSubmit = (values, { resetForm }) => {
-    // store("creditBudgetHeads", values)
-    //   .then((res) => console.log("Succcess", res))
-    //   .catch((err) => console.log(err));
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    // console.log(values);
-    if (update) {
-      try {
-        alter("creditBudgetHeads", state.id, values)
-          .then((res) => {
-            const result = res.data.data;
+  //   const data = {
+  //     sub_budget_head_id: state.sub_budget_head_id,
+  //     approved_amount: state.amount,
+  //     description: state.description,
+  //   };
 
-            setFunds(
-              funds.map((el) => {
-                if (result.id === el.id) {
-                  return result;
-                }
+  //   if (update) {
+  //     try {
+  //       alter("creditBudgetHeads", state.id, data)
+  //         .then((res) => {
+  //           const result = res.data.data;
 
-                return el;
-              })
-            );
+  //           setFunds(
+  //             funds.map((el) => {
+  //               if (result.id === el.id) {
+  //                 return result;
+  //               }
 
-            Alert.success("Updated", res.data.message);
-          })
-          .catch((err) => console.log(err.message));
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      store("creditBudgetHeads", values)
-        .then((res) => {
-          const result = res.data.data;
+  //               return el;
+  //             })
+  //           );
 
-          setFunds([result, ...funds]);
-          Alert.success("Created!!", res.data.message);
-        })
-        .catch((err) => console.log(err));
-    }
+  //           Alert.success("Updated", res.data.message);
+  //         })
+  //         .catch((err) => console.log(err.message));
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     store("creditBudgetHeads", data)
+  //       .then((res) => {
+  //         const result = res.data.data;
 
-    setUpdate(false);
-    setState(initialState);
-    resetForm();
-    setOpen(false);
-  };
+  //         setFunds([result, ...funds]);
+  //         Alert.success("Created!!", res.data.message);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+
+  //   setUpdate(false);
+  //   setState(initialState);
+  //   // resetForm();
+  //   setOpen(false);
+  // };
 
   const fetchSubBudgetHead = (id) => {
-    if (id > 0) {
+    if (id !== 0) {
       collection(`subBudgetHeads/${id}`)
         .then((res) =>
           setState({ ...state, approved_amount: res.data.data.approved_amount })
         )
         .catch((err) => console.log("Error getting the subdget heads", err));
+    } else {
+      return;
     }
   };
+
+  const getSubBudgetHeads = () => {
+    collection("subBudgetHeads")
+      .then((res) => {
+        const result = res.data.data;
+
+        setBudgetHeads(result);
+      })
+      .catch((err) => console.log("Error getting the sub budget heads", err));
+  };
+
+  useMemo(() => {
+    fetch("creditBudgetHeads");
+    getSubBudgetHeads();
+  }, []);
 
   return (
     <div className="row">
@@ -178,16 +194,16 @@ const Fund = () => {
               <div className="card-body">
                 <div className="form-body">
                   <>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                       <div className="row">
                         <div className="col-md-6">
                           <CustomSelect
-                            options={funds}
-                            value={state.sub_budget_id}
+                            options={subBudgetHeads}
+                            value={state.sub_budget_head_id}
                             onChange={(e) => {
                               setState({
                                 ...state,
-                                sub_budget_id: e.target.value,
+                                sub_budget_head_id: e.target.value,
                               });
                               fetchSubBudgetHead(e.target.value);
                             }}
@@ -219,6 +235,7 @@ const Fund = () => {
                                 ...state,
                                 amount: e.target.value,
                               });
+                              // handleChange(e.target.value);
                             }}
                           />
                         </div>
@@ -254,6 +271,25 @@ const Fund = () => {
                             multiline={true}
                           />
                         </div>
+
+                        <div className="col-md-12 mt-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => {
+                              // setUpdate(false);
+                              setState(initialState);
+                              setOpen(false);
+                              // setErrors({});
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
                     </form>
                   </>
@@ -269,7 +305,7 @@ const Fund = () => {
           pageName="Credit Sub Budget Head"
           columns={columns}
           rows={searchTerm.length < 1 ? funds : results}
-          // handleEdit={handleEdit}
+          handleEdit={handleEdit}
           handleDelete={handleDestroy}
           term={searchTerm}
           searchKeyWord={handleSearch}

@@ -43,10 +43,10 @@ const CustomSelect = ({
               );
             }
 
-            if (option.sub_budget_head_id) {
+            if (option.budget_head_id) {
               return (
-                <option key={index} value={option.sub_budget_head_id}>
-                  {option.subBudgetHead.name}
+                <option key={index} value={option.budget_head_id}>
+                  {option.budgetHead.name}
                 </option>
               );
             }

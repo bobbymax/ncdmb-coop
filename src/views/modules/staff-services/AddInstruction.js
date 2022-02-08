@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import CustomSelect from "../../../components/forms/CustomSelect";
 import { verifyNumOfDays } from "../../../services/utils/helpers";
 
 const AddInstruction = (props) => {
@@ -17,14 +16,10 @@ const AddInstruction = (props) => {
     amount: 0,
   };
 
-  console.log(props.benefits);
-
   const [state, setState] = useState(initialState);
 
   const auth = useSelector((state) => state.auth.value.user);
-  // const fetcher = props.fetcher;
-  // const benefits = props.fetchBen;
-  // const child = useSelector((state) => state.entitlements.benefits.child);
+  const child = props.benefit.children;
 
   const collectData = (e) => {
     e.preventDefault();
@@ -102,6 +97,33 @@ const AddInstruction = (props) => {
     }
   }, [state.from, state.to]);
 
+  // useEffect(() => {
+  //   if (
+  //     props.benefit &&
+  //     !props.benefit.numOfDays &&
+  //     props.benefit.entitlements.length !== 0 &&
+  //     state.benefit_id > 0
+  //   ) {
+  //     const fee = props.benefit.entitlements.filter(
+  //       (entitlement) => entitlement.grade === auth.level
+  //     );
+
+  //     const entitlement = fee[0];
+
+  //     setState({
+  //       ...state,
+  //       amount: entitlement.amount,
+  //     });
+  //   } else {
+  //     setState({
+  //       ...state,
+  //       amount: 0,
+  //     });
+
+  //     return null;
+  //   }
+  // }, [props.benefit]);
+
   useEffect(() => {
     if (
       props.benefit &&
@@ -120,58 +142,30 @@ const AddInstruction = (props) => {
         amount: total,
       });
     }
+  }, [props.benefit, state.numOfDays]);
 
+  useEffect(() => {
     if (
-      props.benefit &&
-      !props.benefit.numOfDays &&
-      props.benefit.entitlements.length !== 0 &&
-      state.benefit_id > 0
+      child &&
+      state.numOfDays > 0 &&
+      child.entitlements.length !== 0 &&
+      state.category > 0
     ) {
-      const fee = props.benefit.entitlements.filter(
+      const fee = child.entitlements.filter(
         (entitlement) => entitlement.grade === auth.level
       );
-
       const entitlement = fee[0];
 
+      const total = entitlement.amount * state.numOfDays;
+
       setState({
         ...state,
-        amount: entitlement.amount,
-      });
-    } else {
-      setState({
-        ...state,
-        amount: 0,
+        amount: total,
       });
     }
-  }, [props.benefit, state.numOfDays, state.from]);
+  }, [child]);
 
-  // useEffect(() => {
-  //   if (
-  //     child &&
-  //     state.numOfDays > 0 &&
-  //     child.entitlements.length !== 0 &&
-  //     state.category > 0
-  //   ) {
-  //     const fee = child.entitlements.filter(
-  //       (entitlement) => entitlement.grade === auth.level
-  //     );
-  //     const entitlement = fee[0];
-  //     const total = entitlement.amount * state.numOfDays;
-  //     setState({
-  //       ...state,
-  //       amount: total,
-  //     });
-  //   }
-  // }, [state.numOfDays]);
-
-  const options = () => {
-    if (props.benefit !== null && props.benefit.children) return props.benefit;
-    else {
-      return null;
-    }
-  };
-
-  console.log(options());
+  // console.log(props.benefit);
 
   return (
     <>

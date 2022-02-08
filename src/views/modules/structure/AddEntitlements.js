@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
+import { Modal } from "react-bootstrap";
 
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-// import { customTheme, filterByRef } from "../../../services/helpers/functions";
+import { filterByRef } from "../../../services/utils/helpers";
 
 const AddEntitlements = (props) => {
   const defaultState = {
@@ -19,7 +20,7 @@ const AddEntitlements = (props) => {
 
     const data = {
       benefit_id: props.benefit.id,
-      grades: grades,
+      grades: props.grades,
       price_list_id: entitlement.prices,
     };
 
@@ -31,44 +32,46 @@ const AddEntitlements = (props) => {
 
   return (
     <>
-      <div className="modal">
-        <div
-          className="modal-content"
-          {...props}
-          // size="lg"
-          // aria-labelledby="contained-modal-title-vcenter"
-          // centered
-        >
-          <div className="modal-dialog">
-            <form onSubmit={handleModalStateChange}>
-              <div className="modal-header">
-                <h5 className="modal-title" id="contained-modal-title-vcenter">
-                  Add Entitlements
-                </h5>
-              </div>
+      <Modal
+        className="modal"
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <>
+          <form onSubmit={handleModalStateChange}>
+            <div className="modal-header">
+              <h5 className="modal-title" id="contained-modal-title-vcenter">
+                Add Entitlements
+              </h5>
+            </div>
 
-              <div className="modal-body">
-                {/* <Container fluid>
+            <div className="modal-body">
+              <div className="container-fluid">
                 <div className="row" style={{ marginBottom: 20 }}>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Benefit Name</Form.Label>
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="form-label">Benefit Name</label>
+
                       <input
                         type="text"
                         className="form-control"
                         value={props.benefit ? props.benefit.name : null}
                         readOnly
                       />
-                    </Form.Group>
-                  </Col>
+                    </div>
+                  </div>
                 </div>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Grade Levels</Form.Label>
+
+                <div className="row">
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="form-label">Grade Levels</label>
+
                       <Select
                         components={makeAnimated()}
-                        theme={customTheme}
+                        // theme={customTheme}
                         options={
                           props.benefit
                             ? filterByRef(
@@ -84,11 +87,13 @@ const AddEntitlements = (props) => {
                         isMulti
                         autoFocus
                       />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Amount</Form.Label>
+                    </div>
+                  </div>
+
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="form-label">Amount</label>
+
                       <select
                         name="price_list_id"
                         className="form-control"
@@ -109,23 +114,24 @@ const AddEntitlements = (props) => {
                             ))
                           : null}
                       </select>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Container> */}
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              <div className="modal-footer">
-                <button className="btn btn-success" type="submit">
-                  Submit
-                </button>
+            <div className="modal-footer">
+              <button className="btn btn-success" type="submit">
+                Submit
+              </button>
 
-                <button className="btn btn-danger">Close</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+              <button className="btn btn-danger" onClick={props.onHide}>
+                Close
+              </button>
+            </div>
+          </form>
+        </>
+      </Modal>
     </>
   );
 };

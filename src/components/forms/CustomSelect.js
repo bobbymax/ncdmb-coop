@@ -10,6 +10,7 @@ const CustomSelect = ({
   error = false,
   errorMessage = null,
   arrinput = false,
+  ...otherProps
 }) => {
   return (
     <>
@@ -24,11 +25,11 @@ const CustomSelect = ({
           value={value}
           onChange={onChange}
           multiple={arrinput ? "multiple" : ""}
+          placeholder
+          {...otherProps}
         >
           <option value={defaultInputValue}>{defaultText}</option>
           {options.map((option, index) => {
-            // console.log(option.budgetHead.name);
-
             if (option.key) {
               return (
                 <option key={index} value={option.key}>
@@ -46,8 +47,6 @@ const CustomSelect = ({
             }
 
             if (option.id) {
-              console.log("Budget head id", option.id);
-
               return (
                 <option key={index} value={option.id}>
                   {option.budgetHead.name}

@@ -15,6 +15,7 @@ import {
 import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
 import AddEntitlements from "./AddEntitlements";
+import { levelOptions } from "../../../services/utils/helpers";
 
 const Benefits = () => {
   const { data: benefits, setData: setBenefits, request } = useApi(collection);
@@ -38,15 +39,10 @@ const Benefits = () => {
   const [state, setState] = useState(initialState);
   const [modalShow, setModalShow] = useState(modalState);
   const [update, setUpdate] = useState(false);
+  const [gradeLevels, setGradeLevels] = useState([]);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [options, setOptions] = useState([]);
-
-  const getBenefits = () => {
-    collection("benefits")
-      .then((res) => setOptions(res.data.data))
-      .catch((err) => console.log(err));
-  };
 
   const rules = [
     { name: "name", rules: ["required", "string"] },
@@ -54,6 +50,18 @@ const Benefits = () => {
     { name: "numOfDays", rules: ["required"] },
     { name: "description", rules: ["required"] },
   ];
+
+  const handleStateChange = (data) => {
+    store("load/entitlements/", data)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  const getGradeLevels = () => {
+    collection("gradeLevels")
+      .then((res) => setGradeLevels(res.data.data))
+      .catch((err) => console.log(err));
+  };
 
   const handleUpdate = (data) => {
     setState(data);
@@ -67,8 +75,6 @@ const Benefits = () => {
   ];
 
   const handleModalEvent = (data) => {
-    console.log(data);
-
     setModalShow({
       ...modalShow,
       entity: data,
@@ -157,7 +163,7 @@ const Benefits = () => {
 
   useEffect(() => {
     request("benefits");
-    getBenefits();
+    getGradeLevels();
   }, []);
 
   return (
@@ -174,7 +180,15 @@ const Benefits = () => {
         </div>
       </div>
 
-      {/* <AddEntitlements show={modalShow.visibility} /> */}
+      <AddEntitlements
+        onSubmit={handleStateChange}
+        show={modalShow.visibility}
+        benefit={modalShow.entity}
+        grades={levelOptions(gradeLevels)}
+        onHide={() => {
+          setModalShow({ ...modalShow, visibility: false });
+        }}
+      />
 
       {open && (
         <>

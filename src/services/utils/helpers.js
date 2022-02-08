@@ -22,6 +22,18 @@ export const formatConfig = (arr) => {
   return obt;
 };
 
+export const levelOptions = (optionsArr) => {
+  const arr = [];
+  if (optionsArr.length !== 0) {
+    optionsArr.forEach((el) => {
+      arr.push({ value: el.id, label: el.code });
+    });
+  } else {
+    arr.push({ value: 0, label: "Select Grade Level" });
+  }
+  return arr;
+};
+
 export const getMonthToCurrent = () => {
   const months = [
     "January",
@@ -76,4 +88,16 @@ export const formatDate = (date) => {
 
 export const amountToWords = (amount) => {
   return toWords.convert(amount);
+};
+
+export const filterByRef = (arr1, arr2) => {
+  let res = [];
+
+  res = arr1.filter((el) => {
+    return !arr2.find((element) => {
+      return element.grade_level_id === el.value;
+    });
+  });
+
+  return res;
 };

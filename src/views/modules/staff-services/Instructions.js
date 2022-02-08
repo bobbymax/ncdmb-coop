@@ -71,7 +71,7 @@ export const Instructions = (props) => {
     // props.update("claims", state.claim.id, data, {
     //   success: broad.REGISTERED_CLAIM_SUCCESSFULLY,
     //   failed: broad.REGISTERED_CLAIM_FAILED,
-    // });
+    // })
   };
   //   setState({
   //     ...state,

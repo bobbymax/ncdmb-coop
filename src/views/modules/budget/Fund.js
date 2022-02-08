@@ -1,16 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import debounce from "lodash/debounce";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection, destroy } from "../../../services/utils/controllers";
-import Form from "../../../components/forms/Form";
-import FormInput from "../../../components/forms/FormInput";
+// import Form from "../../../components/forms/Form";
+// import FormInput from "../../../components/forms/FormInput";
 import TextInputField from "../../../components/forms/TextInputField";
-import FormSelect from "../../../components/forms/FormSelect";
-import CustomCheckbox from "../../../components/forms/CustomCheckbox";
+// import FormSelect from "../../../components/forms/FormSelect";
+// import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import CustomSelect from "../../../components/forms/CustomSelect";
-import SubmitButton from "../../../components/forms/SubmitButton";
-import { store, alter } from "../../../services/utils/controllers";
+// import SubmitButton from "../../../components/forms/SubmitButton";
+// import { store, alter } from "../../../services/utils/controllers";
 import Alert from "../../../services/classes/Alert";
 
 const Fund = () => {
@@ -29,8 +30,7 @@ const Fund = () => {
   const [subBudgetHeads, setBudgetHeads] = useState([]);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
-
-  // const [budget, setBudget] = useState({});
+  const [subBudgetHead, setSubBudgetHead] = useState({});
 
   const {
     data: funds,
@@ -149,9 +149,22 @@ const Fund = () => {
   const fetchSubBudgetHead = (id) => {
     if (id !== 0) {
       collection(`subBudgetHeads/${id}`)
-        .then((res) =>
-          setState({ ...state, approved_amount: res.data.data.approved_amount })
-        )
+        .then((res) => {
+          setSubBudgetHead(res.data.data);
+          setState({
+            ...state,
+            sub_budget_id: subBudgetHead.id,
+            approved_amount:
+              subBudgetHead.fund !== null
+                ? subBudgetHead.fund.approved_amount
+                : 0,
+            available_balance:
+              subBudgetHead.fund !== null
+                ? subBudgetHead.fund.actual_balance
+                : 0,
+            description: subBudgetHead.description,
+          });
+        })
         .catch((err) => console.log("Error getting the subdget heads", err));
     } else {
       return;
@@ -172,6 +185,29 @@ const Fund = () => {
     fetch("creditBudgetHeads");
     getSubBudgetHeads();
   }, []);
+
+  useMemo(() => {
+    if (subBudgetHeads.length !== 0) {
+      setState({
+        ...state,
+        subBudgetHeads: subBudgetHeads,
+      });
+    }
+  }, [subBudgetHeads]);
+
+  // useMemo(() => {
+  //   if (subBudgetHead !== null && state.sub_budget_id > 0) {
+  //     setState({
+  //       ...state,
+  //       sub_budget_id: subBudgetHead.id,
+  //       approved_amount:
+  //         subBudgetHead.fund !== null ? subBudgetHead.fund.approved_amount : 0,
+  //       available_balance:
+  //         subBudgetHead.fund !== null ? subBudgetHead.fund.actual_balance : 0,
+  //       description: subBudgetHead.description,
+  //     });
+  //   }
+  // }, [subBudgetHead]);
 
   return (
     <div className="row">

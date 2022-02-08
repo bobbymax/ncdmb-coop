@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";
 import FormInput from "../../../components/forms/FormInput";
@@ -35,13 +35,14 @@ const Expenditures = () => {
   const [disabled, setDisbled] = useState(false);
   const [payment_type, setPayment_Type] = useState("");
   const [claimData, setClaimData] = useState({});
+  const [subBudgetHeads, setSubBudgetHeads] = useState([]);
 
   const [state, setState] = useState(initialState);
   const [update, setUpdate] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (values) => {
-    console.log(values);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     // store("expenditures", values)
     //   .then((res) => console.log(res))
@@ -50,8 +51,7 @@ const Expenditures = () => {
 
   const getSubBudgetHeads = async () => {
     const res = await collection("subBudgetHeads");
-
-    setState({ ...state, subBudgetHeads: res.data.data });
+    setSubBudgetHeads(res.data.dat);
   };
 
   useEffect(() => {
@@ -126,11 +126,14 @@ const Expenditures = () => {
 
   const fetchSubBudgetHead = (value) => {
     if (value > 0) {
-      collection("subBudgetHeads", value)
-        .then((res) => {
-          console.log(res);
-          // setState({ ...state, sub_budget_head_id: res.data.data.id });
-        })
+      collection("subBudgetHeads/" + value)
+        // .then((res) => {
+        //   setState({
+        //     ...state,
+        //     available_balance: res.data.data.actual_balance,
+        //     budget_code: res.data.data.budgetCode,
+        //   });
+        // })
         .catch((err) => console.log(err));
     }
   };
@@ -175,13 +178,81 @@ const Expenditures = () => {
 
   const options = [
     { key: "staff-payment", label: "STAFF PAYMENT" },
-    { key: "third-payment", label: "THIRD PARTY" },
+    { key: "third-party", label: "THIRD PARTY" },
   ];
 
-  const getDepartments = async () => {
-    const response = await collection("departments");
-    setDepartments(response.data.data);
-  };
+  // useEffect(() => {
+  //   collection("subBudgetHeads")
+  //     .then((res) => {
+  //       setSubBudgetHeads(res.data.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  // useEffect(() => {
+  //   props.index("subBudgetHeads", {
+  //     success: broadcast.FETCH_SUB_BUDGET_HEADS,
+  //     failed: broadcast.FETCH_SUB_BUDGET_HEADS_FAILED,
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    if (state.claim) {
+      setState({
+        ...state,
+        claim: state.claim,
+        title: state.claim.title,
+        beneficiary: state.claim.owner.name.toUpperCase(),
+        amount: state.claim.total_amount,
+        claim_id: state.claim.id,
+      });
+    }
+  }, [state.claim]);
+
+  // useEffect(() => {
+  // //   if (props.subBudgetHeads) {
+  // //     setState({
+  // //       ...state,
+  // //       subBudgetHeads: props.subBudgetHeads.collection,
+  // //     });
+  // //   }
+  // // }, [props.subBudgetHeads]);
+
+  useEffect(() => {
+    if (
+      subBudgetHeads.subBudgetHead &&
+      subBudgetHeads.subBudgetHead !== null &&
+      state.sub_budget_head_id > 0
+    ) {
+      const subBudgetHead = subBudgetHeads.subBudgetHead;
+
+      setState({
+        ...state,
+        budget_code: subBudgetHeads.budgetCode,
+        available_balance: subBudgetHead.fund
+          ? subBudgetHead.fund.actual_balance
+          : 0,
+      });
+    } else {
+      setState({
+        ...state,
+        budget_code: "",
+        available_balance: 0,
+      });
+    }
+  }, [subBudgetHeads, state.sub_budget_head_id]);
+
+  useEffect(() => {
+    if (state.available_balance > 0 && state.amount > 0) {
+      const value =
+        parseFloat(state.available_balance) - parseFloat(state.amount);
+
+      setState({
+        ...state,
+        new_balance: value,
+      });
+    }
+  }, [state.available_balance, state.amount]);
 
   return (
     <div className="row">
@@ -205,9 +276,13 @@ const Expenditures = () => {
                         placeholder="STAFF PAYMENT"
                         type="text"
                         value={state.payment_type}
-                        onChange={(e) =>
-                          setState({ ...state, payment_type: e.target.value })
-                        }
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setState({
+                            ...state,
+                            payment_type: e.target.value,
+                          });
+                        }}
                         error={
                           errors &&
                           errors.payment_type &&
@@ -237,30 +312,29 @@ const Expenditures = () => {
 
                     <div className="col-md-4">
                       <TextInputField
-                        placeholder="CLAIM ID"
-                        type="number"
-                        value={state.claim_id}
+                        placeholder="ENTER CLAIM ID"
+                        type="text"
+                        value={state.code}
                         onChange={(e) =>
-                          setState({ ...state, claim_id: e.target.value })
+                          setState({ ...state, code: e.target.value })
                         }
-                        error={
-                          errors &&
-                          errors.claim_id &&
-                          errors.claim_id.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.claim_id && errors.claim_id[0]
-                        }
+                        error={errors && errors.code && errors.code.length > 0}
+                        errorMessage={errors && errors.code && errors.code[0]}
+                        readOnly={state.payment_type === "third-party"}
                       />
                     </div>
 
                     <div className="col-md-12">
                       <CustomSelect
+                        // defaultInputValue={"SELECT SUB BUDGET HEAD"}
                         defaultText="SELECT SUB BUDGET HEAD"
-                        options={state.subBudgetHeads}
+                        options={subBudgetHeads}
                         value={state.sub_budget_head_id}
                         onChange={(e) => {
-                          setState({ ...state, isSuper: e.target.value });
+                          setState({
+                            ...state,
+                            sub_budget_head_id: e.target.value,
+                          });
                           fetchSubBudgetHead(e.target.value);
                         }}
                         error={
@@ -288,104 +362,116 @@ const Expenditures = () => {
                         errorMessage={
                           errors && errors.budget_code && errors.budget_code[0]
                         }
+                        readOnly
                       />
                     </div>
 
                     <div className="col-md-6">
                       <TextInputField
-                        placeholder="Enter Max Slot"
+                        placeholder="AVAILABLE BALANCE"
                         type="number"
-                        value={state.max_slots}
-                        onChange={(e) =>
-                          setState({ ...state, max_slots: e.target.value })
-                        }
-                        error={
-                          errors &&
-                          errors.max_slots &&
-                          errors.max_slots.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.max_slots && errors.max_slots[0]
-                        }
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <TextInputField
-                        placeholder="Enter Max Slot"
-                        type="number"
-                        value={state.max_slots}
-                        onChange={(e) =>
-                          setState({ ...state, max_slots: e.target.value })
-                        }
-                        error={
-                          errors &&
-                          errors.max_slots &&
-                          errors.max_slots.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.max_slots && errors.max_slots[0]
-                        }
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <TextInputField
-                        placeholder="Enter Max Slot"
-                        type="number"
-                        value={state.max_slots}
-                        onChange={(e) =>
-                          setState({ ...state, max_slots: e.target.value })
-                        }
-                        error={
-                          errors &&
-                          errors.max_slots &&
-                          errors.max_slots.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.max_slots && errors.max_slots[0]
-                        }
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <TextInputField
-                        placeholder="Start Date"
-                        type="date"
-                        value={state.start_date}
-                        onChange={(e) =>
-                          setState({ ...state, start_date: e.target.value })
-                        }
-                        error={
-                          errors &&
-                          errors.start_date &&
-                          errors.start_date.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.start_date && errors.start_date[0]
-                        }
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <TextInputField
-                        placeholder="Expiry Date"
-                        type="date"
-                        value={state.expiry_date}
-                        onChange={(e) =>
-                          setState({ ...state, expiry_date: e.target.value })
-                        }
-                      />
-                    </div>
-
-                    <div className="col-md-127">
-                      <CustomSelect
-                        defaultText="Cannot Expire?"
-                        options={options}
-                        value={state.cannot_expire}
+                        value={state.available_balance}
                         onChange={(e) =>
                           setState({
                             ...state,
-                            cannot_expire: e.target.value,
+                            available_balance: e.target.value,
+                          })
+                        }
+                        error={
+                          errors &&
+                          errors.available_balance &&
+                          errors.available_balance.length > 0
+                        }
+                        errorMessage={
+                          errors &&
+                          errors.available_balance &&
+                          errors.available_balance[0]
+                        }
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="col-md-6">
+                      <TextInputField
+                        placeholder="AMOUNT"
+                        type="number"
+                        value={state.amount}
+                        onChange={(e) =>
+                          setState({ ...state, amount: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.new_balance &&
+                          errors.new_balance.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.new_balance && errors.new_balance[0]
+                        }
+                        readOnly={state.payment_type === "staff-payment"}
+                      />
+                    </div>
+
+                    <div className="col-md-6">
+                      <TextInputField
+                        placeholder="NEW BALANCE"
+                        type="number"
+                        value={state.new_balance}
+                        onChange={(e) =>
+                          setState({ ...state, new_balance: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.new_balance &&
+                          errors.new_balance.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.new_balance && errors.new_balance[0]
+                        }
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="col-md-12">
+                      <TextInputField
+                        placeholder="BENEFICIARY"
+                        type="text"
+                        value={state.beneficiary}
+                        onChange={(e) =>
+                          setState({ ...state, beneficiary: e.target.value })
+                        }
+                        error={
+                          errors &&
+                          errors.beneficiary &&
+                          errors.beneficiary.length > 0
+                        }
+                        errorMessage={
+                          errors && errors.beneficiary && errors.beneficiary[0]
+                        }
+                        readOnly={state.payment_type === "staff-payment"}
+                      />
+                    </div>
+
+                    <div className="col-md-12">
+                      <TextInputField
+                        placeholder="DESCRIPTION"
+                        multiline={2}
+                        type="text"
+                        value={state.title}
+                        onChange={(e) =>
+                          setState({ ...state, title: e.target.value })
+                        }
+                        readOnly={state.payment_type === "staff-payment"}
+                      />
+                    </div>
+
+                    <div className="col-md-12">
+                      <TextInputField
+                        placeholder="ADDITIONAL INFO"
+                        value={state.additional_info}
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            additional_info: e.target.value,
                           })
                         }
                         error={

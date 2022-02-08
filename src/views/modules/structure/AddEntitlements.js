@@ -25,9 +25,9 @@ const AddEntitlements = (props) => {
     };
 
     props.onSubmit(data);
-    setEntitlement(defaultState);
-    setGrades([]);
-    props.onHide();
+    // setEntitlement(defaultState);
+    // setGrades([]);
+    // props.onHide();
   };
 
   return (

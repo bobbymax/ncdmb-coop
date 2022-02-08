@@ -52,9 +52,11 @@ const Benefits = () => {
   ];
 
   const handleStateChange = (data) => {
-    store("load/entitlements/", data)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    console.log(data);
+
+    // store("load/entitlements/", data)
+    //   .then((res) => console.log(res))
+    //   .catch((err) => console.log(err));
   };
 
   const getGradeLevels = () => {

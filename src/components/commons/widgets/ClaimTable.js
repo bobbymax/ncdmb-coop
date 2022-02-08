@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import TableLoader from "../../commons/tables/TableLoader";
 
 const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
   return (

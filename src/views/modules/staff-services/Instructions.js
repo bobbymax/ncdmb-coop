@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import InstructionWidget from "../../../components/commons/widgets/InstructionWidget";
+import TextInputField from "../../../components/forms/TextInputField";
+import { alter, collection, store } from "../../../services/utils/controllers";
 import AddInstruction from "./AddInstruction";
-// import { Form, Row, Col, Button, Table } from "react-bootstrap";
-// import { connect, useSelector } from "react-redux";
-// import { destroy, fetch, index, store, update } from "../../../redux/actions";
-// import * as broadcast from "../../../redux/entitlements/types";
-// import * as broad from "../../../redux/accessControl/types";
-// import AddInstruction from "./AddInstruction";
-// import InstructionWidget from "../../widgets/InstructionWidget";
 
 export const Instructions = (props) => {
   const params = useLocation();
+  const auth = useSelector((state) => state.auth.value.user);
 
   const initialState = {
     claim: null,
@@ -23,27 +20,27 @@ export const Instructions = (props) => {
   const [state, setState] = useState(initialState);
   const [modal, setModal] = useState(false);
   const [total, setTotal] = useState(0);
+  const [benefits, setBenefits] = useState([]);
+  const [benefit, setBenefit] = useState({});
 
-  // // const handleSubmit = (url, data) => {
-  // //   props.store(url, data, {
-  // //     success: broad.CREATED_CLAIM_INSTRUCTION_RECORD,
-  // //     failed: broad.CREATED_CLAIM_INSTRUCTION_RECORD_FAILED,
-  // //   });
-  // // };
+  const handleSubmit = (url, data) => {
+    store(url, data)
+      .then((res) => alert("Success", res.data.message))
+      .catch((err) => alert("failed"));
+  };
 
-  // // const fetchBen = (value) => {
-  // //   props.fetch("benefits", value, {
-  // //     success: broadcast.FETCH_BENEFIT_RECORD,
-  // //     failed: broadcast.FETCH_BENEFIT_RECORD_FAILED,
-  // //   });
-  // // };
+  const fetchBen = (value) => {
+    collection("benefits/" + value)
+      .then((res) => setBenefit(res.data.data))
+      .catch((err) => console.log(err));
+  };
 
-  // const fetchChild = (value) => {
-  //   props.fetch("benefits", value, {
-  //     success: broadcast.FETCH_BENEFIT_CHILD,
-  //     failed: broadcast.FETCH_BENEFIT_CHILD_FAILED,
-  //   });
-  // };
+  const fetchChild = async (value) => {
+    const benefits = await collection("benefits/" + value);
+    const data = benefits.data.data;
+
+    return data;
+  };
 
   // // const handleInstructionDestroy = (instruction) => {
   // //   props.destroy(
@@ -56,69 +53,80 @@ export const Instructions = (props) => {
   // //   );
   // // };
 
-  // // const updateGrandTotal = (sum) => {
-  // //   return setTotal(sum);
-  // // };
+  const updateGrandTotal = (sum) => {
+    return setTotal(sum);
+  };
 
-  // // const registerClaim = () => {
-  // //   const data = {
-  // //     title: state.claim.title,
-  // //     total_amount: total,
-  // //     status: "registered",
-  // //   };
+  const registerClaim = () => {
+    const data = {
+      title: state.claim.title,
+      total_amount: total,
+      status: "registered",
+    };
 
-  // //   props.update("claims", state.claim.id, data, {
-  // //     success: broad.REGISTERED_CLAIM_SUCCESSFULLY,
-  // //     failed: broad.REGISTERED_CLAIM_FAILED,
-  // //   });
+    alter("claims", state.claim_id, data)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
 
-  // //   setState({
-  // //     ...state,
-  // //     claim: null,
-  // //     claim_id: 0,
-  // //     title: "",
-  // //   });
-  // //   setTotal(0);
+    // props.update("claims", state.claim.id, data, {
+    //   success: broad.REGISTERED_CLAIM_SUCCESSFULLY,
+    //   failed: broad.REGISTERED_CLAIM_FAILED,
+    // });
+  };
+  //   setState({
+  //     ...state,
+  //     claim: null,
+  //     claim_id: 0,
+  //     title: "",
+  //   });
+  //   setTotal(0);
 
   // //   props.history.push("/claims");
   // // };
 
-  // // useEffect(() => {
-  // //   props.index("benefits", {
-  // //     success: broadcast.FETCH_BENEFITS,
-  // //     failed: broadcast.FETCH_BENEFITS_FAILED,
-  // //   });
-  // // }, []);
-
-  // // useEffect(() => {
-  // //   if (instructions.length !== 0) {
-  // //     const sum = instructions.reduce(
-  // //       (sum, instruction) => sum + parseFloat(instruction.amount),
-  // //       0
-  // //     );
-  // //     updateGrandTotal(sum);
-  // //   }
-  // // }, [instructions]);
-
-  // // useEffect(() => {
-  // //   if (props.location && props.location.state) {
-  // //     const claim = props.location.state.claim;
-  // //     // const status = props.location.state.actionType
-
-  // //     setState({
-  // //       ...state,
-  // //       claim: claim,
-  // //       claim_id: claim.id,
-  // //       title: claim.title,
-  // //     });
-
-  // //     props.index(`claims/${claim.id}/instructions`, {
-  // //       success: broad.FETCHED_CLAIM_INSTRUCTIONS,
-  // //       failed: broad.FETCHED_CLAIM_INSTRUCTIONS_FAILED,
-  // //     });
-  // //     // setStatus(status)
-  // //   }
+  // useEffect(() => {
+  //   props.index("benefits", {
+  //     success: broadcast.FETCH_BENEFITS,
+  //     failed: broadcast.FETCH_BENEFITS_FAILED,
+  //   });
   // }, []);
+
+  console.log("Claim", params.state.claim);
+
+  useEffect(() => {
+    if (params.path && params.state) {
+      const claim = params.state.claim;
+
+      setState({
+        ...state,
+        claim: claim,
+        claim_id: claim.id,
+        title: claim.title,
+      });
+
+      // props.index(`claims/${claim.id}/instructions`, {
+      //   success: broad.FETCHED_CLAIM_INSTRUCTIONS,
+      //   failed: broad.FETCHED_CLAIM_INSTRUCTIONS_FAILED,
+      // });
+      // setStatus(status)
+    }
+
+    if (params.state.claim.instructions.length !== 0) {
+      const sum = params.state.claim.instructions.reduce(
+        (sum, instruction) => sum + parseFloat(instruction.amount),
+        0
+      );
+      updateGrandTotal(sum);
+    }
+  }, [params.state.claim.instructions]);
+
+  const getBenefits = () => {
+    collection("benefits")
+      .then((res) => setBenefits(res.data.data))
+      .catch((err) => console.log(err));
+
+    // return benefits.data.data;
+  };
 
   useEffect(() => {
     if (params.pathname && params.state) {
@@ -132,13 +140,15 @@ export const Instructions = (props) => {
         title: claim.title,
       });
     }
+
+    getBenefits();
   }, []);
 
   return (
     <>
       <div className="form-group">
         <label className="form-label">CLAIM TITLE</label>
-        <input
+        <TextInputField
           className="form-control"
           type="text"
           disabled={state.claim}
@@ -150,25 +160,28 @@ export const Instructions = (props) => {
       <AddInstruction
         show={modal}
         claim={state.claim}
-        // onSubmit={handleSubmit}
-        // fetcher={fetchBen}
-        // children={fetchChild}
+        onSubmit={handleSubmit}
+        benefits={benefits}
+        benefit={benefit}
+        fetcher={fetchBen}
+        children={fetchChild}
         onHide={() => {
           setModal(false);
         }}
       />
 
-      <div className="card form-portal-card mt-5">
-        <div className="row mb-5">
+      <div className="">
+        <div className="row mb-3">
           <div className="col">
             <button className="btn btn-success" onClick={() => setModal(true)}>
+              <i className="fa fa-plus" style={{ marginRight: "2px" }}></i>
               ADD DETAILS
             </button>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col">
+        <div className="card">
+          <div className="card-body">
             <table className="table table-striped table-hover table-bordered">
               <thead>
                 <tr>
@@ -180,48 +193,43 @@ export const Instructions = (props) => {
                 </tr>
               </thead>
 
-              {/* <tbody>
-                {console.log(params.state.claim)}
-                {!params.state.claim.instructions.collection ? params.state.claim.map}
-
-                {params.state.claim.instructions.collection.length !== 0
-                  ? params.state.claim.collection.map((instruction) => {
-                      if (state.claim) {
-                        return (
-                          <InstructionWidget
-                            key={instruction.id}
-                            instruction={instruction}
-                            // onDestroy={handleInstructionDestroy}
-                          />
-                        );
-                      } else {
-                        return null;
+              <tbody>
+                {params.state.claim.instructions.collection &&
+                params.state.claim.instructions.collection.length !== 0
+                  ? params.state.claim.instructions.collection.map(
+                      (instruction) => {
+                        if (state.claim) {
+                          return (
+                            <InstructionWidget
+                              key={instruction.id}
+                              instruction={instruction}
+                              // onDestroy={handleInstructionDestroy}
+                            />
+                          );
+                        } else {
+                          return null;
+                        }
                       }
-                    })
+                    )
                   : null}
-              </tbody> */}
+              </tbody>
             </table>
+            <h4 className="mb-4 pull-right">
+              TOTAL: <span style={{ marginLeft: 25 }}>NGN {total}</span>
+            </h4>
           </div>
         </div>
       </div>
 
-      <div className="card form-portal-card mt-5 mb-5">
-        <div className="row">
-          <div className="col"></div>
-          <div className="col">
-            <h4 className="mb-4">
-              TOTAL: <span style={{ marginLeft: 25 }}>NGN {total}</span>
-            </h4>
-
-            <button
-              className="btn btn-success btn-lg"
-              type="button"
-              // onClick={registerClaim}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
+      <div className="">
+        <button
+          className="btn btn-success btn-lg"
+          type="button"
+          onClick={registerClaim}
+        >
+          <i className="fa fa-paper-plane" style={{ marginRight: "2px" }}></i>
+          Submit
+        </button>
       </div>
     </>
   );

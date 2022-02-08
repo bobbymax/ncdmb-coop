@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 // import BasicTable from "../../../components/commons/tables/BasicTable";
 // import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import ClaimTable from "../../../components/commons/widgets/ClaimTable";
-import { connect } from "react-redux";
-import Form from "../../../components/forms/Form";
-import FormInput from "../../../components/forms/FormInput";
-import SubmitButton from "../../../components/forms/SubmitButton";
+import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
 import Alert from "../../../services/classes/Alert";
 import {
@@ -16,6 +13,7 @@ import {
   alter,
   fetch,
 } from "../../../services/utils/controllers";
+import TextInputField from "../../../components/forms/TextInputField";
 
 const Claims = (props) => {
   const navigate = useNavigate();
@@ -29,75 +27,71 @@ const Claims = (props) => {
     isUpdating: false,
   };
 
-  const { request, data: claims } = useApi(collection);
+  const { request, data: claims, setData: setClaims } = useApi(collection);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [state, setState] = useState(initialState);
+  const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
 
-  const columns = [
-    { label: "Title", key: "title" },
-    { label: "Amount", key: "total_amount" },
-  ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleSubmit = (values) => {
-    const data = { ...values, title: values.title, type: state.type };
+    const data = {
+      title: state.title,
+      type: state.type,
+    };
 
-    // console.log(data);
+    const formErrors = validate(rules, data);
+    setErrors(formErrors);
 
-    store("claims", data)
-      .then((res) => console.log("Succcess", res))
-      .catch((err) => console.log(err));
+    const status =
+      Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
 
-    // console.log(values);
+    if (status) {
+      if (update) {
+        try {
+          alter("claims", state.id, data)
+            .then((res) => {
+              const result = res.data.data;
 
-    // const formErrors = validate(rules, data);
-    // setErrors(formErrors);
-    // const status =
-    //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
+              setClaims(
+                claims.map((el) => {
+                  if (result.id === el.id) {
+                    return result;
+                  }
 
-    // if (status) {
-    //   if (update) {
-    //     try {
-    //       alter("roles", state.id, data)
-    //         .then((res) => {
-    //           const result = res.data.data;
+                  return el;
+                })
+              );
+              Alert.success("Updated", res.data.message);
+            })
+            .catch((err) => console.log(err.message));
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          store("claims", data)
+            .then((res) => {
+              const result = res.data.data;
+              setClaims([...claims, result]);
+              Alert.success("Created!!", res.data.message);
+            })
+            .catch((err) => console.log(err.message));
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
-    //           setRoles(
-    //             roles.map((el) => {
-    //               if (result.id === el.id) {
-    //                 return result;
-    //               }
+      setErrors({});
 
-    //               return el;
-    //             })
-    //           );
-    //           Alert.success("Updated", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     try {
-    //       store("roles", data)
-    //         .then((res) => {
-    //           const result = res.data.data;
-    //           setRoles([result, ...roles]);
-    //           Alert.success("Created!!", res.data.message);
-    //         })
-    //         .catch((err) => console.log(err.message));
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
-
-    //   setErrors({});
-
-    //   setUpdate(false);
-    //   setState(initialState);
-    //   setOpen(false);
-    // }
+      setUpdate(false);
+      setState(initialState);
+      // setOpen(false);
+    }
   };
 
   const handlePrintOut = (claim) => {
@@ -108,6 +102,8 @@ const Claims = (props) => {
       },
     });
   };
+
+  const rules = [{ name: "title", rules: ["required", "integar"] }];
 
   const loadClaim = (data) => {
     setState({
@@ -148,13 +144,14 @@ const Claims = (props) => {
       "You would not be able to revert this!!"
     ).then((result) => {
       if (result.isConfirmed) {
-        console.log(claim);
-        // destroy("claims", data.id)
-        //   .then((res) => {
-        //     setRoles([...roles.filter((role) => role.id !== res.data.data.id)]);
-        //     Alert.success("Deleted!!", res.data.message);
-        //   })
-        //   .catch((err) => console.log(err.message));
+        destroy("claims", claim.id)
+          .then((res) => {
+            setClaims([
+              ...claims.filter((claim) => claim.id !== res.data.data.id),
+            ]);
+            Alert.success("Deleted!!", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
       }
     });
   };
@@ -178,7 +175,6 @@ const Claims = (props) => {
 
   useEffect(() => {
     request("claims");
-    console.log(props);
   }, []);
 
   return (
@@ -201,45 +197,44 @@ const Claims = (props) => {
             <div className="card">
               <div className="card-body">
                 <div className="form-body">
-                  <>
-                    <Form
-                      initialValues={{
-                        title: state.title,
-                        type: state.type,
-                      }}
-                      onSubmit={handleSubmit}
-                    >
-                      <div className="row">
-                        <div className="col-md-12">
-                          <FormInput
-                            placeholder="Enter Claim Title"
-                            name="title"
-                          />
-                        </div>
-
-                        <div className="mt-3 ml-3 d-flex">
-                          <SubmitButton
-                            className="btn btn-primary"
-                            title="Submit"
-                            // disabled={open}
-                          />
-
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              // setUpdate(false);
-                              // setState(initialState);
-                              setOpen(false);
-                              // setErrors({});
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
+                  <form onSubmit={handleSubmit}>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <TextInputField
+                          placeholder="Enter Claim Title"
+                          type="text"
+                          value={state.title}
+                          onChange={(e) =>
+                            setState({ ...state, title: e.target.value })
+                          }
+                          error={
+                            errors && errors.title && errors.title.length > 0
+                          }
+                          errorMessage={
+                            errors && errors.title && errors.title[0]
+                          }
+                        />
                       </div>
-                    </Form>
-                  </>
+
+                      <div className="col-md-12 mt-3">
+                        <button type="submit" className="btn btn-primary">
+                          Submit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => {
+                            setUpdate(false);
+                            setState(initialState);
+                            setOpen(false);
+                            setErrors({});
+                          }}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -259,22 +254,5 @@ const Claims = (props) => {
     </div>
   );
 };
-
-// const mapStateToProps = (state) => ({
-//   // auth: state.access.staff.authenticatedUser,
-//   claims: state.claims,
-// });
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     index: (entity, broadcast) => dispatch(fetch(entity, broadcast)),
-//     store: (entity, body, broadcast) =>
-//       dispatch(store(entity, body, broadcast)),
-//     update: (entity, id, body, broadcast) =>
-//       dispatch(alter(entity, id, body, broadcast)),
-//     destroy: (entity, id, broadcast) =>
-//       dispatch(destroy(entity, id, broadcast)),
-//   };
-// };
 
 export default Claims;

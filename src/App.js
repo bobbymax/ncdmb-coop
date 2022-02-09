@@ -26,6 +26,7 @@ import Claim from "./views/modules/staff-services/Claim";
 import Instructions from "./views/modules/staff-services/Instructions";
 import Approvals from "./views/modules/approvals/Approvals";
 import Logistics from "./views/modules/refunds/Logistics";
+import Batch from "./views/modules/budget/Batch";
 
 const App = () => {
   return (
@@ -237,6 +238,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Logistics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/batch/claim"
+          element={
+            <ProtectedRoute>
+              <Batch />
             </ProtectedRoute>
           }
         />

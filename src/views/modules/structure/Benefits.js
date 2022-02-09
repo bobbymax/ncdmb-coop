@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import BasicTable from "../../../components/commons/tables/BasicTable";
-// import BenefitsWidget from "../../../components/commons/widgets/BenefitsWidget";
 import BenefitsWidget from "./BenefitsWidget";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";

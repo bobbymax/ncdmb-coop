@@ -126,7 +126,7 @@ const GradeLevels = () => {
       "You would not be able to revert this!!"
     ).then((result) => {
       if (result.isConfirmed) {
-        destroy("roles", data.label)
+        destroy("gradeLevels", data.id)
           .then((res) => {
             setGradeLevels([
               ...gradeLevels.filter((role) => role.id !== res.data.data.id),

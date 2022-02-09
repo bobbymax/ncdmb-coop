@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
@@ -43,6 +44,15 @@ const Wages = () => {
     collection("benefits")
       .then((res) => setOptions(res.data.data))
       .catch((err) => console.log(err));
+  };
+
+  const benefitOptions = (optionsArr) => {
+    const arr = [];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
   };
 
   const rules = [
@@ -163,7 +173,7 @@ const Wages = () => {
                       <div className="col-md-6">
                         <CustomSelect
                           defaultText="Select Benefit"
-                          options={options}
+                          options={benefitOptions(options)}
                           value={state.benefit_id}
                           onChange={(e) =>
                             setState({ ...state, benefit_id: e.target.value })

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
@@ -18,7 +19,11 @@ import AddEntitlements from "./AddEntitlements";
 import { levelOptions } from "../../../services/utils/helpers";
 
 const Benefits = () => {
-  const { data: benefits, setData: setBenefits, request } = useApi(collection);
+  const {
+    data: benefits,
+    setData: setBenefits,
+    request: fetch,
+  } = useApi(collection);
 
   const initialState = {
     showForm: false,
@@ -52,8 +57,6 @@ const Benefits = () => {
   ];
 
   const handleStateChange = (data) => {
-    console.log(data);
-
     store("load/entitlements/", data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -75,6 +78,17 @@ const Benefits = () => {
     { key: "0", label: "None" },
     { key: "1", label: "Number of Days" },
   ];
+
+  const benefitOptions = (optionsArr) => {
+    const arr = [{ key: 0, label: "None" }];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
+  };
+
+  console.log(benefits);
 
   const handleModalEvent = (data) => {
     setModalShow({
@@ -164,7 +178,7 @@ const Benefits = () => {
   };
 
   useEffect(() => {
-    request("benefits");
+    fetch("benefits");
     getGradeLevels();
   }, []);
 
@@ -218,9 +232,10 @@ const Benefits = () => {
 
                       <div className="col-md-4">
                         <CustomSelect
-                          defaultText="Select Benefit"
+                          defaultText="Select Parent"
+                          defaultInputValue={""}
                           label="Select Parent"
-                          options={options}
+                          options={benefitOptions(benefits)}
                           value={state.parentId}
                           onChange={(e) =>
                             setState({ ...state, parentId: e.target.value })
@@ -239,8 +254,8 @@ const Benefits = () => {
                       <div className="col-md-4">
                         <CustomSelect
                           label="Requirement"
-                          // defaultText="None"
-                          // defaultInputValue="None"
+                          defaultText="Choose Option"
+                          defaultInputValue={""}
                           options={requirementOptions}
                           value={state.depends}
                           onChange={(e) =>

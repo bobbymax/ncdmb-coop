@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -15,6 +16,8 @@ export const Instructions = (props) => {
     claim: null,
     claim_id: 0,
     title: "",
+    instructions: [],
+    status: "",
   };
 
   const [state, setState] = useState(initialState);
@@ -24,10 +27,13 @@ export const Instructions = (props) => {
   const [benefit, setBenefit] = useState({});
 
   const handleSubmit = (url, data) => {
-    store(url, data)
-      .then((res) => alert("Success", res.data.message))
-      .catch((err) => alert("failed"));
+    setState({
+      ...state,
+      instructions: [data, ...state.instructions],
+    });
   };
+
+  console.log(state.instructions);
 
   const fetchBen = (value) => {
     collection("benefits/" + value)
@@ -103,12 +109,6 @@ export const Instructions = (props) => {
         claim_id: claim.id,
         title: claim.title,
       });
-
-      // props.index(`claims/${claim.id}/instructions`, {
-      //   success: broad.FETCHED_CLAIM_INSTRUCTIONS,
-      //   failed: broad.FETCHED_CLAIM_INSTRUCTIONS_FAILED,
-      // });
-      // setStatus(status)
     }
 
     if (params.state.claim.instructions.length !== 0) {

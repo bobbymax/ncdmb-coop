@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 // import { Link } from "react-router-dom";
 import TableLoader from "../../commons/tables/TableLoader";
@@ -20,7 +21,7 @@ const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
 
                 <tbody>
                   {claims.map((claim) => (
-                    <tr>
+                    <tr key={claim.id}>
                       <td>{claim.title}</td>
                       <td>{`NGN ${new Intl.NumberFormat().format(
                         claim.total_amount

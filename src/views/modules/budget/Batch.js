@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+// import { connect, useSelector } from "react-redux";
+// import * as broadcast from "../../../redux/accessControl/types";
 import { Table, Row, Col, Button } from "react-bootstrap";
-// import { uniqueNumberGenerator } from "../../../services/helpers/functions";
+import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 // import ExpenditureCard from "../../widgets/ExpenditureCard";
 // import "../../../assets/js/canvas";
 // import BatchCard from "../../widgets/BatchCard";
@@ -21,133 +23,134 @@ const Batch = (props) => {
   };
 
   const [state, setState] = useState(initialState);
-  // const grandTotal =
-  //   state.board.length !== 0
-  //     ? state.board.reduce(
-  //         (sum, expenditure) => sum + parseFloat(expenditure.amount),
-  //         0
-  //       )
-  //     : 0;
-  // const auth = useSelector((state) => state.access.staff.authenticatedUser);
-  // const boardLength = state.board.length;
 
-  // const batchClaim = (expenditure) => {
-  //   const batch = state.expenditures.filter(
-  //     (batch) => expenditure.id === batch.id
-  //   );
+  const grandTotal =
+    state.board.length !== 0
+      ? state.board.reduce(
+          (sum, expenditure) => sum + parseFloat(expenditure.amount),
+          0
+        )
+      : 0;
+  // const auth = useSelector((state) => state.auth.staff.authenticatedUser);
+  const boardLength = state.board.length;
 
-  //   const maxSlots = {
-  //     staffPayment: 6,
-  //     thirdParty: 1,
-  //   };
+  const batchClaim = (expenditure) => {
+    const batch = state.expenditures.filter(
+      (batch) => expenditure.id === batch.id
+    );
 
-  //   if (
-  //     expenditure.payment_type === "third-party" &&
-  //     state.board.length < maxSlots.thirdParty
-  //   ) {
-  //     setState({
-  //       ...state,
-  //       expenditures: state.expenditures.filter(
-  //         (batch) => expenditure.id !== batch.id
-  //       ),
-  //       board: [...state.board, batch[0]],
-  //       buttonDisabled: !state.buttonDisabled,
-  //       boardType: expenditure.payment_type,
-  //       maxSlot: maxSlots.thirdParty,
-  //     });
-  //   } else if (
-  //     expenditure.payment_type === "staff-payment" &&
-  //     state.board.length <= maxSlots.staffPayment
-  //   ) {
-  //     if (
-  //       boardLength >= 1 &&
-  //       expenditure.subBudgetHead.id === state.sub_budget_head_id
-  //     ) {
-  //       setState({
-  //         ...state,
-  //         expenditures: state.expenditures.filter(
-  //           (batch) => expenditure.id !== batch.id
-  //         ),
-  //         board: [...state.board, batch[0]],
-  //         buttonDisabled: true,
-  //         boardType: expenditure.payment_type,
-  //         maxSlot: maxSlots.staffPayment,
-  //       });
-  //     } else {
-  //       setState({
-  //         ...state,
-  //         expenditures: state.expenditures.filter(
-  //           (batch) => expenditure.id !== batch.id
-  //         ),
-  //         board: [...state.board, batch[0]],
-  //         buttonDisabled: true,
-  //         boardType: expenditure.payment_type,
-  //         maxSlot: maxSlots.staffPayment,
-  //       });
-  //     }
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       buttonDisabled: !state.buttonDisabled,
-  //     });
-  //   }
-  // };
+    const maxSlots = {
+      staffPayment: 6,
+      thirdParty: 1,
+    };
 
-  // const grandPrettyTotal = (num) => {
-  //   return `NGN ${new Intl.NumberFormat().format(num)}`;
-  // };
+    if (
+      expenditure.payment_type === "third-party" &&
+      state.board.length < maxSlots.thirdParty
+    ) {
+      setState({
+        ...state,
+        expenditures: state.expenditures.filter(
+          (batch) => expenditure.id !== batch.id
+        ),
+        board: [...state.board, batch[0]],
+        buttonDisabled: !state.buttonDisabled,
+        boardType: expenditure.payment_type,
+        maxSlot: maxSlots.thirdParty,
+      });
+    } else if (
+      expenditure.payment_type === "staff-payment" &&
+      state.board.length <= maxSlots.staffPayment
+    ) {
+      if (
+        boardLength >= 1 &&
+        expenditure.subBudgetHead.id === state.sub_budget_head_id
+      ) {
+        setState({
+          ...state,
+          expenditures: state.expenditures.filter(
+            (batch) => expenditure.id !== batch.id
+          ),
+          board: [...state.board, batch[0]],
+          buttonDisabled: true,
+          boardType: expenditure.payment_type,
+          maxSlot: maxSlots.staffPayment,
+        });
+      } else {
+        setState({
+          ...state,
+          expenditures: state.expenditures.filter(
+            (batch) => expenditure.id !== batch.id
+          ),
+          board: [...state.board, batch[0]],
+          buttonDisabled: true,
+          boardType: expenditure.payment_type,
+          maxSlot: maxSlots.staffPayment,
+        });
+      }
+    } else {
+      setState({
+        ...state,
+        buttonDisabled: !state.buttonDisabled,
+      });
+    }
+  };
 
-  // const handleBatcher = () => {
-  //   const data = {
-  //     batch_no: state.code,
-  //     expenditures: state.board,
-  //     noOfClaim: state.board.length,
-  //     subBudgetHeadCode: state.board[0].subBudgetHead.budgetCode,
-  //     amount: state.total,
-  //     steps: 1,
-  //   };
+  const grandPrettyTotal = (num) => {
+    return `NGN ${new Intl.NumberFormat().format(num)}`;
+  };
 
-  //   props.store("batches", data, {
-  //     success: broadcast.BATCHED_EXPENDITURES,
-  //     failed: broadcast.BATCHED_EXPENDITURES_FAILED,
-  //   });
+  const handleBatcher = () => {
+    const data = {
+      batch_no: state.code,
+      expenditures: state.board,
+      noOfClaim: state.board.length,
+      subBudgetHeadCode: state.board[0].subBudgetHead.budgetCode,
+      amount: state.total,
+      steps: 1,
+    };
 
-  //   setState({
-  //     ...state,
-  //     board: [],
-  //     boardType: "",
-  //     maxSlot: 0,
-  //     code: "",
-  //     total: 0,
-  //     buttonDisabled: false,
-  //   });
+    // props.store("batches", data, {
+    //   success: broadcast.BATCHED_EXPENDITURES,
+    //   failed: broadcast.BATCHED_EXPENDITURES_FAILED,
+    // });
 
-  //   props.history.push("/payments");
-  // };
+    setState({
+      ...state,
+      board: [],
+      boardType: "",
+      maxSlot: 0,
+      code: "",
+      total: 0,
+      buttonDisabled: false,
+    });
 
-  // const handleDelete = (expenditure) => {
-  //   if (state.board.length !== 0) {
-  //     const claimChoosen = state.board.filter((b) => expenditure.id === b.id);
-  //     const boardState = state.board.filter((b) => expenditure.id !== b.id);
+    props.history.push("/payments");
+  };
 
-  //     if (boardState.length > 0) {
-  //       setState({
-  //         ...state,
-  //         board: boardState,
-  //         expenditures: [...state.expenditures, claimChoosen[0]],
-  //         buttonDisabled: state.boardType !== "" ? true : false,
-  //       });
-  //     } else {
-  //       setState({
-  //         ...state,
-  //         board: boardState,
-  //         boardType: "",
-  //         expenditures: [...state.expenditures, claimChoosen[0]],
-  //         buttonDisabled: false,
-  //       });
-  //     }
-  //   }
-  // };
+  const handleDelete = (expenditure) => {
+    if (state.board.length !== 0) {
+      const claimChoosen = state.board.filter((b) => expenditure.id === b.id);
+      const boardState = state.board.filter((b) => expenditure.id !== b.id);
+
+      if (boardState.length > 0) {
+        setState({
+          ...state,
+          board: boardState,
+          expenditures: [...state.expenditures, claimChoosen[0]],
+          buttonDisabled: state.boardType !== "" ? true : false,
+        });
+      } else {
+        setState({
+          ...state,
+          board: boardState,
+          boardType: "",
+          expenditures: [...state.expenditures, claimChoosen[0]],
+          buttonDisabled: false,
+        });
+      }
+    }
+  };
 
   // useEffect(() => {
   //   props.index("expenditures", {
@@ -156,61 +159,63 @@ const Batch = (props) => {
   //   });
   // }, []);
 
-  // useEffect(() => {
-  //   if (boardLength === 1) {
-  //     setState({
-  //       ...state,
-  //       sub_budget_head_id: state.board[0].subBudgetHead.id,
-  //     });
-  //   }
-  // }, [boardLength]);
+  useEffect(() => {
+    if (boardLength === 1) {
+      setState({
+        ...state,
+        sub_budget_head_id: state.board[0].subBudgetHead.id,
+      });
+    }
+  }, [boardLength]);
 
-  // useEffect(() => {
-  //   setState({
-  //     ...state,
-  //     total: grandTotal,
-  //   });
-  // }, [grandTotal]);
+  useEffect(() => {
+    setState({
+      ...state,
+      total: grandTotal,
+    });
+  }, [grandTotal]);
 
-  // useEffect(() => {
-  //   if (props.expenditures && props.expenditures.collection.length !== 0) {
-  //     setState({
-  //       ...state,
-  //       expenditures: props.expenditures.collection,
-  //     });
-  //   }
-  // }, [props.expenditures]);
+  useEffect(() => {
+    if (props.expenditures && props.expenditures.collection.length !== 0) {
+      setState({
+        ...state,
+        expenditures: props.expenditures.collection,
+      });
+    }
+  }, [props.expenditures]);
 
   return (
     <>
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
-      <button
-        className="btn btn-success"
+      <Button
         type="button"
-        // onClick={() =>
-        //   setState({ ...state, code: uniqueNumberGenerator(state.boardType) })
-        // }
-        // disabled={boardLength === 0 || state.code !== ""}
+        variant="success"
+        onClick={() =>
+          setState({ ...state, code: uniqueNumberGenerator(state.boardType) })
+        }
+        disabled={boardLength === 0 || state.code !== ""}
       >
         Generate Batch Number
-      </button>
+      </Button>
 
-      <div className="row mt-4">
-        <div className="col-md-9">
-          <div className="row">
-            <table className="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Budget Code</th>
-                  <th>Payment Type</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
+      <Row className="mt-4">
+        <Col md={8}>
+          <>
+            <div className="card">
+              <div className="card-body">
+                <table className="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      {/* <th></th> */}
+                      <th>Budget Code</th>
+                      <th>Payment Type</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
 
-              <tbody>
-                {/* {state.expenditures.length !== 0 ? (
+                  {/* <tbody>
+                {state.expenditures.length !== 0 ? (
                   state.expenditures.map((expenditure) => {
                     if (
                       auth.department.id ===
@@ -238,15 +243,17 @@ const Batch = (props) => {
                   <tr>
                     <td colSpan="5">{"No Expenditure Data!!"}</td>
                   </tr>
-                )} */}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                )}
+              </tbody> */}
+                </table>
+              </div>
+            </div>
+          </>
+        </Col>
 
-        <div className="col-md-4">
-          <div className="row">
-            <div className="col">
+        <Col md={3}>
+          <>
+            <Col>
               <h4 className="content-title content-title-xs mb-3">
                 Batch - {state.code.toUpperCase()}
               </h4>
@@ -265,24 +272,24 @@ const Batch = (props) => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mg-b-10">
                     <h1 className="card-value">
-                      {/* {grandPrettyTotal(state.total)} */}
+                      {grandPrettyTotal(state.total)}
                     </h1>
                   </div>
                   <h5 className="card-title tx-primary">{"Grand Total"}</h5>
                 </div>
               </div>
-
-              <button
-                className="btn btn-success btn-block"
+              <Button
+                variant="success"
+                className="btn-block"
                 disabled={state.code === ""}
-                // onClick={handleBatcher}
+                onClick={handleBatcher}
               >
                 Batch Payments
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Button>
+            </Col>
+          </>
+        </Col>
+      </Row>
     </>
   );
 };

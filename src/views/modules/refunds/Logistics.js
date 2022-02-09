@@ -126,7 +126,7 @@ const Logistics = (props) => {
         </form>
       </div>
 
-      {state.activeExp ? (
+      {!state.activeExp ? (
         <div className="row mb-4">
           <div className="col">
             <div className="card">

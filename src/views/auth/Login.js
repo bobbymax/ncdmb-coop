@@ -10,13 +10,6 @@ import { authenticate } from "../../features/auth/userSlice";
 import { login } from "../../services/utils/auth/auth.controller";
 import FormInput from "../../components/forms/FormInput";
 
-import * as Yup from "yup";
-
-const validationSchema = Yup.object().shape({
-  staff_no: Yup.string().required().label("STAFF NO"),
-  password: Yup.string().required().label("Password"),
-});
-
 const Login = () => {
   const naviagate = useNavigate();
   const dispatch = useDispatch();

@@ -66,20 +66,24 @@ const AddInstruction = (props) => {
 
   useEffect(() => {
     if (state.additional_benefit_id > 0) {
-      const child = benefit.children.filter((ben) => {
-        return state.additional_benefit_id === ben.id;
-      });
+      const fee = benefit.children.filter(
+        (ben) => state.additional_benefit_id == ben.id
+      );
 
-      // const fee = benefit.entitlements.filter(
-      //   (entitlement) => entitlement.grade === auth.level
-      // );
-      // const entitlement = fee[0];
+      const entitlement = fee[0];
+      console.log();
+
+      const total = entitlement.entitlements[0].amount * state.numOfDays;
       // const total = entitlement.amount * state.numOfDays;
-      console.log(benefit, child);
+
+      setState({
+        ...state,
+        amount: total,
+      });
     }
   }, [state.additional_benefit_id]);
 
-  console.log(state.additional_benefit_id);
+  // console.log("add ben id", state.additional_benefit_id);
 
   useEffect(() => {
     if (

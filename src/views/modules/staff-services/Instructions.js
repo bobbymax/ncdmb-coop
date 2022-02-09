@@ -26,14 +26,16 @@ export const Instructions = (props) => {
   const [benefits, setBenefits] = useState([]);
   const [benefit, setBenefit] = useState({});
 
-  const handleSubmit = (url, data) => {
+  const handleSubmit = (data) => {
+    console.log(data);
+
+    // console.log(state.instructions);
+
     setState({
       ...state,
       instructions: [data, ...state.instructions],
     });
   };
-
-  console.log(state.instructions);
 
   const fetchBen = (value) => {
     collection("benefits/" + value)
@@ -48,16 +50,13 @@ export const Instructions = (props) => {
     return data;
   };
 
-  // // const handleInstructionDestroy = (instruction) => {
-  // //   props.destroy(
-  // //     `claims/${instruction.parent.id}/instructions`,
-  // //     instruction.id,
-  // //     {
-  // //       success: broad.DELETED_CLAIM_INSTRUCTION_RECORD,
-  // //       failed: broad.DELETED_CLAIM_INSTRUCTION_RECORD_FAILED,
-  // //     }
-  // //   );
-  // // };
+  const handleInstructionDestroy = (value) => {
+    setState({
+      ...state.instructions.filter(
+        (instruction) => instruction.id !== value.id
+      ),
+    });
+  };
 
   const updateGrandTotal = (sum) => {
     return setTotal(sum);
@@ -111,14 +110,14 @@ export const Instructions = (props) => {
       });
     }
 
-    if (params.state.claim.instructions.length !== 0) {
-      const sum = params.state.claim.instructions.reduce(
+    if (state.instructions && state.instructions.length !== 0) {
+      const sum = state.instructions.reduce(
         (sum, instruction) => sum + parseFloat(instruction.amount),
         0
       );
       updateGrandTotal(sum);
     }
-  }, [params.state.claim.instructions]);
+  }, [state.instructions]);
 
   const getBenefits = () => {
     collection("benefits")
@@ -193,24 +192,40 @@ export const Instructions = (props) => {
                 </tr>
               </thead>
 
-              <tbody>
-                {params.state.claim.instructions.collection &&
-                params.state.claim.instructions.collection.length !== 0
-                  ? params.state.claim.instructions.collection.map(
-                      (instruction) => {
-                        if (state.claim) {
-                          return (
-                            <InstructionWidget
-                              key={instruction.id}
-                              instruction={instruction}
-                              // onDestroy={handleInstructionDestroy}
-                            />
-                          );
-                        } else {
-                          return null;
-                        }
+              {/* <tbody>
+                {state.claim.instructions &&
+                state.claim.instructions.length !== 0
+                  ? state.claim.instructions.map((instruction) => {
+                      if (state.claim) {
+                        return (
+                          <InstructionWidget
+                            key={instruction.id}
+                            instruction={instruction}
+                            // onDestroy={handleInstructionDestroy}
+                          />
+                        );
+                      } else {
+                        return null;
                       }
-                    )
+                    })
+                  : null}
+              </tbody> */}
+
+              <tbody>
+                {state.instructions && state.instructions.length !== 0
+                  ? state.instructions.map((instruction) => {
+                      if (state.instructions) {
+                        return (
+                          <InstructionWidget
+                            key={instruction.id}
+                            instruction={instruction}
+                            onDestroy={handleInstructionDestroy}
+                          />
+                        );
+                      } else {
+                        return null;
+                      }
+                    })
                   : null}
               </tbody>
             </table>

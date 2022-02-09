@@ -11,9 +11,9 @@ const InstructionWidget = ({ instruction, onDestroy }) => {
       <td>
         <button
           className="btn btn-danger btn-sm"
-          // onClick={() => onDestroy(instruction)}
+          onClick={() => onDestroy(instruction)}
         >
-          FIX
+          <i className="fa fa-close"></i>
           {/* <FiX /> */}
         </button>
       </td>

@@ -20,21 +20,23 @@ const AddEntitlements = (props) => {
 
     const data = {
       benefit_id: props.benefit.id,
-      grades: props.grades,
+      grades: grades,
       price_list_id: entitlement.prices,
     };
 
     props.onSubmit(data);
-    // setEntitlement(defaultState);
-    // setGrades([]);
-    // props.onHide();
+    setEntitlement(defaultState);
+    setGrades([]);
+    props.onHide();
   };
 
   return (
     <>
       <Modal
         className="modal"
-        {...props}
+        show={props.show}
+        onHide={props.onHide}
+        // {...props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered

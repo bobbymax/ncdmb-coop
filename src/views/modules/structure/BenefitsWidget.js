@@ -27,7 +27,7 @@ const BenefitsWidget = ({ benefit, onEdit, onDestroy, modalControl }) => {
         <button
           type="button"
           className="btn btn-danger btn-sm"
-          // onClick={() => onDestroy(benefit)}
+          onClick={() => onDestroy(benefit)}
         >
           <i className="fa fa-trash"></i>
           {/* <FiTrash2 /> */}

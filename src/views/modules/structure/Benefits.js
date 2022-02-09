@@ -54,9 +54,9 @@ const Benefits = () => {
   const handleStateChange = (data) => {
     console.log(data);
 
-    // store("load/entitlements/", data)
-    //   .then((res) => console.log(res))
-    //   .catch((err) => console.log(err));
+    store("load/entitlements/", data)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const getGradeLevels = () => {
@@ -151,7 +151,7 @@ const Benefits = () => {
       "You would not be able to revert this!!"
     ).then((result) => {
       if (result.isConfirmed) {
-        destroy("priceLists", data.id)
+        destroy("benefits", data.id)
           .then((res) => {
             setBenefits([
               ...benefits.filter((price) => price.id !== res.data.data.id),

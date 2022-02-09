@@ -101,3 +101,18 @@ export const filterByRef = (arr1, arr2) => {
 
   return res;
 };
+
+const fetchLabels = (entity) => {
+  let enty = [];
+
+  entity.roles.forEach((el) => {
+    enty.push(el.label);
+  });
+
+  return enty;
+};
+
+export const userHasRole = (auth, role) => {
+  const authRoles = fetchLabels(auth);
+  return authRoles.includes(role);
+};

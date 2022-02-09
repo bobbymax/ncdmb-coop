@@ -27,6 +27,7 @@ import Instructions from "./views/modules/staff-services/Instructions";
 import Approvals from "./views/modules/approvals/Approvals";
 import Logistics from "./views/modules/refunds/Logistics";
 import Batch from "./views/modules/budget/Batch";
+import RefundRequests from "./views/modules/refunds/RefundRequests";
 
 const App = () => {
   return (
@@ -238,6 +239,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Logistics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/refund/requests"
+          element={
+            <ProtectedRoute>
+              <RefundRequests />
             </ProtectedRoute>
           }
         />

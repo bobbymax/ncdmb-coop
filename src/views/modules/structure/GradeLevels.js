@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
@@ -129,7 +130,7 @@ const GradeLevels = () => {
         destroy("gradeLevels", data.id)
           .then((res) => {
             setGradeLevels([
-              ...gradeLevels.filter((role) => role.id !== res.data.data.id),
+              ...gradeLevels.filter((level) => level.id !== res.data.data.id),
             ]);
             Alert.success("Deleted!!", res.data.message);
           })

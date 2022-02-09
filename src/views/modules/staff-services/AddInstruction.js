@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
@@ -6,84 +7,50 @@ import { verifyNumOfDays } from "../../../services/utils/helpers";
 
 const AddInstruction = (props) => {
   const initialState = {
-    claim_id: 0,
     benefit_id: 0,
     from: "",
     to: "",
-    category: 0,
     numOfDays: 0,
+    additional_benefit_id: 0,
     description: "",
     amount: 0,
   };
 
   const [state, setState] = useState(initialState);
+  const [benefit, setBenefit] = useState(null);
 
   const auth = useSelector((state) => state.auth.value.user);
-  const child = props.benefit.children;
 
   const collectData = (e) => {
     e.preventDefault();
 
-    const url = `claims/${state.claim_id}/instructions`;
+    // const url = `claims/${state.claim_id}/instructions`;
 
     const data = {
       benefit_id: state.benefit_id,
       from: state.from,
       to: state.to,
-      category: state.category,
+      additional_benefit_id: state.additional_benefit_id,
       numOfDays: state.numOfDays,
       description: state.description,
       amount: state.amount,
     };
 
-    props.onSubmit(url, data);
-
-    setState({
-      ...state,
-      benefit_id: 0,
-      from: "",
-      to: "",
-      category: 0,
-      numOfDays: 0,
-      description: "",
-      amount: 0,
-    });
-
-    // props.onHide();
+    props.onSubmit(data);
+    setState(initialState);
+    props.onHide();
+    setBenefit(null);
   };
 
   const closeModal = () => {
-    // setState({
-    //   ...state,
-    //   benefit_id: 0,
-    //   from: "",
-    //   to: "",
-    //   category: 0,
-    //   numOfDays: 0,
-    //   description: "",
-    //   amount: 0,
-    // });
-
     props.onHide();
+    setState(initialState);
+    setBenefit(null);
   };
 
   useEffect(() => {
-    if (props.claim) {
-      setState({
-        ...state,
-        claim_id: props.claim.id,
-      });
-    } else {
-      setState({
-        ...state,
-        claim_id: 0,
-      });
-    }
-  }, [props.claim]);
-
-  useEffect(() => {
     if (state.from !== "" && state.to !== "") {
-      if (props.benefit && props.benefit.numOfDays) {
+      if (benefit && benefit.numOfDays) {
         setState({
           ...state,
           numOfDays: verifyNumOfDays(state.from, state.to),
@@ -97,41 +64,31 @@ const AddInstruction = (props) => {
     }
   }, [state.from, state.to]);
 
-  // useEffect(() => {
-  //   if (
-  //     props.benefit &&
-  //     !props.benefit.numOfDays &&
-  //     props.benefit.entitlements.length !== 0 &&
-  //     state.benefit_id > 0
-  //   ) {
-  //     const fee = props.benefit.entitlements.filter(
-  //       (entitlement) => entitlement.grade === auth.level
-  //     );
+  useEffect(() => {
+    if (state.additional_benefit_id > 0) {
+      const child = benefit.children.filter((ben) => {
+        return state.additional_benefit_id === ben.id;
+      });
 
-  //     const entitlement = fee[0];
+      // const fee = benefit.entitlements.filter(
+      //   (entitlement) => entitlement.grade === auth.level
+      // );
+      // const entitlement = fee[0];
+      // const total = entitlement.amount * state.numOfDays;
+      console.log(benefit, child);
+    }
+  }, [state.additional_benefit_id]);
 
-  //     setState({
-  //       ...state,
-  //       amount: entitlement.amount,
-  //     });
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       amount: 0,
-  //     });
-
-  //     return null;
-  //   }
-  // }, [props.benefit]);
+  console.log(state.additional_benefit_id);
 
   useEffect(() => {
     if (
-      props.benefit &&
-      props.benefit.numOfDays &&
-      props.benefit.entitlements.length !== 0 &&
+      benefit &&
+      benefit.numOfDays &&
+      benefit.entitlements.length > 0 &&
       state.numOfDays > 0
     ) {
-      const fee = props.benefit.entitlements.filter(
+      const fee = benefit.entitlements.filter(
         (entitlement) => entitlement.grade === auth.level
       );
       const entitlement = fee[0];
@@ -142,16 +99,29 @@ const AddInstruction = (props) => {
         amount: total,
       });
     }
-  }, [props.benefit, state.numOfDays]);
+  }, [benefit, state.numOfDays]);
+
+  useEffect(() => {
+    if (state.benefit_id > 0) {
+      try {
+        props
+          .children(state.benefit_id)
+          .then((res) => setBenefit(res))
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [state.benefit_id]);
 
   useEffect(() => {
     if (
-      child &&
-      state.numOfDays > 0 &&
-      child.entitlements.length !== 0 &&
-      state.category > 0
+      benefit &&
+      !benefit.numOfDays &&
+      benefit.entitlements.length > 0 &&
+      state.additional_benefit_id > 0
     ) {
-      const fee = child.entitlements.filter(
+      const fee = benefit.entitlements.filter(
         (entitlement) => entitlement.grade === auth.level
       );
       const entitlement = fee[0];
@@ -163,9 +133,7 @@ const AddInstruction = (props) => {
         amount: total,
       });
     }
-  }, [child]);
-
-  // console.log(props.benefit);
+  }, [benefit]);
 
   return (
     <>
@@ -251,9 +219,7 @@ const AddInstruction = (props) => {
                     </div>
                   </div>
 
-                  {state.benefit_id !== 0 &&
-                  props.benefit &&
-                  props.benefit.hasChildren ? (
+                  {state.benefit_id !== 0 && benefit && benefit.hasChildren ? (
                     <div className="row mb-3">
                       <div className="col">
                         <label className="form-label">Select Category</label>
@@ -261,15 +227,18 @@ const AddInstruction = (props) => {
                         <select
                           as="select"
                           className="form-control"
-                          value={state.category}
+                          value={state.additional_benefit_id}
                           onChange={(e) => {
-                            setState({ ...state, category: e.target.value });
+                            setState({
+                              ...state,
+                              additional_benefit_id: e.target.value,
+                            });
                             props.children(e.target.value);
                           }}
                         >
                           <option value="0">Select Category</option>
-                          {props.benefit !== null && props.benefit.children
-                            ? props.benefit.children.map((child) => (
+                          {benefit !== null && benefit.children
+                            ? benefit.children.map((child) => (
                                 <option key={child.id} value={child.id}>
                                   {child.name}
                                 </option>
@@ -280,9 +249,7 @@ const AddInstruction = (props) => {
                     </div>
                   ) : null}
 
-                  {state.benefit_id !== 0 &&
-                  props.benefit &&
-                  props.benefit.numOfDays ? (
+                  {state.benefit_id !== 0 && benefit && benefit.numOfDays ? (
                     <div className="row mb-3">
                       <div className="col">
                         <div className="form-group">
@@ -330,9 +297,7 @@ const AddInstruction = (props) => {
                           onChange={(e) =>
                             setState({ ...state, amount: e.target.value })
                           }
-                          readOnly={
-                            props.benefit && props.benefit.label !== "others"
-                          }
+                          readOnly={benefit && benefit.label !== "others"}
                         />
                       </div>
                     </div>

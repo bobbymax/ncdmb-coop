@@ -1,19 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  uselo,
-  useLocation,
-  useMatch,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import { fetch } from "../../../services/utils/controllers";
-// import { Col, Row, Table, Button } from "react-bootstrap";
-// import { amountToWords } from "../../../services/helpers/functions";
-// import { FiPrinter } from "react-icons/fi";
-// import ExportClaim from "./ExportClaim";
-// import ClaimDetails from "../../widgets/ClaimDetails";
+import { useLocation, useNavigate } from "react-router-dom";
 import ClaimDetails from "../../../components/commons/widgets/ClaimDetails";
 import { amountToWords } from "../../../services/utils/helpers";
 import ExportClaim from "./ExportClaim";
@@ -28,7 +15,6 @@ export const Claim = (props) => {
   };
 
   const [state, setState] = useState(initialState);
-  // const auth = useSelector((state) => state.access.staff.authenticatedUser);
 
   const handleDownload = () => {
     setState({
@@ -39,14 +25,9 @@ export const Claim = (props) => {
     navigate("/claims");
   };
 
-  // const getClaim = () => {
-  //   fetch('/claims', id).then(res => console.log(res)).catch(err => console.lo)
-  // }
-
   useEffect(() => {
     if (params.pathname && params.state) {
       const claim = params.state.claim;
-      console.log(claim);
 
       setState({
         ...state,

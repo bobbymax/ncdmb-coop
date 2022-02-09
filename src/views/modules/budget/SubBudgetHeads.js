@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import {
@@ -97,7 +99,6 @@ const SubBudgetHeads = () => {
 
   useEffect(() => {
     request("subBudgetHeads");
-
     getDepartments();
     getBudgetHead();
   }, []);

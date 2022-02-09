@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 
 const CustomSelect = ({
@@ -10,6 +11,7 @@ const CustomSelect = ({
   error = false,
   errorMessage = null,
   arrinput = false,
+  placeholder,
   ...otherProps
 }) => {
   return (
@@ -25,35 +27,15 @@ const CustomSelect = ({
           value={value}
           onChange={onChange}
           multiple={arrinput ? "multiple" : ""}
-          placeholder
+          placeholder={placeholder}
           {...otherProps}
         >
           <option value={defaultInputValue}>{defaultText}</option>
-          {options.map((option, index) => {
-            if (option.key) {
-              return (
-                <option key={index} value={option.key}>
-                  {option.label}
-                </option>
-              );
-            }
-
-            if (option.name) {
-              return (
-                <option key={index} value={option.id}>
-                  {option.name}
-                </option>
-              );
-            }
-
-            if (option.id) {
-              return (
-                <option key={index} value={option.id}>
-                  {option.budgetHead.name}
-                </option>
-              );
-            }
-          })}
+          {options.map((option, index) => (
+            <option key={index} value={option.key}>
+              {option.label}
+            </option>
+          ))}
         </select>
         {errorMessage ? (
           <span style={{ fontSize: 12 }} className="text-danger">

@@ -72,11 +72,6 @@ export const Instructions = (props) => {
     alter("claims", state.claim_id, data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-
-    // props.update("claims", state.claim.id, data, {
-    //   success: broad.REGISTERED_CLAIM_SUCCESSFULLY,
-    //   failed: broad.REGISTERED_CLAIM_FAILED,
-    // })
   };
   //   setState({
   //     ...state,
@@ -95,8 +90,6 @@ export const Instructions = (props) => {
   //     failed: broadcast.FETCH_BENEFITS_FAILED,
   //   });
   // }, []);
-
-  console.log("Claim", params.state.claim);
 
   useEffect(() => {
     if (params.path && params.state) {
@@ -213,11 +206,11 @@ export const Instructions = (props) => {
 
               <tbody>
                 {state.instructions && state.instructions.length !== 0
-                  ? state.instructions.map((instruction) => {
+                  ? state.instructions.map((instruction, index) => {
                       if (state.instructions) {
                         return (
                           <InstructionWidget
-                            key={instruction.id}
+                            key={index}
                             instruction={instruction}
                             onDestroy={handleInstructionDestroy}
                           />

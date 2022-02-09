@@ -104,17 +104,18 @@ const Payments = (props) => {
                       <tbody>
                         {batches.map((batch) => (
                           <tr key={batch.id}>
+                            {/* <td></td> */}
+
                             <td>
                               <button
-                                className="btn btn-success"
+                                className="btn btn-success mr-3"
                                 onClick={() => handleBatchPrint(batch)}
                               >
                                 <i className="fa fa-print"></i>
                                 {/* <FiPrinter /> */}
                               </button>
+                              {batch.batch_no}
                             </td>
-
-                            <td>{batch.batch_no}</td>
                             <td>{`NGN ${new Intl.NumberFormat().format(
                               batch.amount
                             )}`}</td>

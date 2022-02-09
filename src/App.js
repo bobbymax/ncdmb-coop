@@ -24,6 +24,7 @@ import Benefits from "./views/modules/structure/Benefits";
 // import { Instructions } from "./views/modules/staff-services/Instructions";
 import Claim from "./views/modules/staff-services/Claim";
 import Instructions from "./views/modules/staff-services/Instructions";
+import Approvals from "./views/modules/approvals/Approvals";
 
 const App = () => {
   return (
@@ -215,6 +216,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Benefits />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/approve/expenditures"
+          element={
+            <ProtectedRoute>
+              <Approvals />
             </ProtectedRoute>
           }
         />

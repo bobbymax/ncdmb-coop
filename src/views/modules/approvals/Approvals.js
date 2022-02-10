@@ -2,9 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { collection, store } from "../../../services/utils/controllers";
-// import { connect } from 'react-redux'
-// import { fetch, store, update } from '../../../redux/actions'
-// import * as broadcast from '../../../redux/accessControl/types'
 import { getPaymentType, userHasRole } from "../../../services/utils/helpers";
 // import { getPaymentType } from '../../../services/helpers/functions'
 
@@ -29,7 +26,6 @@ const Approvals = (props) => {
   };
 
   const [state, setState] = useState(initialState);
-  // const
 
   const fetchPaymentBatch = (e) => {
     e.preventDefault();

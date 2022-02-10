@@ -11,7 +11,7 @@ const FormSelect = ({
   arrinput = false,
   ...otherProps
 }) => {
-  const { errors, values, setFieldValue, setErrors } = useFormikContext();
+  const { errors, values, setFieldValue } = useFormikContext();
 
   return (
     <>

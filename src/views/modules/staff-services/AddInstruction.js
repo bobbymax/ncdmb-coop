@@ -168,180 +168,176 @@ const AddInstruction = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <form onSubmit={collectData}>
-              <div className="modal-header">
-                <h5 className="modal-title">Add Detail</h5>
-              </div>
+        <form onSubmit={collectData}>
+          <div className="modal-header">
+            <h5 className="modal-title">Add Detail</h5>
+          </div>
 
-              <div className="modal-body">
-                <div className="container-fluid">
-                  <div className="row mb-3">
-                    <div className="col-md-4">
-                      <div className="form-group">
-                        <label className="form-label">Type</label>
+          <div className="modal-body">
+            <div className="container-fluid">
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <div className="form-group">
+                    <label className="form-label">Type</label>
 
-                        <select
-                          value={state.benefit_id}
-                          className="form-control"
-                          onChange={(e) => {
-                            setState({
-                              ...state,
-                              benefit_id: e.target.value,
-                            });
-                          }}
-                        >
-                          <option value="0">Select Type</option>
+                    <select
+                      value={state.benefit_id}
+                      className="form-control"
+                      onChange={(e) => {
+                        setState({
+                          ...state,
+                          benefit_id: e.target.value,
+                        });
+                      }}
+                    >
+                      <option value="0">Select Type</option>
 
-                          {props.benefits.length !== 0
-                            ? props.benefits.map((benefit) => {
-                                if (benefit.parentId === 0) {
-                                  return (
-                                    <option key={benefit.id} value={benefit.id}>
-                                      {benefit.name}
-                                    </option>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              })
-                            : null}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="col-md-4">
-                      <div className="form-group">
-                        <label className="form-label">From</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={state.from}
-                          onChange={(e) =>
-                            setState({ ...state, from: e.target.value })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-md-4">
-                      <div className="form-group">
-                        <label className="form-label">To</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={state.to}
-                          onChange={(e) =>
-                            setState({ ...state, to: e.target.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {state.benefit_id !== 0 && benefit && benefit.hasChildren ? (
-                    <div className="row mb-3">
-                      <div className="col">
-                        <label className="form-label">Select Category</label>
-
-                        <select
-                          as="select"
-                          className="form-control"
-                          value={state.additional_benefit_id}
-                          onChange={(e) => {
-                            setState({
-                              ...state,
-                              additional_benefit_id: e.target.value,
-                            });
-                            props.children(e.target.value);
-                          }}
-                        >
-                          <option value="0">Select Category</option>
-                          {benefit !== null && benefit.children
-                            ? benefit.children.map((child) => (
-                                <option key={child.id} value={child.id}>
-                                  {child.name}
+                      {props.benefits.length !== 0
+                        ? props.benefits.map((benefit) => {
+                            if (benefit.parentId === 0) {
+                              return (
+                                <option key={benefit.id} value={benefit.id}>
+                                  {benefit.name}
                                 </option>
-                              ))
-                            : null}
-                        </select>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {state.benefit_id !== 0 && benefit && benefit.numOfDays ? (
-                    <div className="row mb-3">
-                      <div className="col">
-                        <div className="form-group">
-                          <label className="form-label">Number of Days</label>
-
-                          <input
-                            className="form-control"
-                            type="text"
-                            placeholder="Enter Number of Days"
-                            value={state.numOfDays}
-                            onChange={(e) =>
-                              setState({ ...state, numOfDays: e.target.value })
+                              );
+                            } else {
+                              return null;
                             }
-                            readOnly
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="row mb-3">
-                    <div className="col">
-                      <div className="form-group">
-                        <label className="form-label">Description</label>
-                        <textarea
-                          className="form-control"
-                          value={state.description}
-                          onChange={(e) =>
-                            setState({ ...state, description: e.target.value })
-                          }
-                        ></textarea>
-                      </div>
-                    </div>
+                          })
+                        : null}
+                    </select>
                   </div>
+                </div>
 
-                  <div className="row mb-3">
-                    <div className="col">
-                      <div className="form-group">
-                        <label className="form-label">Amount</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          placeholder="Enter Amount"
-                          value={state.amount}
-                          onChange={(e) =>
-                            setState({ ...state, amount: e.target.value })
-                          }
-                          readOnly={benefit && benefit.label !== "others"}
-                        />
-                      </div>
-                    </div>
+                <div className="col-md-4">
+                  <div className="form-group">
+                    <label className="form-label">From</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={state.from}
+                      onChange={(e) =>
+                        setState({ ...state, from: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-4">
+                  <div className="form-group">
+                    <label className="form-label">To</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={state.to}
+                      onChange={(e) =>
+                        setState({ ...state, to: e.target.value })
+                      }
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="modal-footer">
-                <button className="btn btn-success" type="submit">
-                  Submit
-                </button>
+              {state.benefit_id !== 0 && benefit && benefit.hasChildren ? (
+                <div className="row mb-3">
+                  <div className="col">
+                    <label className="form-label">Select Category</label>
 
-                <button
-                  className="btn btn-danger"
-                  type="button"
-                  onClick={closeModal}
-                >
-                  Close
-                </button>
+                    <select
+                      as="select"
+                      className="form-control"
+                      value={state.additional_benefit_id}
+                      onChange={(e) => {
+                        setState({
+                          ...state,
+                          additional_benefit_id: e.target.value,
+                        });
+                        props.children(e.target.value);
+                      }}
+                    >
+                      <option value="0">Select Category</option>
+                      {benefit !== null && benefit.children
+                        ? benefit.children.map((child) => (
+                            <option key={child.id} value={child.id}>
+                              {child.name}
+                            </option>
+                          ))
+                        : null}
+                    </select>
+                  </div>
+                </div>
+              ) : null}
+
+              {state.benefit_id !== 0 && benefit && benefit.numOfDays ? (
+                <div className="row mb-3">
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="form-label">Number of Days</label>
+
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="Enter Number of Days"
+                        value={state.numOfDays}
+                        onChange={(e) =>
+                          setState({ ...state, numOfDays: e.target.value })
+                        }
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="row mb-3">
+                <div className="col">
+                  <div className="form-group">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      className="form-control"
+                      value={state.description}
+                      onChange={(e) =>
+                        setState({ ...state, description: e.target.value })
+                      }
+                    ></textarea>
+                  </div>
+                </div>
               </div>
-            </form>
+
+              <div className="row mb-3">
+                <div className="col">
+                  <div className="form-group">
+                    <label className="form-label">Amount</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="Enter Amount"
+                      value={state.amount}
+                      onChange={(e) =>
+                        setState({ ...state, amount: e.target.value })
+                      }
+                      readOnly={benefit && benefit.label !== "others"}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <div className="modal-footer">
+            <button className="btn btn-success" type="submit">
+              Submit
+            </button>
+
+            <button
+              className="btn btn-danger"
+              type="button"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </form>
       </Modal>
     </>
   );

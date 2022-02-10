@@ -20,8 +20,7 @@ const BatchPrintOut = ({ batch, onClose }) => {
       <Pdf targetRef={ref} filename="claim.pdf" options={options}>
         {({ toPdf }) => (
           <button className="btn btn-success mb-4" onClick={toPdf}>
-            <i className="fa fa-print" style={{ marginRight: 12 }}></i>
-            Print
+            <i className="fa fa-print"></i> Print
           </button>
         )}
       </Pdf>
@@ -31,8 +30,7 @@ const BatchPrintOut = ({ batch, onClose }) => {
         style={{ marginLeft: 4 }}
         onClick={() => onClose()}
       >
-        {/* <FiX style={{ marginRight: 5 }} /> */}
-        Close
+        <i className="fa fa-close"></i> Close
       </button>
 
       <div id="batch" ref={ref}>

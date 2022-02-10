@@ -65,7 +65,9 @@ const Login = () => {
                           // required
                         />
 
-                        <SubmitButton title="Sign Me In" />
+                        <div>
+                          <SubmitButton title="Sign Me In" />
+                        </div>
                       </Form>
 
                       <>

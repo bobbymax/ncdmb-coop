@@ -57,56 +57,58 @@ export const Claim = (props) => {
               })
             }
           >
-            <i className="fa fa-print"></i>
+            <i className="fa fa-print mr-2"></i>
             PRINT CLAIM
           </button>
 
-          <div className="card mt-5">
-            <table className="table table-bordered table-striped hover">
-              <thead>
-                <tr>
-                  <th>DATE</th>
-                  <th>DESCRIPTION</th>
-                  <th>AMOUNT</th>
-                </tr>
-              </thead>
+          <div className="card mt-4">
+            <div className="card-body">
+              <table className="table table-bordered table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>DESCRIPTION</th>
+                    <th>AMOUNT</th>
+                  </tr>
+                </thead>
 
-              <tbody>
-                {state.claim && state.claim.instructions.length !== 0
-                  ? state.claim.instructions.map((instruction) => (
-                      <ClaimDetails
-                        key={instruction.id}
-                        instruction={instruction}
-                      />
-                    ))
-                  : null}
-                <tr>
-                  <td colSpan="2" style={{ textAlign: "center" }}>
-                    <strong>TOTAL:</strong>
-                  </td>
-                  <td>
+                <tbody>
+                  {state.claim && state.claim.instructions.length !== 0
+                    ? state.claim.instructions.map((instruction) => (
+                        <ClaimDetails
+                          key={instruction.id}
+                          instruction={instruction}
+                        />
+                      ))
+                    : null}
+                  <tr>
+                    <td colSpan="2" style={{ textAlign: "center" }}>
+                      <strong>TOTAL:</strong>
+                    </td>
+                    <td>
+                      <strong>
+                        {state.claim
+                          ? new Intl.NumberFormat().format(
+                              state.claim.total_amount
+                            )
+                          : null}
+                      </strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="row">
+                <div className="col mt-4">
+                  <p style={{ textDecoration: "underline" }}>
                     <strong>
+                      Amount in Words:{" "}
                       {state.claim
-                        ? new Intl.NumberFormat().format(
-                            state.claim.total_amount
-                          )
+                        ? amountToWords(state.claim.total_amount).toUpperCase()
                         : null}
                     </strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div className="row">
-              <div className="col mt-4">
-                <p style={{ padding: 15, textDecoration: "underline" }}>
-                  <strong>
-                    Amount in Words:{" "}
-                    {state.claim
-                      ? amountToWords(state.claim.total_amount).toUpperCase()
-                      : null}
-                  </strong>
-                </p>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

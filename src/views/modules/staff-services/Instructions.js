@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import InstructionWidget from "../../../components/commons/widgets/InstructionWidget";
 import TextInputField from "../../../components/forms/TextInputField";
 import { alter, collection, store } from "../../../services/utils/controllers";
@@ -10,6 +10,7 @@ import AddInstruction from "./AddInstruction";
 
 export const Instructions = (props) => {
   const params = useLocation();
+  const navigate = useNavigate();
   const auth = useSelector((state) => state.auth.value.user);
 
   const initialState = {
@@ -27,10 +28,6 @@ export const Instructions = (props) => {
   const [benefit, setBenefit] = useState({});
 
   const handleSubmit = (data) => {
-    console.log(data);
-
-    // console.log(state.instructions);
-
     setState({
       ...state,
       instructions: [data, ...state.instructions],
@@ -51,10 +48,9 @@ export const Instructions = (props) => {
   };
 
   const handleInstructionDestroy = (value) => {
-    console.log(value);
-
     setState({
-      ...state.instructions.filter(
+      ...state,
+      instructions: state.instructions.filter(
         (instruction) => instruction.id !== value.id
       ),
     });
@@ -66,32 +62,18 @@ export const Instructions = (props) => {
 
   const registerClaim = () => {
     const data = {
-      title: state.claim.title,
-      total_amount: total,
+      claim_id: state.claim_id,
+      instructions: state.instructions,
       status: "registered",
     };
 
-    alter("claims", state.claim_id, data)
-      .then((res) => console.log(res))
+    store("claim/instructions", data)
+      .then((res) => {
+        console.log(res);
+        navigate("/claims");
+      })
       .catch((err) => console.log(err));
   };
-  //   setState({
-  //     ...state,
-  //     claim: null,
-  //     claim_id: 0,
-  //     title: "",
-  //   });
-  //   setTotal(0);
-
-  // //   props.history.push("/claims");
-  // // };
-
-  // useEffect(() => {
-  //   props.index("benefits", {
-  //     success: broadcast.FETCH_BENEFITS,
-  //     failed: broadcast.FETCH_BENEFITS_FAILED,
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (params.path && params.state) {
@@ -118,8 +100,6 @@ export const Instructions = (props) => {
     collection("benefits")
       .then((res) => setBenefits(res.data.data))
       .catch((err) => console.log(err));
-
-    // return benefits.data.data;
   };
 
   useEffect(() => {
@@ -137,6 +117,8 @@ export const Instructions = (props) => {
 
     getBenefits();
   }, []);
+
+  console.log(state.instructions);
 
   return (
     <>
@@ -187,32 +169,13 @@ export const Instructions = (props) => {
                 </tr>
               </thead>
 
-              {/* <tbody>
-                {state.claim.instructions &&
-                state.claim.instructions.length !== 0
-                  ? state.claim.instructions.map((instruction) => {
-                      if (state.claim) {
-                        return (
-                          <InstructionWidget
-                            key={instruction.id}
-                            instruction={instruction}
-                            // onDestroy={handleInstructionDestroy}
-                          />
-                        );
-                      } else {
-                        return null;
-                      }
-                    })
-                  : null}
-              </tbody> */}
-
               <tbody>
                 {state.instructions && state.instructions.length !== 0
-                  ? state.instructions.map((instruction, index) => {
+                  ? state.instructions.map((instruction, i) => {
                       if (state.instructions) {
                         return (
                           <InstructionWidget
-                            key={index}
+                            key={i}
                             instruction={instruction}
                             onDestroy={handleInstructionDestroy}
                           />
@@ -236,6 +199,7 @@ export const Instructions = (props) => {
           className="btn btn-success btn-lg"
           type="button"
           onClick={registerClaim}
+          disabled={state.instructions.length === 0}
         >
           <i className="fa fa-paper-plane" style={{ marginRight: "2px" }}></i>
           Submit

@@ -1,17 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useMemo } from "react";
-import debounce from "lodash/debounce";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection, destroy } from "../../../services/utils/controllers";
-// import Form from "../../../components/forms/Form";
-// import FormInput from "../../../components/forms/FormInput";
 import TextInputField from "../../../components/forms/TextInputField";
-// import FormSelect from "../../../components/forms/FormSelect";
-// import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import CustomSelect from "../../../components/forms/CustomSelect";
-// import SubmitButton from "../../../components/forms/SubmitButton";
-// import { store, alter } from "../../../services/utils/controllers";
 import Alert from "../../../services/classes/Alert";
 
 const Fund = () => {

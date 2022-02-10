@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
 import Form from "../../../components/forms/Form";

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
@@ -34,6 +35,7 @@ const AddInstruction = (props) => {
       numOfDays: state.numOfDays,
       description: state.description,
       amount: state.amount,
+      benefit,
     };
 
     props.onSubmit(data);
@@ -50,7 +52,7 @@ const AddInstruction = (props) => {
 
   useEffect(() => {
     if (state.from !== "" && state.to !== "") {
-      if (benefit && benefit.numOfDays) {
+      if (benefit && !benefit.numOfDays) {
         setState({
           ...state,
           numOfDays: verifyNumOfDays(state.from, state.to),
@@ -66,15 +68,17 @@ const AddInstruction = (props) => {
 
   useEffect(() => {
     if (state.additional_benefit_id > 0) {
-      const fee = benefit.children.filter(
+      const child = benefit.children.filter(
         (ben) => state.additional_benefit_id == ben.id
       );
 
-      const entitlement = fee[0];
-      console.log();
+      const fee = child[0].entitlements.filter(
+        (ent) => ent.grade === auth.level
+      );
+      // console.log();
 
-      const total = entitlement.entitlements[0].amount * state.numOfDays;
-      // const total = entitlement.amount * state.numOfDays;
+      const entitlement = fee[0];
+      const total = entitlement.amount * state.numOfDays;
 
       setState({
         ...state,
@@ -314,7 +318,13 @@ const AddInstruction = (props) => {
                   Submit
                 </button>
 
-                <button className="btn btn-danger">Close</button>
+                <button
+                  className="btn btn-danger"
+                  type="button"
+                  onClick={closeModal}
+                >
+                  Close
+                </button>
               </div>
             </form>
           </div>

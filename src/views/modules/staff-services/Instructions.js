@@ -27,10 +27,6 @@ export const Instructions = (props) => {
   const [benefit, setBenefit] = useState({});
 
   const handleSubmit = (data) => {
-    console.log(data);
-
-    // console.log(state.instructions);
-
     setState({
       ...state,
       instructions: [data, ...state.instructions],
@@ -64,39 +60,15 @@ export const Instructions = (props) => {
 
   const registerClaim = () => {
     const data = {
-      title: state.claim.title,
-      total_amount: total,
+      claim_id: state.claim_id,
+      instructions: state.instructions,
       status: "registered",
     };
 
-    alter("claims", state.claim_id, data)
+    store("claim/instructions", data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-
-    // props.update("claims", state.claim.id, data, {
-    //   success: broad.REGISTERED_CLAIM_SUCCESSFULLY,
-    //   failed: broad.REGISTERED_CLAIM_FAILED,
-    // })
   };
-  //   setState({
-  //     ...state,
-  //     claim: null,
-  //     claim_id: 0,
-  //     title: "",
-  //   });
-  //   setTotal(0);
-
-  // //   props.history.push("/claims");
-  // // };
-
-  // useEffect(() => {
-  //   props.index("benefits", {
-  //     success: broadcast.FETCH_BENEFITS,
-  //     failed: broadcast.FETCH_BENEFITS_FAILED,
-  //   });
-  // }, []);
-
-  console.log("Claim", params.state.claim);
 
   useEffect(() => {
     if (params.path && params.state) {
@@ -123,8 +95,6 @@ export const Instructions = (props) => {
     collection("benefits")
       .then((res) => setBenefits(res.data.data))
       .catch((err) => console.log(err));
-
-    // return benefits.data.data;
   };
 
   useEffect(() => {
@@ -192,32 +162,13 @@ export const Instructions = (props) => {
                 </tr>
               </thead>
 
-              {/* <tbody>
-                {state.claim.instructions &&
-                state.claim.instructions.length !== 0
-                  ? state.claim.instructions.map((instruction) => {
-                      if (state.claim) {
-                        return (
-                          <InstructionWidget
-                            key={instruction.id}
-                            instruction={instruction}
-                            // onDestroy={handleInstructionDestroy}
-                          />
-                        );
-                      } else {
-                        return null;
-                      }
-                    })
-                  : null}
-              </tbody> */}
-
               <tbody>
                 {state.instructions && state.instructions.length !== 0
-                  ? state.instructions.map((instruction) => {
+                  ? state.instructions.map((instruction, i) => {
                       if (state.instructions) {
                         return (
                           <InstructionWidget
-                            key={instruction.id}
+                            key={i}
                             instruction={instruction}
                             onDestroy={handleInstructionDestroy}
                           />

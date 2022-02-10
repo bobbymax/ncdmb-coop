@@ -53,11 +53,11 @@ export const Instructions = (props) => {
   const handleInstructionDestroy = (value) => {
     console.log(value);
 
-    // setState({
-    //   ...state.instructions.filter(
-    //     (instruction) => instruction.id !== value.id
-    //   ),
-    // });
+    setState({
+      ...state.instructions.filter(
+        (instruction) => instruction.id !== value.id
+      ),
+    });
   };
 
   const updateGrandTotal = (sum) => {

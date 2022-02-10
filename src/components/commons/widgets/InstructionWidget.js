@@ -5,7 +5,7 @@ const InstructionWidget = ({ instruction, onDestroy }) => {
     <tr>
       <td>{instruction.from}</td>
       <td>{instruction.to}</td>
-      <td>{instruction.benefit}</td>
+      <td>{instruction.benefit && instruction.benefit.name}</td>
       <td>{instruction.amount}</td>
 
       <td>

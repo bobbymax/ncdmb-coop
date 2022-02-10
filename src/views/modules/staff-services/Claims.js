@@ -79,7 +79,7 @@ const Claims = (props) => {
           store("claims", data)
             .then((res) => {
               const result = res.data.data;
-              setClaims([...claims, result]);
+              setClaims([result, ...claims]);
               Alert.success("Created!!", res.data.message);
             })
             .catch((err) => console.log(err.message));
@@ -92,7 +92,7 @@ const Claims = (props) => {
 
       setUpdate(false);
       setState(initialState);
-      // setOpen(false);
+      setOpen(false);
     }
   };
 

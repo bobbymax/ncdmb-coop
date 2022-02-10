@@ -116,3 +116,8 @@ export const userHasRole = (auth, role) => {
   const authRoles = fetchLabels(auth);
   return authRoles.includes(role);
 };
+
+export const uniqueNumberGenerator = (str) => {
+  const paymentType = str === "staff-payment" ? "SP" : "TPP";
+  return paymentType + Math.floor(Math.random() * 100000);
+};

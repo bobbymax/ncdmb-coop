@@ -28,6 +28,7 @@ const Logistics = (props) => {
 
           setState({
             ...state,
+            batch: res.data,
             amount: data.amount,
             budgetCode: data.sub,
             beneficiary: data.beneficiary,
@@ -87,16 +88,16 @@ const Logistics = (props) => {
       .catch((err) => console.log(err));
 
   useEffect(() => {
-    if (state.batch !== null) {
-      setState({
-        ...state,
-        batch: state.batch,
-        // batch: props.batch,
-      });
+    // if (state.batch !== null) {
+    //   setState({
+    //     ...state,
+    //     batch: state.batch,
+    //     // batch: props.batch,
+    //   });
+    // }
 
-      getDepartments();
-    }
-  }, [state.batch]);
+    getDepartments();
+  }, []);
 
   // useEffect(() => {
   //   props.index("departments", {
@@ -141,34 +142,36 @@ const Logistics = (props) => {
                     </tr>
                   </thead>
 
-                  {/* <tbody>
-                {state.batch && state.batch.expenditures.length !== 0 ? (
-                  state.batch.expenditures.map((exp) => (
-                    <tr key={exp.id}>
-                      <td>{exp.subBudgetHead.budgetCode}</td>
-                      <td>{exp.beneficiary}</td>
-                      <td>{exp.amount}</td>
-                      <td>{exp.description}</td>
-                      <td>
-                        <Button
-                          variant="success"
-                          size="sm"
-                          onClick={() => fillExpenditure(exp)}
-                          disabled={exp.refunded !== null}
-                        >
-                          REQUEST REFUND
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="text-danger">
-                      No Data Found!!
-                    </td>
-                  </tr>
-                )}
-              </tbody> */}
+                  <tbody>
+                    {state.batch && state.batch.expenditures.length !== 0 ? (
+                      state.batch.expenditures.map((exp) => (
+                        <tr key={exp.id}>
+                          <td>{exp.subBudgetHead.budgetCode}</td>
+                          <td>{exp.beneficiary}</td>
+                          <td>{exp.amount}</td>
+                          <td>{exp.description}</td>
+
+                          <td>
+                            <button
+                              className="btn btn-success btn-sm"
+                              // variant="success"
+                              // size="sm"
+                              // onClick={() => fillExpenditure(exp)}
+                              disabled={exp.refunded !== null}
+                            >
+                              REQUEST REFUND
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="text-danger">
+                          No Data Found!!
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -176,7 +179,7 @@ const Logistics = (props) => {
         </div>
       ) : null}
 
-      {state.activeExp ? (
+      {/* {state.activeExp ? (
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="row">
             <div className="col-md-3">
@@ -306,7 +309,7 @@ const Logistics = (props) => {
             </div>
           </div>
         </form>
-      ) : null}
+      ) : null} */}
     </>
   );
 };

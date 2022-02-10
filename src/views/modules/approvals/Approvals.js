@@ -44,7 +44,6 @@ const Approvals = (props) => {
       ...state,
       batch_code: "",
       showDetails: true,
-      isUpdating: true,
     });
   };
 
@@ -121,7 +120,7 @@ const Approvals = (props) => {
   };
 
   useEffect(() => {
-    if (state.batch !== null && !state.showDetails) {
+    if (state.batch && state.batch !== null && !state.showDetails) {
       setState({
         ...state,
         batch: state.batch,

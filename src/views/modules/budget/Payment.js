@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -5,12 +6,6 @@ import BatchPrintOut from "../../../components/commons/BatchPrintOut";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
-// import { Button, Col, Row, Table } from "react-bootstrap";
-// import { connect, useSelector } from "react-redux";
-// import { index } from "../../../redux/actions";
-// import * as broadcast from "../../../redux/accessControl/types";
-// import { FiPrinter } from "react-icons/fi";
-// import BatchPrintOut from "./BatchPrintOut";
 
 const Payments = (props) => {
   const [searchTerm, setSearchTerm] = useState("");

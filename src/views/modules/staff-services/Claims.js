@@ -129,16 +129,6 @@ const Claims = (props) => {
     });
   };
 
-  // console.log(claims);
-
-  // const handleUpdate = data => {
-  //     //
-  // }
-
-  // const handleDestroy = data => {
-
-  // }
-
   const deleteClaim = (claim) => {
     Alert.flash(
       "Are you sure?",
@@ -157,23 +147,6 @@ const Claims = (props) => {
       }
     });
   };
-
-  // const handleSearch = (str) => {
-  //   setSearchTerm(str);
-
-  //   if (str !== "") {
-  //     const filtered = claims.filter((row) => {
-  //       return Object.values(row)
-  //         .join(" ")
-  //         .toLowerCase()
-  //         .includes(str.toLowerCase());
-  //     });
-
-  //     setResults(filtered);
-  //   } else {
-  //     setResults(claims);
-  //   }
-  // };
 
   useEffect(() => {
     request("claims");

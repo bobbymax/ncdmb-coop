@@ -25,9 +25,12 @@ const AddInstruction = (props) => {
   const collectData = (e) => {
     e.preventDefault();
 
+    let count = 1000000000;
+
     // const url = `claims/${state.claim_id}/instructions`;
 
     const data = {
+      id: Math.random(count),
       benefit_id: state.benefit_id,
       from: state.from,
       to: state.to,
@@ -52,7 +55,7 @@ const AddInstruction = (props) => {
 
   useEffect(() => {
     if (state.from !== "" && state.to !== "") {
-      if (benefit && !benefit.numOfDays) {
+      if (benefit && benefit.numOfDays) {
         setState({
           ...state,
           numOfDays: verifyNumOfDays(state.from, state.to),
@@ -75,7 +78,6 @@ const AddInstruction = (props) => {
       const fee = child[0].entitlements.filter(
         (ent) => ent.grade === auth.level
       );
-      // console.log();
 
       const entitlement = fee[0];
       const total = entitlement.amount * state.numOfDays;
@@ -86,8 +88,6 @@ const AddInstruction = (props) => {
       });
     }
   }, [state.additional_benefit_id]);
-
-  // console.log("add ben id", state.additional_benefit_id);
 
   useEffect(() => {
     if (
@@ -114,7 +114,22 @@ const AddInstruction = (props) => {
       try {
         props
           .children(state.benefit_id)
-          .then((res) => setBenefit(res))
+          .then((res) => {
+            const selected = res;
+            setBenefit(res);
+
+            if (!selected.numOfDays) {
+              const fee =
+                selected.entitlements.length > 0 &&
+                selected.entitlements.filter((ent) => ent.grade === auth.level);
+
+              const entitlement = fee && fee[0];
+              setState({
+                ...state,
+                amount: entitlement.amount,
+              });
+            }
+          })
           .catch((err) => console.log(err.message));
       } catch (error) {
         console.log(error);
@@ -175,8 +190,6 @@ const AddInstruction = (props) => {
                               ...state,
                               benefit_id: e.target.value,
                             });
-
-                            props.fetcher(e.target.value);
                           }}
                         >
                           <option value="0">Select Type</option>

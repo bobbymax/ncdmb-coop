@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import InstructionWidget from "../../../components/commons/widgets/InstructionWidget";
 import TextInputField from "../../../components/forms/TextInputField";
 import { alter, collection, store } from "../../../services/utils/controllers";
@@ -10,6 +10,7 @@ import AddInstruction from "./AddInstruction";
 
 export const Instructions = (props) => {
   const params = useLocation();
+  const navigate = useNavigate();
   const auth = useSelector((state) => state.auth.value.user);
 
   const initialState = {
@@ -48,7 +49,8 @@ export const Instructions = (props) => {
 
   const handleInstructionDestroy = (value) => {
     setState({
-      ...state.instructions.filter(
+      ...state,
+      instructions: state.instructions.filter(
         (instruction) => instruction.id !== value.id
       ),
     });
@@ -66,7 +68,10 @@ export const Instructions = (props) => {
     };
 
     store("claim/instructions", data)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        navigate("/claims");
+      })
       .catch((err) => console.log(err));
   };
 
@@ -112,6 +117,8 @@ export const Instructions = (props) => {
 
     getBenefits();
   }, []);
+
+  console.log(state.instructions);
 
   return (
     <>
@@ -192,6 +199,7 @@ export const Instructions = (props) => {
           className="btn btn-success btn-lg"
           type="button"
           onClick={registerClaim}
+          disabled={state.instructions.length === 0}
         >
           <i className="fa fa-paper-plane" style={{ marginRight: "2px" }}></i>
           Submit

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 // import { connect, useSelector } from "react-redux";
 // import * as broadcast from "../../../redux/accessControl/types";
-import { Table, Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 // import ExpenditureCard from "../../widgets/ExpenditureCard";
 // import "../../../assets/js/canvas";

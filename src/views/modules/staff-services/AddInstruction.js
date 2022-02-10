@@ -71,7 +71,6 @@ const AddInstruction = (props) => {
       );
 
       const entitlement = fee[0];
-      console.log();
 
       const total = entitlement.entitlements[0].amount * state.numOfDays;
       // const total = entitlement.amount * state.numOfDays;
@@ -149,7 +148,7 @@ const AddInstruction = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <div className="modal-dia">
+        <div className="modal-dialog">
           <div className="modal-content">
             <form onSubmit={collectData}>
               <div className="modal-header">

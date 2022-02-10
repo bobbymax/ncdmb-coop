@@ -1,10 +1,11 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
-// import Alert from "../../../services/classes/Alert";
+import Alert from "../../../services/classes/Alert";
 import useApi from "../../../services/hooks/useApi";
 
 const Expenditures = () => {
@@ -13,6 +14,7 @@ const Expenditures = () => {
     setData: setSubBudgetHeads,
     request,
   } = useApi(collection);
+
   const initialState = {
     claim: null,
     code: "",
@@ -28,12 +30,7 @@ const Expenditures = () => {
     payment_type: "",
     status: "cleared",
     additional_info: "",
-    subBudgetHeads: [],
   };
-  const [disabled, setDisbled] = useState(false);
-  const [payment_type, setPayment_Type] = useState("");
-  const [claimData, setClaimData] = useState({});
-
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
 
@@ -41,91 +38,21 @@ const Expenditures = () => {
     request("subBudgetHeads");
   }, []);
 
-  useEffect(() => {}, [state.sub_budget_head_id]);
+  useEffect(() => {
+    const single =
+      state.sub_budget_head_id > 0 &&
+      subBudgetHeads.filter((sub) => sub.id == state.sub_budget_head_id && sub);
 
-  console.log(subBudgetHeads);
-
-  // const handleSubmit = (values) => {
-  //   store("subBudgetHeads", values)
-  //     .then((res) => console.log("Succcess", res))
-  //     .catch((err) => console.log(err));
-
-  //   // console.log(values);
-
-  //   // const formErrors = validate(rules, data);
-  //   // setErrors(formErrors);
-  //   // const status =
-  //   //   Object.keys(formErrors).length === 0 && formErrors.constructor === Object;
-
-  //   // if (status) {
-  //   //   if (update) {
-  //   //     try {
-  //   //       alter("roles", state.id, data)
-  //   //         .then((res) => {
-  //   //           const result = res.data.data;
-
-  //   //           setRoles(
-  //   //             roles.map((el) => {
-  //   //               if (result.id === el.id) {
-  //   //                 return result;
-  //   //               }
-
-  //   //               return el;
-  //   //             })
-  //   //           );
-  //   //           Alert.success("Updated", res.data.message);
-  //   //         })
-  //   //         .catch((err) => console.log(err.message));
-  //   //     } catch (error) {
-  //   //       console.log(error);
-  //   //     }
-  //   //   } else {
-  //   //     try {
-  //   //       store("roles", data)
-  //   //         .then((res) => {
-  //   //           const result = res.data.data;
-  //   //           setRoles([result, ...roles]);
-  //   //           Alert.success("Created!!", res.data.message);
-  //   //         })
-  //   //         .catch((err) => console.log(err.message));
-  //   //     } catch (error) {
-  //   //       console.log(error);
-  //   //     }
-  //   //   }
-
-  //   //   setErrors({});
-
-  //   //   setUpdate(false);
-  //   //   setState(initialState);
-  //   //   setOpen(false);
-  //   // }
-  // };
-
-  const handleChange = (value) => {
-    if (value.length === 8) {
-      collection(`subBudgetHeads/${value}`);
-      //  .then((res) =>
-      //   //  setState({ ...state, sub_budget_head_id: )
-      //  )
-      //  .catch((err) => console.log("Error reading data", err));
+    if (single.length > 0) {
+      setState({
+        ...state,
+        budget_code: single[0].budgetCode,
+        available_balance: parseFloat(single[0].approved_amount),
+      });
     }
-  };
+  }, [state.sub_budget_head_id]);
 
-  const fetchSubBudgetHead = (value) => {
-    if (value > 0) {
-      collection("subBudgetHeads/" + value)
-        // .then((res) => {
-        //   setState({
-        //     ...state,
-        //     available_balance: res.data.data.actual_balance,
-        //     budget_code: res.data.data.budgetCode,
-        //   });
-        // })
-        .catch((err) => console.log(err));
-    }
-  };
-
-  const updateAmount = () => {
+  useEffect(() => {
     if (state.available_balance > 0 && state.amount > 0) {
       const value =
         parseFloat(state.available_balance) - parseFloat(state.amount);
@@ -135,18 +62,18 @@ const Expenditures = () => {
         new_balance: value,
       });
     }
-  };
+  }, [state.available_balance, state.amount]);
 
-  const onClaimIDChange = (value) => {
+  const handleChange = (value) => {
     if (value.length === 8) {
       collection(`fetch/claims/${value}`)
         .then((res) => {
           const claim = res.data.data;
-          // console.log(claim);
 
           setState({
             ...state,
-            claim: claim.claim,
+            code: claim.reference_no,
+            claim: claim,
             title: claim.title,
             beneficiary: claim.owner.name.toUpperCase(),
             amount: claim.total_amount,
@@ -155,6 +82,30 @@ const Expenditures = () => {
         })
         .catch((err) => console.log(err));
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const data = {
+      payment_type: state.payment_type,
+      type: state.payment_type === "staff-payment" ? state.type : "other",
+      claim_id: state.claim_id,
+      sub_budget_head_id: state.sub_budget_head_id,
+      amount: state.amount,
+      new_balance: state.new_balance,
+      beneficiary: state.beneficiary,
+      description: state.title,
+      status: state.status,
+      additional_info: state.additional_info,
+    };
+
+    store("expenditures", data).then((res) => {
+      console.log(res);
+      Alert.success("Expenditure", "Created Successfully!");
+
+      setState(initialState);
+    });
   };
 
   const subBudgetHeadsOptions = (optionsArr) => {
@@ -177,79 +128,6 @@ const Expenditures = () => {
     { key: "third-party", label: "THIRD PARTY" },
   ];
 
-  // useEffect(() => {
-  //   collection("subBudgetHeads")
-  //     .then((res) => {
-  //       setSubBudgetHeads(res.data.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-  // useEffect(() => {
-  //   props.index("subBudgetHeads", {
-  //     success: broadcast.FETCH_SUB_BUDGET_HEADS,
-  //     failed: broadcast.FETCH_SUB_BUDGET_HEADS_FAILED,
-  //   });
-  // }, []);
-
-  useEffect(() => {
-    if (state.claim) {
-      setState({
-        ...state,
-        claim: state.claim,
-        title: state.claim.title,
-        beneficiary: state.claim.owner.name.toUpperCase(),
-        amount: state.claim.total_amount,
-        claim_id: state.claim.id,
-      });
-    }
-  }, [state.claim]);
-
-  // useEffect(() => {
-  // //   if (props.subBudgetHeads) {
-  // //     setState({
-  // //       ...state,
-  // //       subBudgetHeads: props.subBudgetHeads.collection,
-  // //     });
-  // //   }
-  // // }, [props.subBudgetHeads]);
-
-  useEffect(() => {
-    if (
-      subBudgetHeads.subBudgetHead &&
-      subBudgetHeads.subBudgetHead !== null &&
-      state.sub_budget_head_id > 0
-    ) {
-      const subBudgetHead = subBudgetHeads.subBudgetHead;
-
-      setState({
-        ...state,
-        budget_code: subBudgetHeads.budgetCode,
-        available_balance: subBudgetHead.fund
-          ? subBudgetHead.fund.actual_balance
-          : 0,
-      });
-    } else {
-      setState({
-        ...state,
-        budget_code: "",
-        available_balance: 0,
-      });
-    }
-  }, [subBudgetHeads, state.sub_budget_head_id]);
-
-  useEffect(() => {
-    if (state.available_balance > 0 && state.amount > 0) {
-      const value =
-        parseFloat(state.available_balance) - parseFloat(state.amount);
-
-      setState({
-        ...state,
-        new_balance: value,
-      });
-    }
-  }, [state.available_balance, state.amount]);
-
   return (
     <div className="row">
       <div className="col-md-12">
@@ -263,7 +141,7 @@ const Expenditures = () => {
           <div className="card">
             <div className="card-body">
               <div className="form-body">
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-4">
                       <CustomSelect
@@ -273,7 +151,6 @@ const Expenditures = () => {
                         type="text"
                         value={state.payment_type}
                         onChange={(e) => {
-                          console.log(e.target.value);
                           setState({
                             ...state,
                             payment_type: e.target.value,
@@ -311,9 +188,10 @@ const Expenditures = () => {
                         placeholder="ENTER CLAIM ID"
                         type="text"
                         value={state.code}
-                        onChange={(e) =>
-                          setState({ ...state, code: e.target.value })
-                        }
+                        onChange={(e) => {
+                          setState({ ...state, code: e.target.value });
+                          handleChange(e.target.value);
+                        }}
                         error={errors && errors.code && errors.code.length > 0}
                         errorMessage={errors && errors.code && errors.code[0]}
                         readOnly={state.payment_type === "third-party"}
@@ -322,7 +200,6 @@ const Expenditures = () => {
 
                     <div className="col-md-12">
                       <CustomSelect
-                        // defaultInputValue={"SELECT SUB BUDGET HEAD"}
                         defaultText="SELECT SUB BUDGET HEAD"
                         options={subBudgetHeadsOptions(subBudgetHeads)}
                         value={state.sub_budget_head_id}
@@ -331,7 +208,6 @@ const Expenditures = () => {
                             ...state,
                             sub_budget_head_id: e.target.value,
                           });
-                          fetchSubBudgetHead(e.target.value);
                         }}
                         error={
                           errors && errors.isSuper && errors.isSuper.length > 0

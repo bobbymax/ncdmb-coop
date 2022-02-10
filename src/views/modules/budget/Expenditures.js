@@ -2,15 +2,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
-import Form from "../../../components/forms/Form";
-import FormInput from "../../../components/forms/FormInput";
-import FormSelect from "../../../components/forms/FormSelect";
-import SubmitButton from "../../../components/forms/SubmitButton";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
-import Alert from "../../../services/classes/Alert";
+// import Alert from "../../../services/classes/Alert";
+import useApi from "../../../services/hooks/useApi";
 
 const Expenditures = () => {
+  const {
+    data: subBudgetHeads,
+    setData: setSubBudgetHeads,
+    request,
+  } = useApi(collection);
   const initialState = {
     claim: null,
     code: "",
@@ -28,37 +30,20 @@ const Expenditures = () => {
     additional_info: "",
     subBudgetHeads: [],
   };
-
-  const [departments, setDepartments] = useState([]);
-  const [data, setData] = useState(initialState);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
-  const [open, setOpen] = useState(false);
   const [disabled, setDisbled] = useState(false);
   const [payment_type, setPayment_Type] = useState("");
   const [claimData, setClaimData] = useState({});
-  const [subBudgetHeads, setSubBudgetHeads] = useState([]);
 
   const [state, setState] = useState(initialState);
-  const [update, setUpdate] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // store("expenditures", values)
-    //   .then((res) => console.log(res))
-    //   .catch((err) => console.log("Error", err));
-  };
-
-  const getSubBudgetHeads = async () => {
-    const res = await collection("subBudgetHeads");
-    setSubBudgetHeads(res.data.dat);
-  };
-
   useEffect(() => {
-    getSubBudgetHeads();
+    request("subBudgetHeads");
   }, []);
+
+  useEffect(() => {}, [state.sub_budget_head_id]);
+
+  console.log(subBudgetHeads);
 
   // const handleSubmit = (values) => {
   //   store("subBudgetHeads", values)
@@ -172,6 +157,15 @@ const Expenditures = () => {
     }
   };
 
+  const subBudgetHeadsOptions = (optionsArr) => {
+    const arr = [];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
+  };
+
   const paymentType = [
     { key: "staff-claim", label: "STAFF CLAIM" },
     { key: "touring-advance", label: "TOURING ADVANCE" },
@@ -269,7 +263,7 @@ const Expenditures = () => {
           <div className="card">
             <div className="card-body">
               <div className="form-body">
-                <form onSubmit={handleSubmit}>
+                <form>
                   <div className="row">
                     <div className="col-md-4">
                       <CustomSelect
@@ -330,7 +324,7 @@ const Expenditures = () => {
                       <CustomSelect
                         // defaultInputValue={"SELECT SUB BUDGET HEAD"}
                         defaultText="SELECT SUB BUDGET HEAD"
-                        options={subBudgetHeads}
+                        options={subBudgetHeadsOptions(subBudgetHeads)}
                         value={state.sub_budget_head_id}
                         onChange={(e) => {
                           setState({
@@ -491,19 +485,17 @@ const Expenditures = () => {
 
                     <div className="col-md-12 mt-3">
                       <button type="submit" className="btn btn-primary">
-                        Submit
+                        <i className="fa fa-send"></i> Submit
                       </button>
                       <button
                         type="button"
                         className="btn btn-danger"
                         onClick={() => {
-                          setUpdate(false);
                           setState(initialState);
-                          setOpen(false);
                           setErrors({});
                         }}
                       >
-                        Close
+                        <i className="fa fa-close"></i> Cancel
                       </button>
                     </div>
                   </div>

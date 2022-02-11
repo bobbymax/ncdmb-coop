@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 
-function DragNDrop({ data, setData }) {
+function DragNDrop({ data }) {
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
 
-  // useEffect(() => {
-  //   setList(data);
-  // }, [setList, data]);
+  useEffect(() => {
+    setList(data);
+  }, [setList, data]);
 
   const dragItem = useRef();
   const dragItemNode = useRef();
@@ -22,13 +22,11 @@ function DragNDrop({ data, setData }) {
       setDragging(true);
     }, 0);
   };
-
   const handleDragEnter = (e, targetItem) => {
     console.log("Entering a drag target", targetItem);
-
     if (dragItemNode.current !== e.target) {
       console.log("Target is NOT the same as dragged item");
-      setData((oldList) => {
+      setList((oldList) => {
         let newList = JSON.parse(JSON.stringify(oldList));
         newList[targetItem.grpI].items.splice(
           targetItem.itemI,
@@ -44,14 +42,12 @@ function DragNDrop({ data, setData }) {
       });
     }
   };
-
   const handleDragEnd = (e) => {
     setDragging(false);
     dragItem.current = null;
     dragItemNode.current.removeEventListener("dragend", handleDragEnd);
     dragItemNode.current = null;
   };
-
   const getStyles = (item) => {
     if (
       dragItem.current.grpI === item.grpI &&
@@ -65,7 +61,7 @@ function DragNDrop({ data, setData }) {
   if (list) {
     return (
       <div className="drag-n-drop">
-        {data.map((grp, grpI) => (
+        {list.map((grp, grpI) => (
           <div
             key={grp.title}
             onDragEnter={
@@ -75,27 +71,25 @@ function DragNDrop({ data, setData }) {
             }
             className="dnd-group"
           >
-            <div>
-              <h4 className="group-title">{grp.title}</h4>
-
-              {grp.items.map((item, i) => (
-                <div
-                  className="dnd-item"
-                  draggable
-                  onDragStart={
-                    dragging && !grp.items.length
-                      ? (e) => handletDragStart(e, { item, i: 0 })
-                      : null
-                  }
-                >
-                  <>
-                    <h5>{item.amount}</h5> <br />
-                    <p>{item.beneficiary}</p>
-                    <span>{item.description}</span>
-                  </>
-                </div>
-              ))}
-            </div>
+            {grp.title}
+            {grp.items.map((item, itemI) => (
+              <div
+                draggable
+                key={item}
+                onDragStart={(e) => handletDragStart(e, { grpI, itemI })}
+                onDragEnter={
+                  dragging
+                    ? (e) => {
+                        handleDragEnter(e, { grpI, itemI });
+                      }
+                    : null
+                }
+                className={dragging ? getStyles({ grpI, itemI }) : "dnd-item"}
+              >
+                {item.beneficiary}
+                {item.id}
+              </div>
+            ))}
           </div>
         ))}
       </div>

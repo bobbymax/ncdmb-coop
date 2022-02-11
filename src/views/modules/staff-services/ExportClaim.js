@@ -92,11 +92,11 @@ const ExportClaim = ({ claim, auth, onClose }) => {
         <div className="claimBackground" style={styles.outter}>
           <div style={styles.topSection}>
             <img src={logo} alt="claim ncdmb logo" style={styles.logo} />
-
             <h5 style={styles.claim_id}>
               CLAIM ID:{" "}
               <strong>{state ? state.reference_no.toUpperCase() : null}</strong>
             </h5>
+
             <div style={styles.clearfix}></div>
           </div>
 

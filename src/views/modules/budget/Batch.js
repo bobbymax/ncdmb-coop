@@ -1,16 +1,20 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-// import { connect, useSelector } from "react-redux";
-// import * as broadcast from "../../../redux/accessControl/types";
 import { Row, Col, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { collection } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
-// import ExpenditureCard from "../../widgets/ExpenditureCard";
+import useApi from "../../../services/hooks/useApi";
+import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
 // import "../../../assets/js/canvas";
 // import BatchCard from "../../widgets/BatchCard";
 
 const Batch = (props) => {
+  const { data: expenditures, request } = useApi(collection);
+  const auth = useSelector((state) => state.auth.value.user);
+
   const initialState = {
-    expenditures: [],
     board: [],
     boardType: "",
     maxSlot: 0,
@@ -31,7 +35,6 @@ const Batch = (props) => {
           0
         )
       : 0;
-  // const auth = useSelector((state) => state.auth.staff.authenticatedUser);
   const boardLength = state.board.length;
 
   const batchClaim = (expenditure) => {
@@ -152,12 +155,9 @@ const Batch = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   props.index("expenditures", {
-  //     success: broadcast.FETCHED_EXPENDITURES,
-  //     failed: broadcast.FETCHED_EXPENDITURES_FAILED,
-  //   });
-  // }, []);
+  useEffect(() => {
+    request("expenditures");
+  }, []);
 
   useEffect(() => {
     if (boardLength === 1) {
@@ -198,6 +198,20 @@ const Batch = (props) => {
         Generate Batch Number
       </Button>
 
+      <div className="row mt-3">
+        <div className="col-md-4">
+          <h5>STAFF PAYMENT</h5>
+        </div>
+
+        <div className="col-md-4">
+          <h5>THIRD PARTY</h5>
+        </div>
+
+        <div className="col-md-4">
+          <h5>BATCH</h5>
+        </div>
+      </div>
+
       <Row className="mt-4">
         <Col md={8}>
           <>
@@ -214,37 +228,37 @@ const Batch = (props) => {
                     </tr>
                   </thead>
 
-                  {/* <tbody>
-                {state.expenditures.length !== 0 ? (
-                  state.expenditures.map((expenditure) => {
-                    if (
-                      auth.department.id ===
-                        expenditure.controller.department.id &&
-                      expenditure.status === "cleared"
-                    ) {
-                      return (
-                        <ExpenditureCard
-                          key={expenditure.id}
-                          expenditure={expenditure}
-                          addToBatch={batchClaim}
-                          isButtonOff={state.buttonDisabled}
-                          paymentType={state.boardType}
-                          maxed={
-                            state.board.length > 0 &&
-                            state.board.length === state.maxSlot
-                          }
-                        />
-                      );
-                    } else {
-                      return null;
-                    }
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan="5">{"No Expenditure Data!!"}</td>
-                  </tr>
-                )}
-              </tbody> */}
+                  <tbody>
+                    {expenditures.length !== 0 ? (
+                      expenditures.map((expenditure) => {
+                        if (
+                          auth.department.id ===
+                            expenditure.controller.department.id &&
+                          expenditure.status === "cleared"
+                        ) {
+                          return (
+                            <ExpenditureCard
+                              key={expenditure.id}
+                              expenditure={expenditure}
+                              addToBatch={batchClaim}
+                              isButtonOff={state.buttonDisabled}
+                              paymentType={state.boardType}
+                              maxed={
+                                state.board.length > 0 &&
+                                state.board.length === state.maxSlot
+                              }
+                            />
+                          );
+                        } else {
+                          return null;
+                        }
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="5">{"No Expenditure Data!!"}</td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </div>
             </div>

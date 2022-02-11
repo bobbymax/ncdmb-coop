@@ -23,11 +23,14 @@ function DragNDrop({ data }) {
     }, 0);
   };
   const handleDragEnter = (e, targetItem) => {
-    console.log("Entering a drag target", targetItem);
+    // console.log("Entering a drag target", targetItem);
+
     if (dragItemNode.current !== e.target) {
       console.log("Target is NOT the same as dragged item");
       setList((oldList) => {
         let newList = JSON.parse(JSON.stringify(oldList));
+        console.log("New List", newList);
+
         newList[targetItem.grpI].items.splice(
           targetItem.itemI,
           0,
@@ -36,6 +39,7 @@ function DragNDrop({ data }) {
             1
           )[0]
         );
+
         dragItem.current = targetItem;
         localStorage.setItem("List", JSON.stringify(newList));
         return newList;
@@ -49,6 +53,8 @@ function DragNDrop({ data }) {
     dragItemNode.current = null;
   };
   const getStyles = (item) => {
+    console.log("Dragged item", item);
+
     if (
       dragItem.current.grpI === item.grpI &&
       dragItem.current.itemI === item.itemI
@@ -86,8 +92,8 @@ function DragNDrop({ data }) {
                 }
                 className={dragging ? getStyles({ grpI, itemI }) : "dnd-item"}
               >
-                {item.beneficiary}
-                {item.id}
+                <span>{item.beneficiary}</span> <br />
+                <span>{item.amount}</span>
               </div>
             ))}
           </div>

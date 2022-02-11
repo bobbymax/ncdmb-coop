@@ -27,46 +27,42 @@
   grid-template-columns: repeat(auto-fill, 300px);
   align-items: start;
 }
+
 .dnd-group {
   background-color: #49505e;
   border-radius: 5px;
   padding: 0.5rem;
 }
+
 .dnd-item {
-  display: flex;
-  line-height: 30px;
+  /* display: flex; */
+  line-height: 25px;
   min-height: 150px;
   background-color: white;
+  padding: 10px;
   border-radius: 5px;
-  color: #282c34;
+  color: black;
   font-weight: bold;
+  font-family: Poppins;
 }
+
 .dnd-item:not(:last-of-type) {
   margin-bottom: 0.5rem;
 }
+
 .dnd-item * {
   margin: 0;
   font-size: 1.2rem;
 }
+
 .group-title {
   text-align: left;
+  text-transform: capitalize !important;
   color: white;
   margin-bottom: 0.5rem;
   font-size: 15px;
 }
+
 .current {
   background-color: #282c34;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

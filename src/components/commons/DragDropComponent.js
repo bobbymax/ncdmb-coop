@@ -36,14 +36,6 @@ function DragDropComponent() {
     request("expenditures");
   }, []);
 
-  // useEffect(() => {
-  //   if (expenditures > 0) {
-  //     setData(expenditures);
-  //   } else {
-  //     setData(defaultData);
-  //   }
-  // }, []);
-
   return (
     <div className="App">
       <header className="App-header">

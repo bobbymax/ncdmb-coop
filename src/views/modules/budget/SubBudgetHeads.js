@@ -9,12 +9,7 @@ import {
   store,
 } from "../../../services/utils/controllers";
 import useApi from "../../../services/hooks/useApi";
-import FormInput from "../../../components/forms/FormInput";
-import FormSelect from "../../../components/forms/FormSelect";
-import CustomCheckbox from "../../../components/forms/CustomCheckbox";
 import Alert from "../../../services/classes/Alert";
-import SubmitButton from "../../../components/forms/SubmitButton";
-import * as Yup from "yup";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
 import { validate } from "../../../services/utils/validation";

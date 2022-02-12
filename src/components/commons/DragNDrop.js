@@ -57,7 +57,7 @@ function DragNDrop({ data }) {
 
   const getStyles = (item) => {
     console.log("Dragged item", item);
-    if (item.payment_type === "third-party") {
+    if (item.item.payment_type === "third-party") {
       setDisabled(true);
     }
 
@@ -82,7 +82,6 @@ function DragNDrop({ data }) {
                 : null
             }
             className="dnd-group"
-            aria-disabled={grp.title === "batch" ? disabled : "false"}
           >
             {grp.title}
 
@@ -98,6 +97,7 @@ function DragNDrop({ data }) {
                       }
                     : null
                 }
+                aria-disabled={grp.title === "batch" ? disabled : false}
                 className={dragging ? getStyles({ grpI, item }) : "dnd-item"}
               >
                 <span>{item.beneficiary}</span> <br />

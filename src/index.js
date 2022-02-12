@@ -7,9 +7,10 @@ import { store } from "./app/store";
 import DragNDrop from "./components/commons/DragNDrop";
 import DragDropComponent from "./components/commons/DragDropComponent";
 import ReactDndComponent from "./ReactDndComponent";
+import ReactSmoothDnd from "./ReactSmoothDnd";
 
 ReactDOM.render(
-  <DragDropComponent />,
+  <ReactSmoothDnd />,
   // <Provider store={store}>
   //   <Router>
   //     <App />

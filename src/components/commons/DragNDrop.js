@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 function DragNDrop({ data }) {
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     setList(data);
@@ -22,8 +23,9 @@ function DragNDrop({ data }) {
       setDragging(true);
     }, 0);
   };
+
   const handleDragEnter = (e, targetItem) => {
-    // console.log("Entering a drag target", targetItem);
+    console.log("Entering a drag target", targetItem);
 
     if (dragItemNode.current !== e.target) {
       console.log("Target is NOT the same as dragged item");
@@ -52,8 +54,12 @@ function DragNDrop({ data }) {
     dragItemNode.current.removeEventListener("dragend", handleDragEnd);
     dragItemNode.current = null;
   };
+
   const getStyles = (item) => {
     console.log("Dragged item", item);
+    if (item.payment_type === "third-party") {
+      setDisabled(true);
+    }
 
     if (
       dragItem.current.grpI === item.grpI &&
@@ -76,8 +82,10 @@ function DragNDrop({ data }) {
                 : null
             }
             className="dnd-group"
+            aria-disabled={grp.title === "batch" ? disabled : "false"}
           >
             {grp.title}
+
             {grp.items.map((item, itemI) => (
               <div
                 draggable
@@ -86,11 +94,11 @@ function DragNDrop({ data }) {
                 onDragEnter={
                   dragging
                     ? (e) => {
-                        handleDragEnter(e, { grpI, itemI });
+                        handleDragEnter(e, { grpI, item });
                       }
                     : null
                 }
-                className={dragging ? getStyles({ grpI, itemI }) : "dnd-item"}
+                className={dragging ? getStyles({ grpI, item }) : "dnd-item"}
               >
                 <span>{item.beneficiary}</span> <br />
                 <span>{item.amount}</span>

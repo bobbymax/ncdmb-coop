@@ -30,7 +30,6 @@ function DragDropComponent() {
       items: [],
     },
   ];
-  const [data, setData] = useState();
 
   useEffect(() => {
     request("expenditures");

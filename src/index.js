@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import DragNDrop from "./components/commons/DragNDrop";
 import DragDropComponent from "./components/commons/DragDropComponent";
+import ReactDndComponent from "./ReactDndComponent";
 
 ReactDOM.render(
   <DragDropComponent />,

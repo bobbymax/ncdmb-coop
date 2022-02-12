@@ -9,7 +9,10 @@ const items = [
 const ReactSmoothDnd = () => {
   return (
     <div style={{ minHeight: 500 }}>
-      <Container onDragEnd={(result) => console.log(result)}>
+      <Container
+        onDragEnd={(result) => console.log(result)}
+        orientation="horizontal"
+      >
         {items.map((item) => (
           <Draggable key={item.id}>
             <div style={{ width: 250, padding: 20, backgroundColor: "white" }}>

@@ -10,11 +10,10 @@ import ReactDndComponent from "./ReactDndComponent";
 import ReactSmoothDnd from "./ReactSmoothDnd";
 
 ReactDOM.render(
-  <ReactSmoothDnd />,
-  // <Provider store={store}>
-  //   <Router>
-  //     <App />
-  //   </Router>
-  // </Provider>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );

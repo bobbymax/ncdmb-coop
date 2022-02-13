@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, CarouselItem } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { collection } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
@@ -200,8 +200,7 @@ const Batch = (props) => {
   }, [defaultData]);
 
   const getValue = (item) => {
-    // defaultData[2].items.push(item);
-    // console.log(defaultData[2].items);
+    console.log("item", item);
   };
 
   return (

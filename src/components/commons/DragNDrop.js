@@ -23,7 +23,7 @@ function DragNDrop({ data, returnValue }) {
   };
 
   const handleDragEnter = (e, targetItem) => {
-    console.log("Entering a drag target", targetItem);
+    // console.log("Entering a drag target", targetItem);
     returnValue(targetItem.item);
 
     if (dragItemNode.current !== e.target) {

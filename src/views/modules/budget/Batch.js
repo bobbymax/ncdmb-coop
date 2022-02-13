@@ -195,11 +195,6 @@ const Batch = (props) => {
     },
   ];
 
-  const getValue = (item) => {
-    const indexedArray = defaultData[2].items.push(item);
-    console.log(defaultData[2].items);
-  };
-
   return (
     <>
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
@@ -217,11 +212,7 @@ const Batch = (props) => {
 
       <div className="row mt-3">
         <div className="col">
-          <DragNDrop
-            data={defaultData}
-            setData={setExpenditures}
-            returnValue={getValue}
-          />
+          <DragNDrop data={defaultData} setData={setExpenditures} />
         </div>
 
         {defaultData[2].items.length > 0 ? (

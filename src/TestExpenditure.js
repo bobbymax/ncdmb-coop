@@ -149,3 +149,57 @@ useEffect(() => {
     });
   }
 }, [state.available_balance, state.amount]);
+
+<Row className="mt-4">
+  <Col>
+    <>
+      {/* <div className="card">
+              <div className="card-body">
+                <table className="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Budget Code</th>
+                      <th>Payment Type</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {expenditures.length !== 0 ? (
+                      expenditures.map((expenditure) => {
+                        if (
+                          auth.department.id ===
+                            expenditure.controller.department.id &&
+                          expenditure.status === "cleared"
+                        ) {
+                          return (
+                            <ExpenditureCard
+                              key={expenditure.id}
+                              expenditure={expenditure}
+                              addToBatch={batchClaim}
+                              isButtonOff={state.buttonDisabled}
+                              paymentType={state.boardType}
+                              maxed={
+                                state.board.length > 0 &&
+                                state.board.length === state.maxSlot
+                              }
+                            />
+                          );
+                        } else {
+                          return null;
+                        }
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="5">{"No Expenditure Data!!"}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div> */}
+    </>
+  </Col>
+</Row>;

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./drag.css";
 
-function DragNDrop({ data }) {
+function DragNDrop({ data, setData }) {
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -13,8 +14,6 @@ function DragNDrop({ data }) {
   const dragItemNode = useRef();
 
   const handletDragStart = (e, item) => {
-    console.log("Starting to drag", item);
-
     dragItemNode.current = e.target;
     dragItemNode.current.addEventListener("dragend", handleDragEnd);
     dragItem.current = item;
@@ -28,10 +27,8 @@ function DragNDrop({ data }) {
     console.log("Entering a drag target", targetItem);
 
     if (dragItemNode.current !== e.target) {
-      console.log("Target is NOT the same as dragged item");
       setList((oldList) => {
         let newList = JSON.parse(JSON.stringify(oldList));
-        console.log("New List", newList);
 
         newList[targetItem.grpI].items.splice(
           targetItem.itemI,
@@ -48,6 +45,7 @@ function DragNDrop({ data }) {
       });
     }
   };
+
   const handleDragEnd = (e) => {
     setDragging(false);
     dragItem.current = null;
@@ -56,10 +54,7 @@ function DragNDrop({ data }) {
   };
 
   const getStyles = (item) => {
-    console.log("Dragged item", item);
-    if (item.item.payment_type === "third-party") {
-      setDisabled(true);
-    }
+    // console.log("Dragged item", item);
 
     if (
       dragItem.current.grpI === item.grpI &&
@@ -67,6 +62,7 @@ function DragNDrop({ data }) {
     ) {
       return "dnd-item current";
     }
+
     return "dnd-item";
   };
 
@@ -81,27 +77,32 @@ function DragNDrop({ data }) {
                 ? (e) => handleDragEnter(e, { grpI, itemI: 0 })
                 : null
             }
-            className="dnd-group"
+            className="dnd-group bg-success"
           >
-            {grp.title}
+            <h4 className="text-white">{grp.title}</h4>
 
             {grp.items.map((item, itemI) => (
               <div
                 draggable
-                key={item}
+                key={item.id}
                 onDragStart={(e) => handletDragStart(e, { grpI, itemI })}
                 onDragEnter={
                   dragging
                     ? (e) => {
-                        handleDragEnter(e, { grpI, item });
+                        handleDragEnter(e, { item, itemI, grpI });
                       }
                     : null
                 }
-                aria-disabled={grp.title === "batch" ? disabled : false}
-                className={dragging ? getStyles({ grpI, item }) : "dnd-item"}
+                className={
+                  dragging ? getStyles({ grpI, itemI, item }) : "dnd-item"
+                }
+                style={
+                  disabled ? { pointerEvents: "none", opacity: "0.4" } : {}
+                }
               >
-                <span>{item.beneficiary}</span> <br />
-                <span>{item.amount}</span>
+                <h3>BUDGET CODE: {item.subBudgetHead.budgetCode}</h3>
+                <h3>AMOUNT: {item.amount}</h3>
+                <h3>PAYMENT TYPE: {item.payment_type.toUpperCase()}</h3>
               </div>
             ))}
           </div>

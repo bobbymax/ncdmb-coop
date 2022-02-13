@@ -7,12 +7,17 @@ import { collection } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 import useApi from "../../../services/hooks/useApi";
 import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
+import DragNDrop from "../../../components/commons/DragNDrop";
 // import "../../../assets/js/canvas";
 // import BatchCard from "../../widgets/BatchCard";
 
 const Batch = (props) => {
-  const { data: expenditures, request } = useApi(collection);
-  const auth = useSelector((state) => state.auth.value.user);
+  const {
+    data: expenditures,
+    setData: setExpenditures,
+    request,
+  } = useApi(collection);
+  // const auth = useSelector((state) => state.auth.value.user);
 
   const initialState = {
     board: [],
@@ -35,6 +40,7 @@ const Batch = (props) => {
           0
         )
       : 0;
+
   const boardLength = state.board.length;
 
   const batchClaim = (expenditure) => {
@@ -113,11 +119,6 @@ const Batch = (props) => {
       steps: 1,
     };
 
-    // props.store("batches", data, {
-    //   success: broadcast.BATCHED_EXPENDITURES,
-    //   failed: broadcast.BATCHED_EXPENDITURES_FAILED,
-    // });
-
     setState({
       ...state,
       board: [],
@@ -175,14 +176,28 @@ const Batch = (props) => {
     });
   }, [grandTotal]);
 
+  const defaultData = [
+    {
+      title: "STAFF CLAIM",
+      items: expenditures.filter((ex) => {
+        return ex.payment_type && ex.payment_type === "staff-payment";
+      }),
+    },
+    {
+      title: "THIRD PARTY",
+      items: expenditures.filter((ex) => {
+        return ex.payment_type && ex.payment_type === "third-party";
+      }),
+    },
+    {
+      title: "BATCH",
+      items: [],
+    },
+  ];
+
   useEffect(() => {
-    if (props.expenditures && props.expenditures.collection.length !== 0) {
-      setState({
-        ...state,
-        expenditures: props.expenditures.collection,
-      });
-    }
-  }, [props.expenditures]);
+    console.log(defaultData[2].items);
+  }, [defaultData[2].items]);
 
   return (
     <>
@@ -199,111 +214,24 @@ const Batch = (props) => {
       </Button>
 
       <div className="row mt-3">
-        <div className="col-md-4">
-          <h5>STAFF PAYMENT</h5>
+        <div className="col">
+          <DragNDrop data={defaultData} setData={setExpenditures} />
         </div>
 
-        <div className="col-md-4">
-          <h5>THIRD PARTY</h5>
-        </div>
+        <div className="col-md-2">
+          <h4 className="content-title content-title-xs mb-3">
+            Batch - {state.code.toUpperCase()}
+          </h4>
 
-        <div className="col-md-4">
-          <h5>BATCH</h5>
+          <button
+            className="btn btn-success btn-sm"
+            disabled={state.code === ""}
+            onClick={handleBatcher}
+          >
+            Batch Payments
+          </button>
         </div>
       </div>
-
-      <Row className="mt-4">
-        <Col md={8}>
-          <>
-            <div className="card">
-              <div className="card-body">
-                <table className="table table-bordered table-hover">
-                  <thead>
-                    <tr>
-                      {/* <th></th> */}
-                      <th>Budget Code</th>
-                      <th>Payment Type</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {expenditures.length !== 0 ? (
-                      expenditures.map((expenditure) => {
-                        if (
-                          auth.department.id ===
-                            expenditure.controller.department.id &&
-                          expenditure.status === "cleared"
-                        ) {
-                          return (
-                            <ExpenditureCard
-                              key={expenditure.id}
-                              expenditure={expenditure}
-                              addToBatch={batchClaim}
-                              isButtonOff={state.buttonDisabled}
-                              paymentType={state.boardType}
-                              maxed={
-                                state.board.length > 0 &&
-                                state.board.length === state.maxSlot
-                              }
-                            />
-                          );
-                        } else {
-                          return null;
-                        }
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan="5">{"No Expenditure Data!!"}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
-        </Col>
-
-        <Col md={3}>
-          <>
-            <Col>
-              <h4 className="content-title content-title-xs mb-3">
-                Batch - {state.code.toUpperCase()}
-              </h4>
-
-              {/* {state.board.length !== 0
-                ? state.board.map((batch) => (
-                    <BatchCard
-                      key={batch.id}
-                      batch={batch}
-                      onRemove={handleDelete}
-                    />
-                  ))
-                : null} */}
-
-              <div className="card card-hover card-social-one mt-3">
-                <div className="card-body">
-                  <div className="d-flex align-items-center justify-content-between mg-b-10">
-                    <h1 className="card-value">
-                      {grandPrettyTotal(state.total)}
-                    </h1>
-                  </div>
-                  <h5 className="card-title tx-primary">{"Grand Total"}</h5>
-                </div>
-              </div>
-              <Button
-                variant="success"
-                className="btn-block"
-                disabled={state.code === ""}
-                onClick={handleBatcher}
-              >
-                Batch Payments
-              </Button>
-            </Col>
-          </>
-        </Col>
-      </Row>
     </>
   );
 };

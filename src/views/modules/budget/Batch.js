@@ -223,7 +223,7 @@ const Batch = (props) => {
           <DragNDrop
             data={defaultData}
             setData={setExpenditures}
-            returnValue={getValue}
+            // returnValue={getValue}
           />
         </div>
 

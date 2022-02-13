@@ -9,11 +9,7 @@ import Alert from "../../../services/classes/Alert";
 import useApi from "../../../services/hooks/useApi";
 
 const Expenditures = () => {
-  const {
-    data: subBudgetHeads,
-    setData: setSubBudgetHeads,
-    request,
-  } = useApi(collection);
+  const { data: subBudgetHeads, request } = useApi(collection);
 
   const initialState = {
     claim: null,

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { collection } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 import useApi from "../../../services/hooks/useApi";
-import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
+// import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
 import DragNDrop from "../../../components/commons/DragNDrop";
 // import "../../../assets/js/canvas";
 // import BatchCard from "../../widgets/BatchCard";
@@ -195,12 +195,9 @@ const Batch = (props) => {
     },
   ];
 
-  useEffect(() => {
-    console.log(defaultData);
-  }, [defaultData]);
-
   const getValue = (item) => {
-    console.log("item", item);
+    const indexedArray = defaultData.indexOf(2);
+    console.log(indexedArray);
   };
 
   return (
@@ -227,7 +224,7 @@ const Batch = (props) => {
           />
         </div>
 
-        {defaultData[2].items.length > 0 && (
+        {defaultData[2].items.length > 0 ? (
           <div className="col-md-2">
             <h4 className="content-title content-title-xs mb-3">
               Batch - {state.code.toUpperCase()}
@@ -241,7 +238,7 @@ const Batch = (props) => {
               Batch Payments
             </button>
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );

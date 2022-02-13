@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./drag.css";
 
-function DragNDrop({ data, setData }) {
+function DragNDrop({ data, returnValue }) {
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
-  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     setList(data);
@@ -25,6 +24,7 @@ function DragNDrop({ data, setData }) {
 
   const handleDragEnter = (e, targetItem) => {
     console.log("Entering a drag target", targetItem);
+    returnValue(targetItem.item);
 
     if (dragItemNode.current !== e.target) {
       setList((oldList) => {
@@ -84,7 +84,7 @@ function DragNDrop({ data, setData }) {
             {grp.items.map((item, itemI) => (
               <div
                 draggable
-                key={item.id}
+                key={itemI}
                 onDragStart={(e) => handletDragStart(e, { grpI, itemI })}
                 onDragEnter={
                   dragging
@@ -96,13 +96,13 @@ function DragNDrop({ data, setData }) {
                 className={
                   dragging ? getStyles({ grpI, itemI, item }) : "dnd-item"
                 }
-                style={
-                  disabled ? { pointerEvents: "none", opacity: "0.4" } : {}
-                }
               >
-                <h3>BUDGET CODE: {item.subBudgetHead.budgetCode}</h3>
+                <h3 className="card-title">
+                  BUDGET CODE: {item.subBudgetHead.budgetCode}
+                </h3>
                 <h3>AMOUNT: {item.amount}</h3>
                 <h3>PAYMENT TYPE: {item.payment_type.toUpperCase()}</h3>
+                <h3>Description: {item.description}</h3>
               </div>
             ))}
           </div>

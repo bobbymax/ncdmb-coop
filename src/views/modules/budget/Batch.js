@@ -119,17 +119,17 @@ const Batch = (props) => {
       steps: 1,
     };
 
-    setState({
-      ...state,
-      board: [],
-      boardType: "",
-      maxSlot: 0,
-      code: "",
-      total: 0,
-      buttonDisabled: false,
-    });
+    // setState({
+    //   ...state,
+    //   board: [],
+    //   boardType: "",
+    //   maxSlot: 0,
+    //   code: "",
+    //   total: 0,
+    //   buttonDisabled: false,
+    // });
 
-    props.history.push("/payments");
+    // props.history.push("/payments");
   };
 
   const handleDelete = (expenditure) => {
@@ -196,12 +196,18 @@ const Batch = (props) => {
   ];
 
   useEffect(() => {
-    console.log(defaultData[2].items);
-  }, [defaultData[2].items]);
+    console.log(defaultData);
+  }, [defaultData]);
+
+  const getValue = (item) => {
+    // defaultData[2].items.push(item);
+    // console.log(defaultData[2].items);
+  };
 
   return (
     <>
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
+
       <Button
         type="button"
         variant="success"
@@ -215,22 +221,28 @@ const Batch = (props) => {
 
       <div className="row mt-3">
         <div className="col">
-          <DragNDrop data={defaultData} setData={setExpenditures} />
+          <DragNDrop
+            data={defaultData}
+            setData={setExpenditures}
+            returnValue={getValue}
+          />
         </div>
 
-        <div className="col-md-2">
-          <h4 className="content-title content-title-xs mb-3">
-            Batch - {state.code.toUpperCase()}
-          </h4>
+        {defaultData[2].items.length > 0 && (
+          <div className="col-md-2">
+            <h4 className="content-title content-title-xs mb-3">
+              Batch - {state.code.toUpperCase()}
+            </h4>
 
-          <button
-            className="btn btn-success btn-sm"
-            disabled={state.code === ""}
-            onClick={handleBatcher}
-          >
-            Batch Payments
-          </button>
-        </div>
+            <button
+              className="btn btn-success btn-sm"
+              disabled={state.code === ""}
+              onClick={handleBatcher}
+            >
+              Batch Payments
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

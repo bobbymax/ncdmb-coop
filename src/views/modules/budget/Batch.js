@@ -196,8 +196,8 @@ const Batch = (props) => {
   ];
 
   const getValue = (item) => {
-    const indexedArray = defaultData.indexOf(2);
-    console.log(indexedArray);
+    const indexedArray = defaultData[2].items.push(item);
+    console.log(defaultData[2].items);
   };
 
   return (
@@ -220,7 +220,7 @@ const Batch = (props) => {
           <DragNDrop
             data={defaultData}
             setData={setExpenditures}
-            // returnValue={getValue}
+            returnValue={getValue}
           />
         </div>
 

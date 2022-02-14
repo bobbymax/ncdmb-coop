@@ -8,6 +8,8 @@ import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 import useApi from "../../../services/hooks/useApi";
 // import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
 import DragNDrop from "../../../components/commons/DragNDrop";
+import BatchWidget from "../../../components/commons/widgets/BatchWidget";
+import BatchCard from "../../../components/commons/widgets/BatchCard";
 // import "../../../assets/js/canvas";
 // import BatchCard from "../../widgets/BatchCard";
 
@@ -17,7 +19,6 @@ const Batch = (props) => {
     setData: setExpenditures,
     request,
   } = useApi(collection);
-  // const auth = useSelector((state) => state.auth.value.user);
 
   const initialState = {
     board: [],
@@ -30,9 +31,7 @@ const Batch = (props) => {
     buttonDisabled: false,
     sub_budget_head_id: 0,
   };
-
   const [state, setState] = useState(initialState);
-
   const grandTotal =
     state.board.length !== 0
       ? state.board.reduce(
@@ -41,12 +40,25 @@ const Batch = (props) => {
         )
       : 0;
 
+  const defaultData = [
+    {
+      title: "STAFF PAYMENT",
+      items: expenditures.filter((ex) => {
+        return ex.payment_type && ex.payment_type === "staff-payment";
+      }),
+    },
+    {
+      title: "THIRD PARTY",
+      items: expenditures.filter((ex) => {
+        return ex.payment_type && ex.payment_type === "third-party";
+      }),
+    },
+  ];
+
   const boardLength = state.board.length;
 
   const batchClaim = (expenditure) => {
-    const batch = state.expenditures.filter(
-      (batch) => expenditure.id === batch.id
-    );
+    const batch = expenditures.filter((batch) => expenditure.id === batch.id);
 
     const maxSlots = {
       staffPayment: 6,
@@ -57,11 +69,14 @@ const Batch = (props) => {
       expenditure.payment_type === "third-party" &&
       state.board.length < maxSlots.thirdParty
     ) {
+      const newExpenditure = expenditures.filter(
+        (batch) => expenditure.id !== batch.id
+      );
+
+      setExpenditures(newExpenditure);
+
       setState({
         ...state,
-        expenditures: state.expenditures.filter(
-          (batch) => expenditure.id !== batch.id
-        ),
         board: [...state.board, batch[0]],
         buttonDisabled: !state.buttonDisabled,
         boardType: expenditure.payment_type,
@@ -75,22 +90,28 @@ const Batch = (props) => {
         boardLength >= 1 &&
         expenditure.subBudgetHead.id === state.sub_budget_head_id
       ) {
+        const newExpenditure = expenditures.filter(
+          (batch) => expenditure.id !== batch.id
+        );
+
+        setExpenditures(newExpenditure);
+
         setState({
           ...state,
-          expenditures: state.expenditures.filter(
-            (batch) => expenditure.id !== batch.id
-          ),
           board: [...state.board, batch[0]],
           buttonDisabled: true,
           boardType: expenditure.payment_type,
           maxSlot: maxSlots.staffPayment,
         });
       } else {
+        const newExpenditure = expenditures.filter(
+          (batch) => expenditure.id !== batch.id
+        );
+
+        setExpenditures(newExpenditure);
+
         setState({
           ...state,
-          expenditures: state.expenditures.filter(
-            (batch) => expenditure.id !== batch.id
-          ),
           board: [...state.board, batch[0]],
           buttonDisabled: true,
           boardType: expenditure.payment_type,
@@ -135,21 +156,24 @@ const Batch = (props) => {
   const handleDelete = (expenditure) => {
     if (state.board.length !== 0) {
       const claimChoosen = state.board.filter((b) => expenditure.id === b.id);
+
       const boardState = state.board.filter((b) => expenditure.id !== b.id);
 
       if (boardState.length > 0) {
+        setExpenditures([...expenditures, claimChoosen[0]]);
+
         setState({
           ...state,
           board: boardState,
-          expenditures: [...state.expenditures, claimChoosen[0]],
           buttonDisabled: state.boardType !== "" ? true : false,
         });
       } else {
+        setExpenditures([...expenditures, claimChoosen[0]]);
+
         setState({
           ...state,
           board: boardState,
           boardType: "",
-          expenditures: [...state.expenditures, claimChoosen[0]],
           buttonDisabled: false,
         });
       }
@@ -176,25 +200,6 @@ const Batch = (props) => {
     });
   }, [grandTotal]);
 
-  const defaultData = [
-    {
-      title: "STAFF CLAIM",
-      items: expenditures.filter((ex) => {
-        return ex.payment_type && ex.payment_type === "staff-payment";
-      }),
-    },
-    {
-      title: "THIRD PARTY",
-      items: expenditures.filter((ex) => {
-        return ex.payment_type && ex.payment_type === "third-party";
-      }),
-    },
-    {
-      title: "BATCH",
-      items: [],
-    },
-  ];
-
   return (
     <>
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
@@ -211,11 +216,33 @@ const Batch = (props) => {
       </Button>
 
       <div className="row mt-3">
-        <div className="col">
-          <DragNDrop data={defaultData} setData={setExpenditures} />
+        <div className="col-md-8">
+          <BatchWidget
+            data={defaultData}
+            addToBatch={batchClaim}
+            isButtonOff={state.buttonDisabled}
+            paymentType={state.boardType}
+            maxed={
+              state.board.length > 0 && state.board.length === state.maxSlot
+            }
+          />
         </div>
 
-        {defaultData[2].items.length > 0 ? (
+        <div className="col">
+          <h2>Batch</h2>
+
+          {state.board.length > 0
+            ? state.board.map((batch) => (
+                <BatchCard
+                  key={batch.id}
+                  batch={batch}
+                  onRemove={handleDelete}
+                />
+              ))
+            : null}
+        </div>
+
+        {state.board.length > 0 ? (
           <div className="col-md-2">
             <h4 className="content-title content-title-xs mb-3">
               Batch - {state.code.toUpperCase()}

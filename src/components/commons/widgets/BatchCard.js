@@ -1,11 +1,12 @@
 const BatchCard = ({ batch, onRemove }) => {
   return (
-    <div className="card card-hover card-social-one">
+    <div className="card">
       <div className="card-body">
         <div className="d-flex align-items-center justify-content-between mg-b-10">
           <h1 className="card-value">
             {new Intl.NumberFormat().format(batch.amount)}
           </h1>
+
           <div className="chart-wrapper">
             <p
               style={{ cursor: "pointer", fontSize: 13 }}

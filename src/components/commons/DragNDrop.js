@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./drag.css";
 
-function DragNDrop({ data, returnValue = () => {} }) {
+function DragNDrop({ data, setData, getItem }) {
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
 
@@ -24,7 +24,8 @@ function DragNDrop({ data, returnValue = () => {} }) {
 
   const handleDragEnter = (e, targetItem) => {
     // console.log("Entering a drag target", targetItem);
-    returnValue(targetItem.item);
+
+    getItem(targetItem);
 
     if (dragItemNode.current !== e.target) {
       setList((oldList) => {

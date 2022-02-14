@@ -42,12 +42,14 @@ const Batch = (props) => {
 
   const defaultData = [
     {
+      id: 1,
       title: "STAFF PAYMENT",
       items: expenditures.filter((ex) => {
         return ex.payment_type && ex.payment_type === "staff-payment";
       }),
     },
     {
+      id: 2,
       title: "THIRD PARTY",
       items: expenditures.filter((ex) => {
         return ex.payment_type && ex.payment_type === "third-party";
@@ -160,7 +162,9 @@ const Batch = (props) => {
       const boardState = state.board.filter((b) => expenditure.id !== b.id);
 
       if (boardState.length > 0) {
-        setExpenditures([...expenditures, claimChoosen[0]]);
+        const newExpenditure = [...expenditures, claimChoosen[0]];
+
+        setExpenditures(newExpenditure);
 
         setState({
           ...state,
@@ -168,7 +172,9 @@ const Batch = (props) => {
           buttonDisabled: state.boardType !== "" ? true : false,
         });
       } else {
-        setExpenditures([...expenditures, claimChoosen[0]]);
+        const newExpenditure = [...expenditures, claimChoosen[0]];
+
+        setExpenditures(newExpenditure);
 
         setState({
           ...state,
@@ -228,10 +234,16 @@ const Batch = (props) => {
           />
         </div>
 
-        <div className="col">
-          <h2>Batch</h2>
+        <div className="col-md-4">
+          <div className="row">
+            <div className="col">
+              <h4 className="content-title content-title-xs mb-3">
+                Batch - {state.code.toUpperCase()}
+              </h4>
+            </div>
+          </div>
 
-          {state.board.length > 0
+          {state.board.length !== 0
             ? state.board.map((batch) => (
                 <BatchCard
                   key={batch.id}
@@ -240,23 +252,30 @@ const Batch = (props) => {
                 />
               ))
             : null}
-        </div>
 
-        {state.board.length > 0 ? (
-          <div className="col-md-2">
-            <h4 className="content-title content-title-xs mb-3">
-              Batch - {state.code.toUpperCase()}
-            </h4>
-
-            <button
-              className="btn btn-success btn-sm"
-              disabled={state.code === ""}
-              onClick={handleBatcher}
-            >
-              Batch Payments
-            </button>
+          <div
+            // className="h-auto"
+            style={{
+              backgroundColor: "white",
+              padding: 10,
+              margin: "10px 0px",
+              border: "1px solid blue",
+            }}
+          >
+            <div className="d-flex align-items-center justify-content-between mg-b-10">
+              <h3 className="card-value">{grandPrettyTotal(state.total)}</h3>
+            </div>
+            <span className="">{"Grand Total"}</span>
           </div>
-        ) : null}
+
+          <button
+            className="btn btn-success btn-sm"
+            disabled={state.code === ""}
+            onClick={handleBatcher}
+          >
+            Batch Payments
+          </button>
+        </div>
       </div>
     </>
   );

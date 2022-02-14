@@ -1,29 +1,28 @@
 .drag-n-drop {
   padding: 0.5rem;
-  display: grid;
-  gap: 0.5rem;
+  /* display: grid;
+  gap: 0.5rem; */
   width: 100%;
   height: 100%;
-  grid-template-columns: repeat(auto-fill, 300px);
+  display: flex;
+  justify-content: space-between;
   align-items: start;
 }
 
 .dnd-group {
-  background-color: #15fd76;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   padding: 0.5rem;
+  margin: 0px 10px;
+  width: 100%;
 }
 
 .dnd-item {
-  /* display: flex; */
-  line-height: 25px;
+  line-height: 25px !important;
   min-height: 150px;
   background-color: white;
   padding: 10px;
   border-radius: 5px;
   color: black;
-  font-weight: bold;
-  font-family: Poppins;
 }
 
 .dnd-item:not(:last-of-type) {
@@ -32,7 +31,7 @@
 
 .dnd-item * {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 18px;
 }
 
 .group-title {

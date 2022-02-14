@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
-// import { connect } from "react-redux";
-// import { index, fetch, update } from "../../../redux/actions";
-// import * as broadcast from "../../../redux/accessControl/types";
+import { useSelector } from "react-redux";
+import { collection, store } from "../../../services/utils/controllers";
 
 const RefundRequests = (props) => {
+  const [refunds, setRefunds] = useState([]);
+  const auth = useSelector((state) => state.auth.value.user);
+
   const initialState = {
     id: 0,
     subBudgetHeadId: 0,
@@ -22,6 +24,8 @@ const RefundRequests = (props) => {
   };
 
   const [state, setState] = useState(initialState);
+  const [subBudgetHead, setSubBudgetHead] = useState({});
+  const [subBudgetHeads, setSubBudgetHeads] = useState({});
 
   const loadRefundDetails = (data) => {
     setState({
@@ -36,19 +40,6 @@ const RefundRequests = (props) => {
     });
   };
 
-  // const fetchSubBudgetHead = (value) => {
-  //   if (value > 0) {
-  //     props.fetch("subBudgetHeads", value, {
-  //       success: broadcast.FETCH_SUB_BUDGET_HEAD_RECORD,
-  //       failed: broadcast.FETCH_SUB_BUDGET_HEAD_RECORD_FAILED,
-  //     });
-  //   }
-  // };
-
-  const calcNewBalance = (bal) => {
-    return bal - state.amount;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -59,11 +50,6 @@ const RefundRequests = (props) => {
       amount: state.amount,
       status: "approved",
     };
-
-    // props.update("refunds", state.id, data, {
-    //   success: broadcast.UPDATED_REFUND_RECORD,
-    //   failed: broadcast.UPDATED_REFUND_RECORD_FAILED,
-    // });
 
     setState({
       ...state,
@@ -82,29 +68,61 @@ const RefundRequests = (props) => {
     });
   };
 
-  // useEffect(() => {
-  //   props.index("refunds", {
-  //     success: broadcast.FETCHED_REFUNDS,
-  //     failed: broadcast.FETCHED_REFUNDS_FAILED,
-  //   });
-  // }, []);
+  const loadRefunds = () => {
+    collection("refunds")
+      .then((res) => setRefunds(res.data.data))
+      .catch((err) => console.log(err.message));
+  };
 
-  // useEffect(() => {
-  //   props.index("subBudgetHeads", {
-  //     success: broadcast.FETCH_SUB_BUDGET_HEADS,
-  //     failed: broadcast.FETCH_SUB_BUDGET_HEADS_FAILED,
-  //   });
-  // }, []);
+  const loadSubBudgetHeads = () => {
+    collection("subBudgetHeads")
+      .then((res) => {
+        setState({
+          ...state,
+          subBudgetHeads: res.data.data,
+        });
+      })
+      .catch((err) => console.log(err.message));
+  };
 
-  // useEffect(() => {
-  //   if (props.subBudgetHead) {
-  //     setState({
-  //       ...state,
-  //       balance: props.subBudgetHead.fund.actual_balance,
-  //       newBalance: calcNewBalance(props.subBudgetHead.fund.actual_balance),
-  //     });
-  //   }
-  // }, [props.subBudgetHead]);
+  useEffect(() => {
+    loadRefunds();
+    loadSubBudgetHeads();
+  }, []);
+
+  useEffect(() => {
+    if (state.isFunded) {
+      setState({
+        ...state,
+        id: subBudgetHead.fund.id,
+      });
+    } else {
+    }
+  }, [state.isFunded]);
+
+  useEffect(() => {
+    const single =
+      state.sub_budget_head_id > 0 &&
+      subBudgetHeads.filter((sub) => sub.id == state.sub_budget_head_id && sub);
+
+    if (single.length > 0) {
+      setSubBudgetHead(single[0]);
+      setState({
+        ...state,
+        approved_amount: parseFloat(single[0].approved_amount),
+        description: single[0].fund !== null ? single[0].fund.description : "",
+      });
+    }
+  }, [state.sub_budget_head_id]);
+
+  useEffect(() => {
+    const newBalance = state.approved_amount + state.amount;
+
+    setState({
+      ...state,
+      new_balance: newBalance,
+    });
+  }, [state.amount]);
 
   return (
     <>
@@ -155,20 +173,18 @@ const RefundRequests = (props) => {
               <Form.Group>
                 <Form.Control
                   as="select"
-                  className="custom-select"
+                  className="form-control"
                   value={state.subBudgetHeadId}
                   onChange={(e) => {
                     setState({ ...state, subBudgetHeadId: e.target.value });
-                    // fetchSubBudgetHead(e.target.value);
                   }}
                 >
                   <option>Select Sub Budget Head</option>
-                  {/* {props.subBudgetHeads && props.subBudgetHeads.length !== 0
-                    ? props.subBudgetHeads.map((subBudgetHead) => {
+                  {subBudgetHeads && subBudgetHeads.length > 0
+                    ? subBudgetHeads.map((subBudgetHead) => {
                         if (
-                          props.auth &&
-                          props.auth.department.id ===
-                            subBudgetHead.department_id &&
+                          auth &&
+                          auth.department.id === subBudgetHead.department_id &&
                           state.sub_budget_head_id !== subBudgetHead.id
                         ) {
                           return (
@@ -183,19 +199,20 @@ const RefundRequests = (props) => {
                           return null;
                         }
                       })
-                    : null} */}
+                    : null}
                 </Form.Control>
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
-            <Col>
+            <Col md={6}>
               <Form.Group>
-                <Form.Label>AVAILABLE BALANCE</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="AVAILABLE BALANCE"
                   value={state.balance}
+                  className="form-control"
                   onChange={(e) =>
                     setState({ ...state, balance: e.target.value })
                   }
@@ -203,9 +220,9 @@ const RefundRequests = (props) => {
                 />
               </Form.Group>
             </Col>
-            <Col>
+
+            <Col md={6}>
               <Form.Group>
-                <Form.Label>NEW BALANCE</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="NEW BALANCE"
@@ -218,6 +235,7 @@ const RefundRequests = (props) => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col>
               <Form.Group>
@@ -233,6 +251,7 @@ const RefundRequests = (props) => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col>
               <Button
@@ -265,51 +284,50 @@ const RefundRequests = (props) => {
               </tr>
             </thead>
 
-            <tbody>
+            {/* <tbody>
               <tr>
                 <td colSpan="7" className="text-danger">
                   No Data Found!!
                 </td>
               </tr>
-            </tbody>
+            </tbody> */}
 
-            {/* <tbody>
-          {props.refunds && props.refunds.length !== 0
-            ? props.refunds.map((refund) => {
-                if (
-                  props.auth &&
-                  props.auth.department.id === refund.department_id
-                ) {
-                  return (
-                    <tr key={refund.id}>
-                      <td>{refund.expenditure.subBudgetHead.name}</td>
-                      <td>{refund.expenditure.beneficiary}</td>
-                      <td>{refund.expenditure.description}</td>
-                      <td>{refund.expenditure.amount}</td>
-                      <td>{refund.created_at}</td>
-                      <td>
-                        {refund.closed === 0
-                          ? "Not Refunded"
-                          : refund.updated_at}
-                      </td>
-                      <td>
-                        <Button
-                          variant="success"
-                          size="sm"
-                          onClick={() => loadRefundDetails(refund)}
-                          disabled={refund.closed === 1}
-                        >
-                          {refund.closed === 1 ? "REFUNDED" : "LOAD REQUEST"}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                } else {
-                  return null;
-                }
-              })
-            : null}
-        </tbody> */}
+            <tbody>
+              {refunds && refunds.length > 0
+                ? refunds.map((refund) => {
+                    if (auth && auth.department.id === refund.department_id) {
+                      return (
+                        <tr key={refund.id}>
+                          <td>{refund.expenditure.subBudgetHead.name}</td>
+                          <td>{refund.expenditure.beneficiary}</td>
+                          <td>{refund.expenditure.description}</td>
+                          <td>{refund.expenditure.amount}</td>
+                          <td>{refund.created_at}</td>
+                          <td>
+                            {refund.closed === 0
+                              ? "Not Refunded"
+                              : refund.updated_at}
+                          </td>
+                          <td>
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={() => loadRefundDetails(refund)}
+                              disabled={refund.closed === 1}
+                            >
+                              {refund.closed === 1
+                                ? "REFUNDED"
+                                : "LOAD REQUEST"}
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })
+                : null}
+            </tbody>
           </Table>
         </div>
       </div>

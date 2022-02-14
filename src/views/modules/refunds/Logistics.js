@@ -49,18 +49,11 @@ const Logistics = (props) => {
       department_id: state.department_id,
     };
 
-    store("refunds", data);
+    store("refunds", data)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
 
-    setState({
-      ...state,
-      expenditure_id: 0,
-      budgetCode: "",
-      beneficiary: "",
-      sub_budget: "",
-      description: "",
-      amount: 0,
-      activeExp: false,
-    });
+    setState(initialState);
   };
 
   const fillExpenditure = (exp) => {
@@ -178,7 +171,7 @@ const Logistics = (props) => {
       ) : null}
 
       {state.activeExp ? (
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={requestRefund}>
           <div className="row">
             <div className="col-md-3">
               <div className="form-group">

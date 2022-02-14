@@ -1,13 +1,13 @@
 const BatchCard = ({ batch, onRemove }) => {
   return (
-    <div className="card " style={{ height: 150, lineHeight: "15px" }}>
+    <div className="card" style={{ height: 150, lineHeight: "15px" }}>
       <div className="card-body">
         <div className="d-flex align-items-start justify-content-between mb-10">
           <h1 className="card-title">
-            {new Intl.NumberFormat().format(batch.amount)}
+            &#8358; {new Intl.NumberFormat().format(batch.amount)}
           </h1>
 
-          <div className="chart-wrapper">
+          <div className="">
             <p
               style={{ cursor: "pointer", fontSize: 13 }}
               onClick={() => onRemove(batch)}
@@ -18,7 +18,7 @@ const BatchCard = ({ batch, onRemove }) => {
           </div>
         </div>
 
-        <h5 className="card-title tx-primary">{batch.beneficiary}</h5>
+        <span className="card-title tx-primary">{batch.beneficiary}</span>
         <p className="card-desc">{batch.description}</p>
       </div>
     </div>

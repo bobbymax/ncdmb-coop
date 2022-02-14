@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { collection, fetch } from "../../../services/utils/controllers";
+import { collection, fetch, store } from "../../../services/utils/controllers";
 
 const Logistics = (props) => {
   const initialState = {
@@ -14,6 +14,7 @@ const Logistics = (props) => {
     department_id: 0,
     amount: 0,
     activeExp: false,
+    departments: [],
   };
 
   const [state, setState] = useState(initialState);
@@ -28,83 +29,75 @@ const Logistics = (props) => {
 
           setState({
             ...state,
-            batch: res.data,
-            amount: data.amount,
-            budgetCode: data.sub,
-            beneficiary: data.beneficiary,
-          });
-
-          setState({
-            ...state,
-            code: "",
-            activeExp: true,
+            batch: data,
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err.message));
+
+      setState({
+        ...state,
+        code: "",
+      });
     }
   };
 
-  // const requestRefund = (e) => {
-  //   e.preventDefault();
+  const requestRefund = (e) => {
+    e.preventDefault();
 
-  //   const data = {
-  //     expenditure_id: state.expenditure_id,
-  //     department_id: state.department_id,
-  //   };
+    const data = {
+      expenditure_id: state.expenditure_id,
+      department_id: state.department_id,
+    };
 
-  //   props.store("refunds", data, {
-  //     success: broadcast.CREATED_REFUND_RECORD,
-  //     failed: broadcast.CREATED_REFUND_RECORD_FAILED,
-  //   });
+    store("refunds", data);
 
-  //   setState({
-  //     ...state,
-  //     expenditure_id: 0,
-  //     budgetCode: "",
-  //     beneficiary: "",
-  //     sub_budget: "",
-  //     description: "",
-  //     amount: 0,
-  //     activeExp: false,
-  //   });
-  // };
+    setState({
+      ...state,
+      expenditure_id: 0,
+      budgetCode: "",
+      beneficiary: "",
+      sub_budget: "",
+      description: "",
+      amount: 0,
+      activeExp: false,
+    });
+  };
 
-  // const fillExpenditure = (exp) => {
-  //   setState({
-  //     ...state,
-  //     expenditure_id: exp.id,
-  //     budgetCode: exp.subBudgetHead.budgetCode,
-  //     beneficiary: exp.beneficiary,
-  //     sub_budget: exp.subBudgetHead.name,
-  //     description: exp.description,
-  //     amount: exp.amount,
-  //     activeExp: true,
-  //   });
-  // };
+  const fillExpenditure = (exp) => {
+    setState({
+      ...state,
+      expenditure_id: exp.id,
+      budgetCode: exp.subBudgetHead.budgetCode,
+      beneficiary: exp.beneficiary,
+      sub_budget: exp.subBudgetHead.name,
+      description: exp.description,
+      amount: exp.amount,
+      activeExp: true,
+    });
+  };
 
   const getDepartments = () =>
     collection("departments")
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setState({
+          ...state,
+          departments: res.data.data,
+        });
+      })
+      .catch((err) => console.log(err.message));
 
   useEffect(() => {
-    // if (state.batch !== null) {
-    //   setState({
-    //     ...state,
-    //     batch: state.batch,
-    //     // batch: props.batch,
-    //   });
-    // }
+    if (state.batch !== null) {
+      setState({
+        ...state,
+        batch: state.batch,
+      });
+    }
 
     getDepartments();
   }, []);
 
-  // useEffect(() => {
-  //   props.index("departments", {
-  //     success: broadcast.FETCH_DEPARTMENTS,
-  //     failed: broadcast.FETCH_DEPARTMENTS_FAILED,
-  //   });
-  // }, []);
+  console.log(state.batch);
 
   return (
     <>
@@ -120,6 +113,10 @@ const Logistics = (props) => {
                 placeholder="ENTER BATCH NUMBER"
                 value={state.code}
                 onChange={(e) => setState({ ...state, code: e.target.value })}
+                style={{
+                  backgroundColor: state.activeExp ? "#f4f4f4" : "",
+                }}
+                disabled={state.activeExp ? true : false}
               />
             </div>
           </div>
@@ -143,7 +140,7 @@ const Logistics = (props) => {
                   </thead>
 
                   <tbody>
-                    {state.batch && state.batch.expenditures.length !== 0 ? (
+                    {state.batch && state.batch.expenditures.length > 0 ? (
                       state.batch.expenditures.map((exp) => (
                         <tr key={exp.id}>
                           <td>{exp.subBudgetHead.budgetCode}</td>
@@ -154,12 +151,13 @@ const Logistics = (props) => {
                           <td>
                             <button
                               className="btn btn-success btn-sm"
-                              // variant="success"
-                              // size="sm"
-                              // onClick={() => fillExpenditure(exp)}
+                              variant="success"
+                              size="sm"
+                              onClick={() => fillExpenditure(exp)}
                               disabled={exp.refunded !== null}
                             >
-                              REQUEST REFUND
+                              <i className="fa arrow-rotate-left"></i> REQUEST
+                              REFUND
                             </button>
                           </td>
                         </tr>
@@ -179,7 +177,7 @@ const Logistics = (props) => {
         </div>
       ) : null}
 
-      {/* {state.activeExp ? (
+      {state.activeExp ? (
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="row">
             <div className="col-md-3">
@@ -250,9 +248,8 @@ const Logistics = (props) => {
           <div className="row">
             <div className="col-md-8">
               <div className="form-group">
-                <input
-                  as="select"
-                  className="custom-select"
+                <select
+                  className="form-control"
                   value={state.department_id}
                   onChange={(e) =>
                     setState({ ...state, department_id: e.target.value })
@@ -260,14 +257,14 @@ const Logistics = (props) => {
                 >
                   <option>SELECT DEPARTMENT</option>
 
-                  {props.departments && props.departments.length !== 0
-                    ? props.departments.map((dept) => (
+                  {state.departments && state.departments.length !== 0
+                    ? state.departments.map((dept) => (
                         <option key={dept.id} value={dept.id}>
                           {dept.name.toUpperCase()}
                         </option>
                       ))
                     : null}
-                </input>
+                </select>
               </div>
             </div>
 
@@ -309,7 +306,7 @@ const Logistics = (props) => {
             </div>
           </div>
         </form>
-      ) : null} */}
+      ) : null}
     </>
   );
 };

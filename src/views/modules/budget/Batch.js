@@ -1,17 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, CarouselItem } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { collection } from "../../../services/utils/controllers";
+import { collection, store } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 import useApi from "../../../services/hooks/useApi";
-// import ExpenditureCard from "../../../components/commons/widgets/ExpenditureCard";
-import DragNDrop from "../../../components/commons/DragNDrop";
 import BatchWidget from "../../../components/commons/widgets/BatchWidget";
 import BatchCard from "../../../components/commons/widgets/BatchCard";
-// import "../../../assets/js/canvas";
-// import BatchCard from "../../widgets/BatchCard";
+import "./drag.css";
 
 const Batch = (props) => {
   const {
@@ -142,6 +139,10 @@ const Batch = (props) => {
       steps: 1,
     };
 
+    store("batches", data)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err.message));
+
     // setState({
     //   ...state,
     //   board: [],
@@ -210,16 +211,16 @@ const Batch = (props) => {
     <>
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
 
-      <Button
+      <button
+        className="btn btn-success btn-md"
         type="button"
-        variant="success"
         onClick={() =>
           setState({ ...state, code: uniqueNumberGenerator(state.boardType) })
         }
         disabled={boardLength === 0 || state.code !== ""}
       >
         Generate Batch Number
-      </Button>
+      </button>
 
       <div className="row mt-3">
         <div className="col-md-8">
@@ -254,17 +255,16 @@ const Batch = (props) => {
             : null}
 
           <div
-            // className="h-auto"
             style={{
               backgroundColor: "white",
               padding: 10,
               margin: "10px 0px",
-              border: "1px solid blue",
             }}
           >
-            <div className="d-flex align-items-center justify-content-between mg-b-10">
+            <div className="align-items-center justify-content-between mg-b-10">
               <h3 className="card-value">{grandPrettyTotal(state.total)}</h3>
             </div>
+
             <span className="">{"Grand Total"}</span>
           </div>
 

@@ -12,7 +12,11 @@ function BatchWidget({ data, addToBatch, isButtonOff, paymentType, maxed }) {
               grp.items.map((item) => (
                 <div className="dnd-item" key={item.id}>
                   <button
-                    className="btn btn-primary btn-sm pull-right"
+                    className="btn btn-primary btn-sm"
+                    // style={{
+                    //   width: "50px",
+                    //   // alignSelf: "end",
+                    // }}
                     onClick={() => addToBatch(item)}
                     disabled={
                       (isButtonOff && item.payment_type !== paymentType) ||

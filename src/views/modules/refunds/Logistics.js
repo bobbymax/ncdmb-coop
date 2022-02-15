@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import { collection, fetch, store } from "../../../services/utils/controllers";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { filterByRef } from "../../../services/utils/helpers";
 
 const Logistics = (props) => {
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+
   const initialState = {
     code: "",
     batch: null,
@@ -19,9 +21,7 @@ const Logistics = (props) => {
     amount: 0,
     activeExp: false,
     sub_budget_head_id: 0,
-    departments: [],
     subBudgetHeads: [],
-    users: [],
   };
 
   const staffOptions = (optionsArr) => {
@@ -88,10 +88,7 @@ const Logistics = (props) => {
   const getDepartments = () =>
     collection("departments")
       .then((res) => {
-        setState({
-          ...state,
-          departments: res.data.data,
-        });
+        setDepartments(res.data.data);
       })
       .catch((err) => console.log(err.message));
 
@@ -108,24 +105,16 @@ const Logistics = (props) => {
   const getUsers = () => {
     collection("users")
       .then((res) => {
-        setState({
-          ...state,
-          users: res.data.data,
-        });
+        setUsers(res.data.data);
       })
       .catch((err) => console.log(err.message));
   };
 
   useEffect(() => {
-    if (state.batch !== null) {
-      setState({
-        ...state,
-        batch: state.batch,
-      });
-    }
-
     getDepartments();
+
     getSubBudgetHeads();
+
     getUsers();
   }, []);
 
@@ -143,6 +132,21 @@ const Logistics = (props) => {
       });
     }
   }, [state.sub_budget_head_id]);
+
+  useEffect(() => {
+    const single =
+      state.sub_budget_head_id > 0 &&
+      state.subBudgetHeads.filter(
+        (sub) => sub.id == state.sub_budget_head_id && sub
+      );
+
+    if (single.length > 0) {
+      setState({
+        ...state,
+        budgetCode: single[0].budgetCode,
+      });
+    }
+  }, [state.user_id]);
 
   return (
     <>
@@ -274,7 +278,7 @@ const Logistics = (props) => {
                     <Select
                       styles={{ height: "40px" }}
                       components={makeAnimated()}
-                      options={staffOptions(state.users)}
+                      options={staffOptions(users)}
                       placeholder="Select Beneficiary"
                       onChange={(selectedOption) => {
                         setState({
@@ -300,8 +304,8 @@ const Logistics = (props) => {
                     >
                       <option>SELECT DEPARTMENT</option>
 
-                      {state.departments && state.departments.length !== 0
-                        ? state.departments.map((dept) => (
+                      {departments && departments.length > 0
+                        ? departments.map((dept) => (
                             <option key={dept.id} value={dept.id}>
                               {dept.name.toUpperCase()}
                             </option>

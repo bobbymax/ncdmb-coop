@@ -134,16 +134,15 @@ const Logistics = (props) => {
   }, [state.sub_budget_head_id]);
 
   useEffect(() => {
-    const single =
-      state.sub_budget_head_id > 0 &&
-      state.subBudgetHeads.filter(
-        (sub) => sub.id == state.sub_budget_head_id && sub
-      );
+    const user =
+      state.user_id > 0 &&
+      users.filter((user) => user.id == state.user_id && user);
 
-    if (single.length > 0) {
+    if (user.length > 0) {
       setState({
         ...state,
-        budgetCode: single[0].budgetCode,
+        department_id:
+          state.department === "" ? user.department.id : state.department_id,
       });
     }
   }, [state.user_id]);
@@ -172,7 +171,7 @@ const Logistics = (props) => {
         </form>
       </div>
 
-      {!state.activeExp ? (
+      {state.activeExp ? (
         <div className="row mb-4">
           <div className="col">
             <div className="card">

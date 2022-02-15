@@ -1,12 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { collection, fetch, store } from "../../../services/utils/controllers";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { filterByRef } from "../../../services/utils/helpers";
 
 const Logistics = (props) => {
   const initialState = {
     code: "",
     batch: null,
     expenditure_id: 0,
+    user_id: 0,
     budgetCode: "",
     beneficiary: "",
     sub_budget: "",
@@ -14,7 +18,19 @@ const Logistics = (props) => {
     department_id: 0,
     amount: 0,
     activeExp: false,
+    sub_budget_head_id: 0,
     departments: [],
+    subBudgetHeads: [],
+    users: [],
+  };
+
+  const staffOptions = (optionsArr) => {
+    const arr = [];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
   };
 
   const [state, setState] = useState(initialState);
@@ -79,6 +95,27 @@ const Logistics = (props) => {
       })
       .catch((err) => console.log(err.message));
 
+  const getSubBudgetHeads = () =>
+    collection("subBudgetHeads")
+      .then((res) => {
+        setState({
+          ...state,
+          subBudgetHeads: res.data.data,
+        });
+      })
+      .catch((err) => console.log(err.message));
+
+  const getUsers = () => {
+    collection("users")
+      .then((res) => {
+        setState({
+          ...state,
+          users: res.data.data,
+        });
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   useEffect(() => {
     if (state.batch !== null) {
       setState({
@@ -88,9 +125,24 @@ const Logistics = (props) => {
     }
 
     getDepartments();
+    getSubBudgetHeads();
+    getUsers();
   }, []);
 
-  console.log(state.batch);
+  useEffect(() => {
+    const single =
+      state.sub_budget_head_id > 0 &&
+      state.subBudgetHeads.filter(
+        (sub) => sub.id == state.sub_budget_head_id && sub
+      );
+
+    if (single.length > 0) {
+      setState({
+        ...state,
+        budgetCode: single[0].budgetCode,
+      });
+    }
+  }, [state.sub_budget_head_id]);
 
   return (
     <>
@@ -170,135 +222,153 @@ const Logistics = (props) => {
         </div>
       ) : null}
 
-      {state.activeExp ? (
-        <form onSubmit={requestRefund}>
-          <div className="row">
-            <div className="col-md-3">
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="BUDGET CODE"
-                  value={state.budgetCode}
-                  onChange={(e) =>
-                    setState({ ...state, budgetCode: e.target.value })
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
+      {!state.activeExp ? (
+        <div className="card">
+          <div className="card-body">
+            <form onSubmit={requestRefund}>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="form-group">
+                    <select
+                      className="form-control"
+                      value={state.sub_budget_head_id}
+                      onChange={(e) =>
+                        setState({
+                          ...state,
+                          sub_budget_head_id: e.target.value,
+                        })
+                      }
+                    >
+                      <option>SELECT SUB BUDGET HEAD</option>
 
-            <div className="col-md-9">
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="BENEFICIARY"
-                  value={state.beneficiary}
-                  onChange={(e) =>
-                    setState({ ...state, beneficiary: e.target.value })
-                  }
-                  readOnly
-                />
+                      {state.subBudgetHeads && state.subBudgetHeads.length > 0
+                        ? state.subBudgetHeads.map((dept) => (
+                            <option key={dept.id} value={dept.id}>
+                              {dept.name.toUpperCase()}
+                            </option>
+                          ))
+                        : null}
+                    </select>
+                  </div>
+                </div>
               </div>
-            </div>
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="BUDGET CODE"
+                      value={state.budgetCode}
+                      onChange={(e) =>
+                        setState({ ...state, budgetCode: e.target.value })
+                      }
+                      readOnly
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <Select
+                      styles={{ height: "40px" }}
+                      components={makeAnimated()}
+                      options={staffOptions(state.users)}
+                      placeholder="Select Beneficiary"
+                      onChange={(selectedOption) => {
+                        setState({
+                          ...state,
+                          user_id: selectedOption.key,
+                        });
+                      }}
+                      isSearchable
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <select
+                      className="form-control"
+                      value={state.department_id}
+                      onChange={(e) =>
+                        setState({ ...state, department_id: e.target.value })
+                      }
+                    >
+                      <option>SELECT DEPARTMENT</option>
+
+                      {state.departments && state.departments.length !== 0
+                        ? state.departments.map((dept) => (
+                            <option key={dept.id} value={dept.id}>
+                              {dept.name.toUpperCase()}
+                            </option>
+                          ))
+                        : null}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      placeholder="AMOUNT"
+                      value={state.amount}
+                      onChange={(e) =>
+                        setState({ ...state, amount: e.target.value })
+                      }
+                      // readOnly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col">
+                  <div className="form-group">
+                    <textarea
+                      className="form-control"
+                      rows={2}
+                      // style={{ resize: "none" }}
+                      type="text"
+                      placeholder="EXPENDITURE DESCRIPTION"
+                      value={state.description}
+                      onChange={(e) =>
+                        setState({ ...state, description: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col">
+                  <div className="btn-group">
+                    <button
+                      className="btn btn-success"
+                      disabled={state.department_id === 0}
+                    >
+                      <i className="fa fa-spinner"></i>
+                      REQUEST REFUND
+                    </button>
+
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => setState({ ...state, activeExp: false })}
+                    >
+                      <i className="fa fa-close"></i>
+                      CANCEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-
-          <div className="row">
-            <div className="col">
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="SUB BUDGET HEAD"
-                  value={state.sub_budget}
-                  onChange={(e) =>
-                    setState({ ...state, sub_budget: e.target.value })
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="EXPENDITURE DESCRIPTION"
-                  value={state.description}
-                  onChange={(e) =>
-                    setState({ ...state, description: e.target.value })
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-md-8">
-              <div className="form-group">
-                <select
-                  className="form-control"
-                  value={state.department_id}
-                  onChange={(e) =>
-                    setState({ ...state, department_id: e.target.value })
-                  }
-                >
-                  <option>SELECT DEPARTMENT</option>
-
-                  {state.departments && state.departments.length !== 0
-                    ? state.departments.map((dept) => (
-                        <option key={dept.id} value={dept.id}>
-                          {dept.name.toUpperCase()}
-                        </option>
-                      ))
-                    : null}
-                </select>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="AMOUNT"
-                  value={state.amount}
-                  onChange={(e) =>
-                    setState({ ...state, amount: e.target.value })
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <div className="btn-group">
-                <button
-                  className="btn btn-success"
-                  disabled={state.department_id === 0}
-                >
-                  <i className="fa fa-spinner"></i>
-                  REQUEST REFUND
-                </button>
-
-                <button
-                  className="btn btn-danger"
-                  onClick={() => setState({ ...state, activeExp: false })}
-                >
-                  <i className="fa fa-close"></i>
-                  CANCEL
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
+        </div>
       ) : null}
     </>
   );

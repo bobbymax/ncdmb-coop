@@ -14,7 +14,7 @@ const CustomCard = ({ color }) => {
               <span className="fs-13 tx-primary">Target 3k/month</span>
             </div>
 
-            <div className="d-inline-block position-relative donut-chart-sale">
+            {/* <div className="d-inline-block position-relative donut-chart-sale">
               <span
                 className="donut1"
                 data-peity='{ "fill": ["rgb(60, 76, 184)", "rgba(236, 236, 236, 1)"],   "innerRadius": 38, "radius": 10}'
@@ -37,7 +37,7 @@ const CustomCard = ({ color }) => {
               </svg>
               <small className="text-primary">71%</small>
               <span className="circle bgl-primary"></span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

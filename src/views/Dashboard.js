@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import BarChart from "../components/charts/BarChart";
 import { collection } from "../services/utils/controllers";
-import { CSVLink } from "react-csv";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../services/utils/helpers";
 import CustomCard from "../components/commons/cards/CustomCard";
+import { CSVLink } from "react-csv";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
@@ -40,6 +40,10 @@ const Dashboard = () => {
 
   console.log(performance);
 
+  const data = [performance];
+
+  console.log(data);
+
   return (
     <>
       <div className="form-head d-md-flex mb-sm-4 mb-3 align-items-start">
@@ -57,16 +61,31 @@ const Dashboard = () => {
         <div class="col-xl-6 col-xxl-12">
           <div class="row">
             <div class="col-sm-6 col-md-3">
-              <CustomCard color={"success"} />
+              <CustomCard color={"white"} />
             </div>
             <div class="col-sm-6 col-md-3">
               <CustomCard />
             </div>
             <div class="col-sm-6 col-md-3">
-              <CustomCard color={"warning"} />
+              <CustomCard color={"white"} />
             </div>
             <div class="col-sm-6 col-md-3">
-              <CustomCard color={"light"} />
+              <CustomCard color={"white"} />
+            </div>
+          </div>
+
+          <div class="row" style={{ flexDirection: "row-reverse" }}>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard color={"white"} />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard color={"white"} />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard color={"warning"} />
             </div>
           </div>
         </div>
@@ -129,7 +148,7 @@ const Dashboard = () => {
               <h3 className="fs-20 text-black">Monthly Expenses</h3>
 
               <Link className="btn btn-outline-primary rounded" to="#">
-                <>Download CSV</>
+                <CSVLink data={data}>Download CSV</CSVLink>
               </Link>
             </div>
 

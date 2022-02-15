@@ -2,10 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import BasicTable from "../../../components/commons/tables/BasicTable";
-import Form from "../../../components/forms/Form";
-import FormInput from "../../../components/forms/FormInput";
-import SubmitButton from "../../../components/forms/SubmitButton";
-import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
 import { validate } from "../../../services/utils/validation";
 import Alert from "../../../services/classes/Alert";

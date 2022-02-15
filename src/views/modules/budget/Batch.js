@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { collection, store } from "../../../services/utils/controllers";
 import { uniqueNumberGenerator } from "../../../services/utils/helpers";
 import useApi from "../../../services/hooks/useApi";

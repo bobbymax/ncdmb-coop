@@ -37,12 +37,12 @@ const Aside = () => {
             </li>
           ) : null}
 
-          <li>
+          {/* <li>
             <NavLink to="/" className="ai-icon" aria-expanded="false">
               <i className="flaticon-381-view-2" />
               <span className="nav-text">Overview</span>
             </NavLink>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

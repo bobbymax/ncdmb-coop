@@ -62,6 +62,7 @@ const AddEntitlements = (props) => {
                 <Col>
                   <Form.Group>
                     <Form.Label>Grade Levels</Form.Label>
+
                     <Select
                       components={makeAnimated()}
                       theme={customTheme}

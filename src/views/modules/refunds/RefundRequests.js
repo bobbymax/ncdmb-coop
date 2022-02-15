@@ -116,12 +116,14 @@ const RefundRequests = (props) => {
   }, [state.sub_budget_head_id]);
 
   useEffect(() => {
-    const newBalance = state.approved_amount + state.amount;
+    if (state.approved_amount && state.amount) {
+      const newBalance = state.approved_amount + state.amount;
 
-    setState({
-      ...state,
-      new_balance: newBalance,
-    });
+      setState({
+        ...state,
+        newBalance: newBalance,
+      });
+    }
   }, [state.amount]);
 
   return (
@@ -270,8 +272,8 @@ const RefundRequests = (props) => {
       ) : null}
 
       <div className="card">
-        <div className="card-body">
-          <Table striped hover bordered>
+        <div className="card-body table-responsive">
+          <table className="table table-striped table-hover table-bordered ">
             <thead>
               <tr>
                 <th>BUDGET NAME</th>
@@ -283,14 +285,6 @@ const RefundRequests = (props) => {
                 <th>MODIFY</th>
               </tr>
             </thead>
-
-            {/* <tbody>
-              <tr>
-                <td colSpan="7" className="text-danger">
-                  No Data Found!!
-                </td>
-              </tr>
-            </tbody> */}
 
             <tbody>
               {refunds && refunds.length > 0
@@ -328,7 +322,7 @@ const RefundRequests = (props) => {
                   })
                 : null}
             </tbody>
-          </Table>
+          </table>
         </div>
       </div>
     </>

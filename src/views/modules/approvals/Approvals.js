@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { collection, store } from "../../../services/utils/controllers";
 import { getPaymentType, userHasRole } from "../../../services/utils/helpers";
-// import { getPaymentType } from '../../../services/helpers/functions'
 
 const Approvals = (props) => {
   const auth = useSelector((state) => state.auth.value.user);
@@ -34,13 +33,13 @@ const Approvals = (props) => {
       collection("batches/" + state.batch_code)
         .then((res) => setState({ ...state, batch: res.data.data }))
         .catch((err) => console.log(err));
-    }
 
-    setState({
-      ...state,
-      batch_code: "",
-      showDetails: true,
-    });
+      setState({
+        ...state,
+        batch_code: "",
+        showDetails: true,
+      });
+    }
   };
 
   const handleExpenditureUpdate = (e) => {
@@ -49,22 +48,6 @@ const Approvals = (props) => {
     const data = {
       amount: state.amount,
     };
-
-    // props.update("batch/expenditures", state.expenditure_id, data, {
-    //   success: broadcast.UPDATED_BATCHED_EXPENDITURE_RECORD,
-    //   failed: broadcast.UPDATED_BATCHED_EXPENDITURE_RECORD_FAILED,
-    // });
-
-    // setState({
-    //   ...state,
-    //   expenditure: null,
-    //   expenditure_id: 0,
-    //   description: "",
-    //   beneficiary: "",
-    //   amount: 0,
-    //   isUpdating: false,
-    //   previousTotal: 0,
-    // });
   };
 
   const fetchExpenditureSubBudgetHead = (batch) => {
@@ -132,13 +115,17 @@ const Approvals = (props) => {
 
       <form onSubmit={fetchPaymentBatch}>
         <div className="row">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="ENTER BATCH NUMBER"
-            value={state.batch_code}
-            onChange={(e) => setState({ ...state, batch_code: e.target.value })}
-          />
+          <div className="col-md-12">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="ENTER BATCH NUMBER"
+              value={state.batch_code}
+              onChange={(e) =>
+                setState({ ...state, batch_code: e.target.value })
+              }
+            />
+          </div>
         </div>
       </form>
 
@@ -155,19 +142,19 @@ const Approvals = (props) => {
                   <button
                     className="btn btn-white btn-uppercase btn-sm"
                     type="button"
-                    // onClick={() => {
-                    //   setState({
-                    //     ...state,
-                    //     expenditure: null,
-                    //     expenditure_id: 0,
-                    //     description: "",
-                    //     beneficiary: "",
-                    //     amount: 0,
-                    //     isUpdating: false,
-                    //   });
-                    // }}
+                    onClick={() => {
+                      setState({
+                        ...state,
+                        expenditure: null,
+                        expenditure_id: 0,
+                        description: "",
+                        beneficiary: "",
+                        amount: 0,
+                        isUpdating: false,
+                      });
+                    }}
                   >
-                    {/* <FiX className="mr-2" /> */}
+                    <i className="fa fa-close"></i>
                     Cancel
                   </button>
 
@@ -175,7 +162,7 @@ const Approvals = (props) => {
                     type="submit"
                     className="btn btn-success btn-sm btn-uppercase"
                   >
-                    {/* <FiCreditCard className="mr-2" /> */}
+                    <div className="fa fa-pen"></div>
                     Update Expenditure
                   </button>
                 </div>
@@ -188,10 +175,10 @@ const Approvals = (props) => {
                       className="form-control"
                       type="text"
                       placeholder="Enter Expenditure Title"
-                      // value={state.beneficiary}
-                      // onChange={(e) =>
-                      //   setState({ ...state, beneficiary: e.target.value })
-                      // }
+                      value={state.beneficiary}
+                      onChange={(e) =>
+                        setState({ ...state, beneficiary: e.target.value })
+                      }
                       readOnly
                     />
                   </div>
@@ -200,11 +187,11 @@ const Approvals = (props) => {
                     <input
                       className="form-control"
                       type="text"
-                      // placeholder="Enter Amount"
-                      // value={state.amount}
-                      // onChange={(e) =>
-                      //   setState({ ...state, amount: e.target.value })
-                      // }
+                      placeholder="Enter Amount"
+                      value={state.amount}
+                      onChange={(e) =>
+                        setState({ ...state, amount: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -215,10 +202,10 @@ const Approvals = (props) => {
                       className="form-control"
                       as="textarea"
                       rows={2}
-                      // value={state.description}
-                      // onChange={(e) =>
-                      //   setState({ ...state, description: e.target.value })
-                      // }
+                      value={state.description}
+                      onChange={(e) =>
+                        setState({ ...state, description: e.target.value })
+                      }
                       readOnly
                     />
                   </div>

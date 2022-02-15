@@ -9,9 +9,9 @@ const Logistics = (props) => {
   const [users, setUsers] = useState([]);
 
   const initialState = {
-    code: "",
-    batch: null,
-    expenditure_id: 0,
+    // code: "",
+    // batch: null,
+    // expenditure_id: 0,
     user_id: 0,
     budgetCode: "",
     beneficiary: "",
@@ -360,18 +360,18 @@ const Logistics = (props) => {
                   <div className="btn-group">
                     <button
                       className="btn btn-success"
-                      disabled={state.department_id === 0}
+                      disabled={
+                        state.department_id === 0 || state.description === ""
+                      }
                     >
-                      <i className="fa fa-spinner"></i>
-                      REQUEST REFUND
+                      <i className="fa fa-spinner"></i> REQUEST REFUND
                     </button>
 
                     <button
                       className="btn btn-danger"
-                      onClick={() => setState({ ...state, activeExp: false })}
+                      onClick={() => setState(initialState)}
                     >
-                      <i className="fa fa-close"></i>
-                      CANCEL
+                      <i className="fa fa-close"></i> CANCEL
                     </button>
                   </div>
                 </div>

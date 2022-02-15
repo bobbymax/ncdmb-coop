@@ -61,15 +61,20 @@ const Logistics = (props) => {
     e.preventDefault();
 
     const data = {
-      expenditure_id: state.expenditure_id,
+      sub_budget_head_id: state.sub_budget_head_id,
+      budget_code: state.budgetCode,
+      user_id: state.user_id,
+      amount: state.amount,
       department_id: state.department_id,
+      description: state.description,
     };
 
-    store("refunds", data)
-      .then((res) => console.log(res))
+    store("logisticsRequests", data)
+      .then((res) => {
+        console.log(res);
+        setState(initialState);
+      })
       .catch((err) => console.log(err));
-
-    setState(initialState);
   };
 
   const fillExpenditure = (exp) => {
@@ -152,23 +157,25 @@ const Logistics = (props) => {
       <h4 className="mb-4">Logistics</h4>
 
       <div className="mb-4">
-        <form onSubmit={fetchBatch}>
-          <div className="row">
-            <div className="col-md-12">
-              <input
-                className="form-control"
-                type="text"
-                placeholder="ENTER BATCH NUMBER"
-                value={state.code}
-                onChange={(e) => setState({ ...state, code: e.target.value })}
-                style={{
-                  backgroundColor: state.activeExp ? "#f4f4f4" : "",
-                }}
-                disabled={state.activeExp ? true : false}
-              />
+        {state.activeExp && (
+          <form onSubmit={fetchBatch}>
+            <div className="row">
+              <div className="col-md-12">
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="ENTER BATCH NUMBER"
+                  value={state.code}
+                  onChange={(e) => setState({ ...state, code: e.target.value })}
+                  style={{
+                    backgroundColor: state.activeExp ? "#f4f4f4" : "",
+                  }}
+                  disabled={state.activeExp ? true : false}
+                />
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
 
       {state.activeExp ? (
@@ -204,8 +211,8 @@ const Logistics = (props) => {
                               onClick={() => fillExpenditure(exp)}
                               disabled={exp.refunded !== null}
                             >
-                              <i className="fa arrow-rotate-left"></i> REQUEST
-                              REFUND
+                              <i className="fa arrow-rotate-left"></i>
+                              REQUEST REFUND
                             </button>
                           </td>
                         </tr>

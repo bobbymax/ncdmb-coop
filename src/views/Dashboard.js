@@ -5,6 +5,7 @@ import { collection } from "../services/utils/controllers";
 import { CSVLink } from "react-csv";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../services/utils/helpers";
+import CustomCard from "../components/commons/cards/CustomCard";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
@@ -53,6 +54,40 @@ const Dashboard = () => {
       </div>
 
       <div className="row">
+        <div class="col-xl-6 col-xxl-12">
+          <div class="row">
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-xxl-12">
+          <div class="row">
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <CustomCard />
+            </div>
+          </div>
+        </div>
+
         <div className="col-xl-12 col-md-12 col-sm-12">
           <div className="row">
             <div className="col-sm-12 col-md-4 col-lg-4">

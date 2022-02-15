@@ -19,43 +19,17 @@ const BarChart = ({ chartData }) => {
     "Dec",
   ];
 
-  const actual = [];
-  const actualData = () => {
-    labels.map((label) => (chartData[label][0] / chartData[label][1]) * 100);
-  };
-
-  console.log(chartData);
-
-  const formatData = () => {
-    const data = [];
-
-    labels.map((label) =>
-      // data.push(chartData[label])
-      data.push({
-        actual: chartData[label],
-        exp: chartData[label],
-      })
-    );
-
-    return data;
-  };
-
-  // console.log(
-  //   "Expectec expenses data",
-  //   labels.map((label) => (chartData[label][1] / chartData[label][0]) * 100)
-  // );
-
   const data = {
     labels,
     datasets: [
       {
         label: "Actual Expenses",
-        data: actual,
+        data: labels.map((label) => chartData[label] && chartData[label][0]),
         backgroundColor: ["rgba(41, 128, 185, 1.0)"],
       },
       {
         label: "Expected Expenses",
-        data: formatData()[1],
+        data: labels.map((label) => chartData[label] && chartData[label][1]),
         backgroundColor: ["rgba(39, 174, 96, 1.0)"],
       },
     ],

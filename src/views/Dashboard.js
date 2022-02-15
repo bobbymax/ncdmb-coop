@@ -57,33 +57,16 @@ const Dashboard = () => {
         <div class="col-xl-6 col-xxl-12">
           <div class="row">
             <div class="col-sm-6 col-md-3">
-              <CustomCard />
+              <CustomCard color={"success"} />
             </div>
             <div class="col-sm-6 col-md-3">
               <CustomCard />
             </div>
             <div class="col-sm-6 col-md-3">
-              <CustomCard />
+              <CustomCard color={"warning"} />
             </div>
             <div class="col-sm-6 col-md-3">
-              <CustomCard />
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-6 col-xxl-12">
-          <div class="row">
-            <div class="col-sm-6 col-md-3">
-              <CustomCard />
-            </div>
-            <div class="col-sm-6 col-md-3">
-              <CustomCard />
-            </div>
-            <div class="col-sm-6 col-md-3">
-              <CustomCard />
-            </div>
-            <div class="col-sm-6 col-md-3">
-              <CustomCard />
+              <CustomCard color={"light"} />
             </div>
           </div>
         </div>

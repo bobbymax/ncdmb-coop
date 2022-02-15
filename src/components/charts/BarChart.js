@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
 const BarChart = ({ chartData }) => {
@@ -20,6 +20,11 @@ const BarChart = ({ chartData }) => {
   ];
 
   const actual = [];
+  const actualData = () => {
+    labels.map((label) => (chartData[label][0] / chartData[label][1]) * 100);
+  };
+
+  console.log(chartData);
 
   const formatData = () => {
     const data = [];
@@ -34,6 +39,11 @@ const BarChart = ({ chartData }) => {
 
     return data;
   };
+
+  // console.log(
+  //   "Expectec expenses data",
+  //   labels.map((label) => (chartData[label][1] / chartData[label][0]) * 100)
+  // );
 
   const data = {
     labels,

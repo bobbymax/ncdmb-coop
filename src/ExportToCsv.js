@@ -15,8 +15,8 @@ const ExportToCsv = () => {
   ];
 
   return (
-    <CSVLink data={data} headers={headers} filename="files">
-      Download me
+    <CSVLink className="btn btn-primary" data={data} headers={headers}>
+      Download CSV
     </CSVLink>
   );
 };

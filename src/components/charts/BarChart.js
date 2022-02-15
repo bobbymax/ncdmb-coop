@@ -18,10 +18,12 @@ const BarChart = ({ chartData }) => {
     "Nov",
     "Dec",
   ];
+
   const actual = [];
 
   const formatData = () => {
     const data = [];
+
     labels.map((label) =>
       // data.push(chartData[label])
       data.push({

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DoughnutChart from "../components/charts/DoughnutChart";
 import BarChart from "../components/charts/BarChart";
 import { collection } from "../services/utils/controllers";
+import { CSVLink } from "react-csv";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../services/utils/helpers";
 
@@ -15,6 +16,7 @@ const Dashboard = () => {
       collection("dashboard/overview")
         .then((res) => {
           const data = res.data.data;
+
           setOverview(data.utilization);
           setPerformance(data.performance);
           setSummary(data.summary);
@@ -44,10 +46,12 @@ const Dashboard = () => {
           <h2 className="text-black font-w600">Dashboard</h2>
           <p className="mb-0">Welcome Staff</p>
         </div>
+
         <Link to="#" className="btn btn-primary rounded">
           <i className="flaticon-381-settings-2 mr-0" />
         </Link>
       </div>
+
       <div className="row">
         <div className="col-xl-12 col-md-12 col-sm-12">
           <div className="row">
@@ -100,15 +104,17 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col-xl-12 col-md-12 col-sm-12">
           <div className="card">
             <div className="card-header align-items-center border-0 pb-0">
               <h3 className="fs-20 text-black">Monthly Expenses</h3>
+
               <Link className="btn btn-outline-primary rounded" to="#">
-                Download CSV
+                <>Download CSV</>
               </Link>
             </div>
+
             <div className="card-body pb-0 pt-0">
               <div className="d-flex align-items-center mb-3">
                 <BarChart

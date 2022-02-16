@@ -5,6 +5,7 @@ import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
 import useApi from "../../../services/hooks/useApi";
 import {
+  alter,
   collection,
   destroy,
   store,
@@ -25,6 +26,7 @@ const AddModules = () => {
   } = useApi(collection);
 
   const initialState = {
+    id: 0,
     name: "",
     path: "",
     icon: "",
@@ -122,6 +124,7 @@ const AddModules = () => {
     e.preventDefault();
 
     const data = {
+      id: state.id,
       name: state.name,
       path: state.path,
       icon: state.icon,
@@ -132,9 +135,48 @@ const AddModules = () => {
       type: state.type,
     };
 
-    store("modules", data)
-      .then((res) => console.log(res.data.data))
-      .catch((err) => console.log(err.message));
+    if (update) {
+      try {
+        alter("modules", state.id, data)
+          .then((res) => {
+            const result = res.data.data;
+
+            setModules(
+              modules.map((mod) => {
+                if (result.id === mod.id) {
+                  return result;
+                }
+
+                return mod;
+              })
+            );
+
+            Alert.success("Updated", res.data.message);
+
+            setState(initialState);
+            setOpen(false);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        store("modules", data)
+          .then((res) => {
+            const newModule = res.data.data;
+
+            setModules([newModule, ...modules]);
+            Alert.success("Created!!", res.data.message);
+
+            setState(initialState);
+            setOpen(false);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -353,8 +395,8 @@ const AddModules = () => {
                             type="button"
                             className="btn btn-danger"
                             onClick={() => {
-                              // setUpdate(false);
-                              // setState(initialState);
+                              setUpdate(false);
+                              setState(initialState);
                               setOpen(false);
                               setErrors({});
                             }}

@@ -85,7 +85,7 @@ const Dashboard = () => {
               <CustomCard color={"white"} />
             </div>
             <div class="col-sm-6 col-md-3">
-              <CustomCard color={"warning"} />
+              <CustomCard color={"white"} />
             </div>
           </div>
         </div>

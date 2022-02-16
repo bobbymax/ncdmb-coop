@@ -75,6 +75,7 @@ const SubBudgetHeads = () => {
       }
     });
   };
+
   const handleSearch = (str) => {
     setSearchTerm(str);
 

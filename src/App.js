@@ -28,6 +28,7 @@ import Approvals from "./views/modules/approvals/Approvals";
 import Logistics from "./views/modules/refunds/Logistics";
 import Batch from "./views/modules/budget/Batch";
 import RefundRequests from "./views/modules/refunds/RefundRequests";
+import AddModules from "./views/modules/administration/AddModules";
 
 const App = () => {
   return (
@@ -259,6 +260,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Batch />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/modules"
+          element={
+            <ProtectedRoute>
+              <AddModules />
             </ProtectedRoute>
           }
         />

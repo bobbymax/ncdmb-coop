@@ -38,11 +38,7 @@ const Dashboard = () => {
     actualPerformance,
   } = summary;
 
-  console.log(performance);
-
-  const data = [performance];
-
-  console.log(data);
+  // console.log(performance);
 
   return (
     <>
@@ -148,7 +144,7 @@ const Dashboard = () => {
               <h3 className="fs-20 text-black">Monthly Expenses</h3>
 
               <Link className="btn btn-outline-primary rounded" to="#">
-                <CSVLink data={data}>Download CSV</CSVLink>
+                Download CSV
               </Link>
             </div>
 

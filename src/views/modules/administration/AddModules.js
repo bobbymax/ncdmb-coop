@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable eqeqeq */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
@@ -19,29 +22,25 @@ const AddModules = () => {
     request,
   } = useApi(collection);
 
-  const {
-    data: roles,
-    // setData: setModules,
-    request: fetchRoles,
-  } = useApi(collection);
+  const { data: roles, request: fetchRoles } = useApi(collection);
 
   const initialState = {
     id: 0,
     name: "",
     path: "",
     icon: "",
-    parentId: false,
-    isMenu: 0,
+    parentId: 0,
+    isMenu: false,
     generatePermissions: false,
     roles: [],
     type: "",
+    currentRoles: [],
   };
 
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const [errors, setErrors] = useState({});
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -51,10 +50,22 @@ const AddModules = () => {
 
   const handleEdit = (data) => {
     console.log(data);
-    setState(data);
+    setState({
+      id: data.id,
+      name: data.name,
+      path: data.path,
+      icon: data.icon,
+      parentId: data.parentId,
+      isMenu: data.isMenu === 1 ? true : false,
+      generatePermissions: data.generatePermissions === 1 ? true : false,
+      currentRoles: data.roles,
+      type: data.type,
+    });
     setUpdate(true);
     setOpen(true);
   };
+
+  // console.log(state.roles);
 
   const handleDestroy = (data) => {
     Alert.flash(
@@ -124,7 +135,6 @@ const AddModules = () => {
     e.preventDefault();
 
     const data = {
-      id: state.id,
       name: state.name,
       path: state.path,
       icon: state.icon,
@@ -297,6 +307,13 @@ const AddModules = () => {
                               class="form-check-input"
                               type="checkbox"
                               value={state.isMenu}
+                              checked={
+                                state.isMenu
+                                  ? 1
+                                  : 0 || state.isMenu == 1
+                                  ? true
+                                  : false
+                              }
                               onChange={(e) => {
                                 const value = e.target.checked ? true : false;
 
@@ -320,6 +337,13 @@ const AddModules = () => {
                               class="form-check-input"
                               type="checkbox"
                               value={state.generatePermissions}
+                              checked={
+                                state.generatePermissions
+                                  ? 1
+                                  : 0 || state.generatePermissions === 1
+                                  ? true
+                                  : false
+                              }
                               onChange={(e) => {
                                 const value = e.target.checked ? true : false;
 
@@ -398,7 +422,6 @@ const AddModules = () => {
                               setUpdate(false);
                               setState(initialState);
                               setOpen(false);
-                              setErrors({});
                             }}
                           >
                             Close

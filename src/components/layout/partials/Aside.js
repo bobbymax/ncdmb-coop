@@ -36,13 +36,6 @@ const Aside = () => {
               </Link>
             </li>
           ) : null}
-
-          {/* <li>
-            <NavLink to="/" className="ai-icon" aria-expanded="false">
-              <i className="flaticon-381-view-2" />
-              <span className="nav-text">Overview</span>
-            </NavLink>
-          </li> */}
         </ul>
       </div>
     </div>

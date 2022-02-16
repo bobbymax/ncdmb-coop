@@ -1,17 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { collection, fetch, store } from "../../../services/utils/controllers";
+import { collection, store } from "../../../services/utils/controllers";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import useApi from "../../../services/hooks/useApi";
+import Alert from "../../../services/classes/Alert";
+import { useSelector } from "react-redux";
+import { formatCurrency } from "../../../services/utils/helpers";
 
 const Logistics = (props) => {
-  const [departments, setDepartments] = useState([]);
-  const [users, setUsers] = useState([]);
+  const {
+    data: logisticsData,
+    setData: setLogisticsData,
+    request,
+  } = useApi(collection);
 
   const initialState = {
-    // code: "",
-    // batch: null,
-    // expenditure_id: 0,
     user_id: 0,
     budgetCode: "",
     beneficiary: "",
@@ -24,6 +28,13 @@ const Logistics = (props) => {
     subBudgetHeads: [],
   };
 
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [state, setState] = useState(initialState);
+  const [open, setOpen] = useState(false);
+  const [fulfilled, setFulfilled] = useState(0);
+  const auth = useSelector((state) => state.auth.value.user);
+
   const staffOptions = (optionsArr) => {
     const arr = [];
     optionsArr.length > 0 &&
@@ -31,30 +42,6 @@ const Logistics = (props) => {
         arr.push({ key: el.id, label: el.name });
       });
     return arr;
-  };
-
-  const [state, setState] = useState(initialState);
-
-  const fetchBatch = (e) => {
-    e.preventDefault();
-
-    if (state.code !== "") {
-      fetch("batches", state.code)
-        .then((res) => {
-          const data = res.data.data;
-
-          setState({
-            ...state,
-            batch: data,
-          });
-        })
-        .catch((err) => console.log(err.message));
-
-      setState({
-        ...state,
-        code: "",
-      });
-    }
   };
 
   const requestRefund = (e) => {
@@ -67,27 +54,35 @@ const Logistics = (props) => {
       amount: state.amount,
       department_id: state.department_id,
       description: state.description,
+      status: "pending",
     };
 
     store("logisticsRequests", data)
       .then((res) => {
-        console.log(res);
+        const result = res.data.data;
+
+        setLogisticsData([result, ...logisticsData]);
+        Alert.success("Created!!", res.data.message);
+
         setState(initialState);
+        setOpen(false);
       })
       .catch((err) => console.log(err));
   };
 
-  const fillExpenditure = (exp) => {
-    setState({
-      ...state,
-      expenditure_id: exp.id,
-      budgetCode: exp.subBudgetHead.budgetCode,
-      beneficiary: exp.beneficiary,
-      sub_budget: exp.subBudgetHead.name,
-      description: exp.description,
-      amount: exp.amount,
-      activeExp: true,
-    });
+  const fulfillLogistic = (logistic) => {
+    const closed = logistic.closed === "True" ? 0 : 1;
+
+    store(`logisticsRequests/${logistic.id}/complete`, { closed }).then(
+      (res) => {
+        const result = res.data.data;
+        const closed = result.closed === "False" ? 0 : 1;
+
+        setFulfilled(closed);
+
+        Alert.success("Logistic Fulfilled!!", res.data.message);
+      }
+    );
   };
 
   const getDepartments = () =>
@@ -121,6 +116,8 @@ const Logistics = (props) => {
     getSubBudgetHeads();
 
     getUsers();
+
+    request("logisticsRequests");
   }, []);
 
   useEffect(() => {
@@ -154,85 +151,21 @@ const Logistics = (props) => {
 
   return (
     <>
-      <h4 className="mb-4">Logistics</h4>
-
-      <div className="mb-4">
-        {state.activeExp && (
-          <form onSubmit={fetchBatch}>
-            <div className="row">
-              <div className="col-md-12">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="ENTER BATCH NUMBER"
-                  value={state.code}
-                  onChange={(e) => setState({ ...state, code: e.target.value })}
-                  style={{
-                    backgroundColor: state.activeExp ? "#f4f4f4" : "",
-                  }}
-                  disabled={state.activeExp ? true : false}
-                />
-              </div>
-            </div>
-          </form>
-        )}
-      </div>
-
-      {state.activeExp ? (
-        <div className="row mb-4">
-          <div className="col">
-            <div className="card">
-              <div className="card-body">
-                <table className="table table-bordered table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th>Budget Code</th>
-                      <th>Beneficiary</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {state.batch && state.batch.expenditures.length > 0 ? (
-                      state.batch.expenditures.map((exp) => (
-                        <tr key={exp.id}>
-                          <td>{exp.subBudgetHead.budgetCode}</td>
-                          <td>{exp.beneficiary}</td>
-                          <td>{exp.amount}</td>
-                          <td>{exp.description}</td>
-
-                          <td>
-                            <button
-                              className="btn btn-success btn-sm"
-                              variant="success"
-                              size="sm"
-                              onClick={() => fillExpenditure(exp)}
-                              disabled={exp.refunded !== null}
-                            >
-                              <i className="fa arrow-rotate-left"></i>
-                              REQUEST REFUND
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" className="text-danger">
-                          No Data Found!!
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+      <div className="row mb-4">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <button
+              className="btn btn-success"
+              onClick={() => setOpen(!open)}
+              disabled={open}
+            >
+              <i className="fa fa-plus-square"></i> Add Logistics
+            </button>
           </div>
         </div>
-      ) : null}
+      </div>
 
-      {!state.activeExp ? (
+      {open && (
         <div className="card">
           <div className="card-body">
             <form onSubmit={requestRefund}>
@@ -331,7 +264,6 @@ const Logistics = (props) => {
                       onChange={(e) =>
                         setState({ ...state, amount: e.target.value })
                       }
-                      // readOnly
                     />
                   </div>
                 </div>
@@ -343,7 +275,6 @@ const Logistics = (props) => {
                     <textarea
                       className="form-control"
                       rows={2}
-                      // style={{ resize: "none" }}
                       type="text"
                       placeholder="EXPENDITURE DESCRIPTION"
                       value={state.description}
@@ -364,12 +295,15 @@ const Logistics = (props) => {
                         state.department_id === 0 || state.description === ""
                       }
                     >
-                      <i className="fa fa-spinner"></i> REQUEST REFUND
+                      <i className="fa fa-undo"></i> REQUEST REFUND
                     </button>
 
                     <button
                       className="btn btn-danger"
-                      onClick={() => setState(initialState)}
+                      onClick={() => {
+                        setOpen(false);
+                        setState(initialState);
+                      }}
                     >
                       <i className="fa fa-close"></i> CANCEL
                     </button>
@@ -379,7 +313,68 @@ const Logistics = (props) => {
             </form>
           </div>
         </div>
-      ) : null}
+      )}
+
+      <div className="col-md-12">
+        <div className="card table-responsive">
+          <div className="card-body">
+            <table className="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Budget Code</th>
+                  <th>Beneficiary</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Fulfilment</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {logisticsData && logisticsData.length > 0 ? (
+                  logisticsData.map((logistic) => {
+                    if (auth.id === logistic.controller_id) {
+                      return (
+                        <tr key={logistic.id}>
+                          <td>{logistic.subBudgetHead.budgetCode}</td>
+                          <td>{logistic.beneficiary.name}</td>
+                          <td>{logistic.description}</td>
+                          <td>{formatCurrency(logistic.amount)}</td>
+                          <td>{logistic.status}</td>
+                          <td>
+                            {logistic.closed === 1 ? (
+                              <span class="badge bg-success text-white">
+                                Fulfilled
+                              </span>
+                            ) : (
+                              <button
+                                className="btn btn-primary"
+                                onClick={() => fulfillLogistic(logistic)}
+                                disabled={logistic.closed === 1}
+                              >
+                                <i
+                                  className="fa fa-check-circle"
+                                  style={{ color: "white !important" }}
+                                ></i>
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-danger">
+                      No Data Found!!
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

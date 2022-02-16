@@ -43,6 +43,7 @@ const AddEntitlements = (props) => {
               Add Entitlements
             </Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
             <Container fluid>
               <Row style={{ marginBottom: 20 }}>
@@ -115,6 +116,7 @@ const AddEntitlements = (props) => {
             <Button variant="success" type="submit">
               Submit
             </Button>
+
             <Button variant="danger" onClick={props.onHide}>
               Close
             </Button>

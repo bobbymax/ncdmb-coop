@@ -343,12 +343,12 @@ const Logistics = (props) => {
                           <td>{logistic.status}</td>
                           <td>
                             {logistic.closed === 1 ? (
-                              <span class="badge bg-success text-white">
+                              <span class="badge bg-success text-white rounded-pill">
                                 Fulfilled
                               </span>
                             ) : (
                               <button
-                                className="btn btn-primary"
+                                className="btn btn-warning"
                                 onClick={() => fulfillLogistic(logistic)}
                                 disabled={logistic.closed === 1}
                               >

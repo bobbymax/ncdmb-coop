@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { collection, store } from "../../../services/utils/controllers";
+import { alter, collection } from "../../../services/utils/controllers";
+import Alert from "../../../services/classes/Alert";
 
 const RefundRequests = (props) => {
   const [refunds, setRefunds] = useState([]);
@@ -50,6 +51,12 @@ const RefundRequests = (props) => {
       amount: state.amount,
       status: "approved",
     };
+
+    alter("refunds", state.id, data).then((res) => {
+      Alert.success("Created!!", res.data.message);
+
+      setState(initialState);
+    });
 
     setState({
       ...state,
@@ -158,6 +165,7 @@ const RefundRequests = (props) => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={4}>
               <Form.Group>
@@ -302,6 +310,7 @@ const RefundRequests = (props) => {
                               ? "Not Refunded"
                               : refund.updated_at}
                           </td>
+
                           <td>
                             <Button
                               variant="success"

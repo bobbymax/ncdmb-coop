@@ -12,6 +12,7 @@ const DoughnutChart = ({ chartData, totalApproved }) => {
 
   const format = {
     labels: ["Expenditure", "Balance"],
+
     datasets: [
       {
         label: "Budget Utilization",

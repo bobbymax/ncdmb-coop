@@ -5,32 +5,11 @@ import { collection } from "../services/utils/controllers";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../services/utils/helpers";
 import CustomCard from "../components/commons/cards/CustomCard";
-// import { CSVLink } from "react-csv";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
   const [performance, setPerformance] = useState({});
   const [summary, setSummary] = useState({});
-
-  // const labels = [
-  //   "Jan",
-  //   "Feb",
-  //   "Mar",
-  //   "Apr",
-  //   "May",
-  //   "Jun",
-  //   "Jul",
-  //   "Aug",
-  //   "Sep",
-  //   "Oct",
-  //   "Nov",
-  //   "Dec",
-  // ];
-
-  // const data = [
-  //   labels,
-  //   labels.map((label) => performance[label] && performance[label]),
-  // ];
 
   useEffect(() => {
     try {

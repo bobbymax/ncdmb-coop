@@ -29,6 +29,7 @@ import Batch from "./views/modules/budget/Batch";
 import RefundRequests from "./views/modules/refunds/RefundRequests";
 import AddModules from "./views/modules/administration/AddModules";
 import Overview from "./views/modules/overview/Overview";
+import OverviewExpenditure from "./views/modules/overview/OverviewExpenditure";
 
 const App = () => {
   return (
@@ -273,6 +274,17 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          exact
+          path="/overview/:id/expenditure"
+          element={
+            <ProtectedRoute>
+              <OverviewExpenditure />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           exact
           path="/overview"

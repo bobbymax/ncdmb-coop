@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { formatCurrency } from "../../../services/utils/helpers";
+import { useNavigate } from "react-router-dom";
 import { collection } from "../../../services/utils/controllers";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import CustomSelect from "../../../components/forms/CustomSelect";
@@ -50,6 +51,8 @@ const columns = [
 ];
 
 const Overview = (props) => {
+  const navigate = useNavigate();
+
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
@@ -129,8 +132,12 @@ const Overview = (props) => {
     { label: "Actual Performance", key: "actual_performance" },
   ];
 
-  const handleViewBreakdown = (data) => {
-    console.log(data);
+  const handleViewBreakdown = (subBudgetHead) => {
+    navigate(`/overview/${subBudgetHead.id}/expenditure`, {
+      state: {
+        subBudgetHead,
+      },
+    });
   };
 
   return (

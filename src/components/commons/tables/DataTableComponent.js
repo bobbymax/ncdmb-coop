@@ -114,15 +114,12 @@ const DataTableComponent = ({
                         {action !== undefined && (
                           <td>
                             <span>
-                              <Link
-                                to="#"
+                              <button
                                 onClick={() => action(row)}
                                 className="mr-4 btn-sm btn btn-primary"
-                                data-toggle="tooltip"
-                                data-placement="top"
                               >
                                 <i className="fa fa-gavel"></i>
-                              </Link>
+                              </button>
                             </span>
                           </td>
                         )}

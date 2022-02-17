@@ -24,8 +24,6 @@ const SubBudgetHeads = () => {
     loading: isLoading,
   } = useApi(collection);
 
-  console.log(subBudgetHeads);
-
   const [departmentIDs, setDepartmentIDs] = useState([]);
   const [budgetHeads, setBudgetHeads] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

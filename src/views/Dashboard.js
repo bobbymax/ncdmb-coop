@@ -5,12 +5,32 @@ import { collection } from "../services/utils/controllers";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../services/utils/helpers";
 import CustomCard from "../components/commons/cards/CustomCard";
-import { CSVLink } from "react-csv";
+// import { CSVLink } from "react-csv";
 
 const Dashboard = () => {
   const [overview, setOverview] = useState({});
   const [performance, setPerformance] = useState({});
   const [summary, setSummary] = useState({});
+
+  // const labels = [
+  //   "Jan",
+  //   "Feb",
+  //   "Mar",
+  //   "Apr",
+  //   "May",
+  //   "Jun",
+  //   "Jul",
+  //   "Aug",
+  //   "Sep",
+  //   "Oct",
+  //   "Nov",
+  //   "Dec",
+  // ];
+
+  // const data = [
+  //   labels,
+  //   labels.map((label) => performance[label] && performance[label]),
+  // ];
 
   useEffect(() => {
     try {
@@ -38,8 +58,6 @@ const Dashboard = () => {
     actualPerformance,
   } = summary;
 
-  // console.log(performance);
-
   return (
     <>
       <div className="form-head d-md-flex mb-sm-4 mb-3 align-items-start">
@@ -54,33 +72,33 @@ const Dashboard = () => {
       </div>
 
       <div className="row">
-        <div class="col-xl-6 col-xxl-12">
-          <div class="row">
-            <div class="col-sm-6 col-md-3">
+        <div className="col-xl-6 col-xxl-12">
+          <div className="row">
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
           </div>
 
-          <div class="row" style={{ flexDirection: "row-reverse" }}>
-            <div class="col-sm-6 col-md-3">
+          <div className="row" style={{ flexDirection: "row-reverse" }}>
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
-            <div class="col-sm-6 col-md-3">
+            <div className="col-sm-6 col-md-3">
               <CustomCard color={"white"} />
             </div>
           </div>

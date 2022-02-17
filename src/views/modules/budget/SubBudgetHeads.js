@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
@@ -374,17 +375,26 @@ const SubBudgetHeads = () => {
 
                         <div className="col-md-4 mt-2">
                           <input
+                            className="form-check-input"
                             type="checkbox"
-                            checked={state.logisticsBudget === 0 ? true : false}
+                            checked={
+                              state.logisticsBudget
+                                ? true
+                                : false || state.logisticsBudget == 0
+                                ? false
+                                : true
+                            }
                             value={state.logisticsBudget}
                             onChange={(e) => {
-                              console.log(e.target.value);
+                              const value = e.target.checked ? true : false;
+
                               setState({
                                 ...state,
-                                logisticsBudget: e.target.value,
+                                logisticsBudget: value,
                               });
                             }}
                           />
+
                           <label htmlFor="">Logistics Budget</label>
                         </div>
 

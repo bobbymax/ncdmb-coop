@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import Alert from "../../../services/classes/Alert";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
 import { validate } from "../../../services/utils/validation";
+import { CSVLink } from "react-csv";
 
 const SubBudgetHeads = () => {
   const {
@@ -21,6 +23,8 @@ const SubBudgetHeads = () => {
     setData: setSubBudgetHeads,
     loading: isLoading,
   } = useApi(collection);
+
+  console.log(subBudgetHeads);
 
   const [departmentIDs, setDepartmentIDs] = useState([]);
   const [budgetHeads, setBudgetHeads] = useState([]);
@@ -51,10 +55,18 @@ const SubBudgetHeads = () => {
   ];
 
   const handleEdit = (data) => {
-    console.log(data);
     setState(data);
     setUpdate(true);
     setOpen(true);
+  };
+
+  const filterOptions = (optionsArr) => {
+    const arr = [];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
   };
 
   const handleDestroy = (data) => {
@@ -106,7 +118,9 @@ const SubBudgetHeads = () => {
 
   const getBudgetHead = () => {
     collection("budgetHeads")
-      .then((res) => setBudgetHeads(res.data.data))
+      .then((res) => {
+        setBudgetHeads(res.data.data);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -188,6 +202,19 @@ const SubBudgetHeads = () => {
     { key: "personnel", label: "Personnel" },
   ];
 
+  const headers = [
+    { label: "Id", key: "id" },
+    { label: "Budget Code", key: "budgetCode" },
+    { label: "Name", key: "name" },
+    { label: "Actual Balance", key: "actual_balance" },
+    { label: "Actual Expenditure", key: "actual_expenditure" },
+    { label: "Approved Amount", key: "approved_amount" },
+    { label: "Booked Balance", key: "booked_balance" },
+    { label: "Booked Expenditure", key: "booked_expenditure" },
+    { label: "Expected Performance", key: "expected_performance" },
+    { label: "Type", key: "type" },
+  ];
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -199,6 +226,18 @@ const SubBudgetHeads = () => {
           >
             <i className="fa fa-plus-square"></i> Add Sub budget Head
           </button>
+
+          <div className="pull-right">
+            <CSVLink
+              className={`btn btn-success btn-md`}
+              data={subBudgetHeads}
+              headers={headers}
+              filename="Sub Budget Heads"
+              area-disabled={subBudgetHeads.length > 0 ? true : false}
+            >
+              <i className="fa fa-download"></i> Download CSV
+            </CSVLink>
+          </div>
         </div>
       </div>
 
@@ -213,7 +252,7 @@ const SubBudgetHeads = () => {
                       <div className="row">
                         <div className="col-md-4">
                           <CustomSelect
-                            options={budgetHeads}
+                            options={filterOptions(budgetHeads)}
                             value={state.budget_head_id}
                             onChange={(e) => {
                               setState({
@@ -237,7 +276,7 @@ const SubBudgetHeads = () => {
 
                         <div className="col-md-4">
                           <CustomSelect
-                            options={departmentIDs}
+                            options={filterOptions(departmentIDs)}
                             value={state.department_id}
                             error={
                               errors &&
@@ -352,20 +391,29 @@ const SubBudgetHeads = () => {
                           />
                         </div>
 
-                        <div className="col-md-4 mt-2">
+                        <div className="col-md-12">
                           <input
+                            className="form-check-input"
                             type="checkbox"
-                            checked={state.logisticsBudget === 0 ? true : false}
+                            checked={
+                              state.logisticsBudget
+                                ? true
+                                : false || state.logisticsBudget == 0
+                                ? false
+                                : true
+                            }
                             value={state.logisticsBudget}
                             onChange={(e) => {
-                              console.log(e.target.value);
+                              const value = e.target.checked ? true : false;
+
                               setState({
                                 ...state,
-                                logisticsBudget: e.target.value,
+                                logisticsBudget: value,
                               });
                             }}
                           />
-                          <label htmlFor="">Logistics Budget</label>
+
+                          <label>Logistics Budget</label>
                         </div>
 
                         <div className="mt-3 d-flex ml-3">

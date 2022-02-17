@@ -304,7 +304,7 @@ const AddModules = () => {
                         >
                           <div class="form-check">
                             <input
-                              class="form-check-input"
+                              className="form-check-input"
                               type="checkbox"
                               value={state.isMenu}
                               checked={

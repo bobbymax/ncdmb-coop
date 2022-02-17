@@ -36,6 +36,13 @@ const Aside = () => {
               </Link>
             </li>
           ) : null}
+
+          <li>
+            <Link to="/overview" className="ai-icon" aria-expanded="false">
+              <i className="fa fa-eye" />
+              <span className="nav-text">Overview</span>
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

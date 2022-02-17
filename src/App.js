@@ -21,7 +21,6 @@ import Claims from "./views/modules/staff-services/Claims";
 import GradeLevels from "./views/modules/structure/GradeLevels";
 import Wages from "./views/modules/structure/Wages";
 import Benefits from "./views/modules/structure/Benefits";
-// import { Instructions } from "./views/modules/staff-services/Instructions";
 import Claim from "./views/modules/staff-services/Claim";
 import Instructions from "./views/modules/staff-services/Instructions";
 import Approvals from "./views/modules/approvals/Approvals";
@@ -29,6 +28,7 @@ import Logistics from "./views/modules/refunds/Logistics";
 import Batch from "./views/modules/budget/Batch";
 import RefundRequests from "./views/modules/refunds/RefundRequests";
 import AddModules from "./views/modules/administration/AddModules";
+import Overview from "./views/modules/overview/Overview";
 
 const App = () => {
   return (
@@ -270,6 +270,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AddModules />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          exact
+          path="/overview"
+          element={
+            <ProtectedRoute>
+              <Overview />
             </ProtectedRoute>
           }
         />

@@ -129,6 +129,10 @@ const Overview = (props) => {
     { label: "Actual Performance", key: "actual_performance" },
   ];
 
+  const handleViewBreakdown = (data) => {
+    console.log(data);
+  };
+
   return (
     <div>
       <div className="row">
@@ -230,6 +234,7 @@ const Overview = (props) => {
                 </CSVLink>
               </div>
             }
+            action={handleViewBreakdown}
             searchKeyWord={handleSearch}
           />
         </div>

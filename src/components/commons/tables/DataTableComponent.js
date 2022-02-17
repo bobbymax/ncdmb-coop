@@ -6,6 +6,7 @@ import "./data-table.css";
 import TableLoader from "./TableLoader";
 
 const DataTableComponent = ({
+  action = undefined,
   pageName,
   columns,
   downloadButton = null,
@@ -64,6 +65,7 @@ const DataTableComponent = ({
                     <th key={index}>{col.label.toUpperCase()}</th>
                   ))}
                   {handleEdit !== undefined && <th scope="col">Action</th>}
+                  {action !== undefined && <th scope="col">View Breakdown</th>}
                 </tr>
               </thead>
 
@@ -104,6 +106,22 @@ const DataTableComponent = ({
                                 title="Edit"
                               >
                                 <i className="fa fa-trash color-muted"></i>
+                              </Link>
+                            </span>
+                          </td>
+                        )}
+
+                        {action !== undefined && (
+                          <td>
+                            <span>
+                              <Link
+                                to="#"
+                                onClick={() => action(row)}
+                                className="mr-4 btn-sm btn btn-primary"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                              >
+                                <i className="fa fa-gavel"></i>
                               </Link>
                             </span>
                           </td>

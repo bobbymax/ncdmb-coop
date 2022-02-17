@@ -212,6 +212,7 @@ const SubBudgetHeads = () => {
     { label: "Booked Balance", key: "booked_balance" },
     { label: "Booked Expenditure", key: "booked_expenditure" },
     { label: "Expected Performance", key: "expected_performance" },
+    { label: "Type", key: "type" },
   ];
 
   return (
@@ -228,10 +229,11 @@ const SubBudgetHeads = () => {
 
           <div className="pull-right">
             <CSVLink
-              className={`btn btn-success btn-sm`}
+              className={`btn btn-success btn-md`}
               data={subBudgetHeads}
               headers={headers}
               filename="Sub Budget Heads"
+              area-disabled={subBudgetHeads.length > 0 ? true : false}
             >
               <i className="fa fa-download"></i> Download CSV
             </CSVLink>

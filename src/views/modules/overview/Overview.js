@@ -1,68 +1,52 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Card,
-  CardContent,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
-} from "@material-ui/core";
-
 import React, { useState, useEffect } from "react";
-import Requests from "../../../services/classes/Requests";
-import { formatCurrency } from "../../../services/helpers/functions";
-import TableComponent from "../../../widgets/components/TableComponent";
-//import XLSX from 'xlsx'
+import { formatCurrency } from "../../../services/utils/helpers";
+import { collection } from "../../../services/utils/controllers";
+import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+import CustomSelect from "../../../components/forms/CustomSelect";
+import { useSelector } from "react-redux";
+import { CSVLink } from "react-csv";
 
 const columns = [
   {
-    name: "Budget Code",
-    label: "budgetCode",
-    type: "string",
+    label: "Budget Code",
+    key: "budgetCode",
   },
   {
-    name: "Budget Name",
-    label: "name",
-    type: "string",
+    label: "Budget Name",
+    key: "name",
   },
   {
-    name: "Approved Amount",
-    label: "approved_amount",
-    type: "currency",
+    label: "Approved Amount",
+    key: "approved_amount",
   },
   {
-    name: "Booked Expenditure",
-    label: "booked_expenditure",
-    type: "currency",
+    label: "Booked Expenditure",
+    key: "booked_expenditure",
   },
   {
-    name: "Actual Expenditure",
-    label: "actual_expenditure",
-    type: "currency",
+    label: "Actual Expenditure",
+    key: "actual_expenditure",
   },
   {
-    name: "Booked Balance",
-    label: "booked_balance",
-    type: "currency",
+    label: "Booked Balance",
+    key: "booked_balance",
   },
   {
-    name: "Actual Balance",
-    label: "actual_balance",
-    type: "currency",
+    label: "Actual Balance",
+    key: "actual_balance",
   },
   {
-    name: "Expected Performace",
-    label: "expected_performance",
-    type: "string",
+    label: "Expected Performace",
+    key: "expected_performance",
   },
   {
-    name: "Actual Performance",
-    label: "actual_performance",
-    type: "string",
+    label: "Actual Performance",
+    key: "actual_performance",
   },
+  // {
+  //   label: "View Breakdrown",
+  // },
 ];
 
 const Overview = (props) => {
@@ -71,8 +55,9 @@ const Overview = (props) => {
   const [results, setResults] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [department, setDepartment] = useState(0);
+  const auth = useSelector((state) => state.auth.value.user);
 
-  const searchHandler = (term) => {
+  const handleSearch = (term) => {
     setSearchTerm(term);
 
     if (term !== "") {
@@ -90,139 +75,166 @@ const Overview = (props) => {
   };
 
   useEffect(() => {
-    if (props.location && props.location.state) {
-      const budgetHeads = props.location.state.budgetHeads;
-      setData(budgetHeads);
+    const id = auth.department_id;
+
+    if (auth && auth.department_id) {
+      collection("departments/" + id + "/budget/summary")
+        .then((res) => {
+          setData(res.data.data);
+          setDepartment(id);
+        })
+        .catch((err) => console.log(err.message));
     }
-  }, [props.location]);
+  }, [auth.department_id]);
 
   useEffect(() => {
-    Requests.index("departments")
+    collection("departments")
       .then((res) => {
         setDepartments(res.data.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  // console.log(data)
+  const handleChange = (value) => {
+    if (value > 0) {
+      collection("departments/" + value + "/budget/summary")
+        .then((res) => {
+          setData(res.data.data);
+        })
+        .catch((err) => console.log(err.message));
+    }
+  };
+
+  const filterOptions = (optionsArr) => {
+    const arr = [];
+    optionsArr.length > 0 &&
+      optionsArr.forEach((el) => {
+        arr.push({ key: el.id, label: el.name });
+      });
+    return arr;
+  };
+
+  const headers = [
+    { label: "Budget Head Id", key: "budget_head_id" },
+    { label: "Department Code", key: "department_code" },
+    { label: "Budget Code", key: "budgetCode" },
+    { label: "Name", key: "name" },
+    { label: "Logistics Budget", key: "logisticsBudget" },
+    { label: "Approved Amount", key: "approved_amount" },
+    { label: "Booked Expenditure", key: "booked_expenditure" },
+    { label: "Actual Expenditure", key: "actual_expenditure" },
+    { label: "Booked Balance", key: "booked_balance" },
+    { label: "Actual Balance", key: "actual_balance" },
+    { label: "Expected Performance", key: "expected_performance" },
+    { label: "Actual Performance", key: "actual_performance" },
+  ];
 
   return (
-    <>
-      <div container spacing={3}>
-        <Grid item md={6}>
-          <FormControl
-            variant="outlined"
-            style={{ width: "100%", marginBottom: 40 }}
-          >
-            <label className="form-label" id="department">
-              Departments
-            </label>
+    <div>
+      <div className="row">
+        <div className="col-md-12">
+          <CustomSelect
+            options={filterOptions(departments)}
+            defaultText="Select Department"
+            label="Departments"
+            value={department}
+            onChange={(e) => {
+              setDepartment(e.target.value);
+              handleChange(e.target.value);
+            }}
+          />
+        </div>
 
-            <Select
-              labelId="departmentLabel"
-              id="department"
-              label="Departments"
-              value={department}
-              onChange={(e) => {
-                setDepartment(e.target.value);
-                // handleChange(e.target.value);
-              }}
-              required
-            >
-              <MenuItem value="0" disabled>
-                <em>Select Department</em>
-              </MenuItem>
-              {departments.map((dept) => (
-                <MenuItem key={dept.id} value={dept.id}>
-                  <em>{dept.name}</em>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item md={6}>
-          <Grid container spacing={2}>
-            <Grid item md={4}>
-              <Card component={Paper}>
-                <CardContent>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 10, textTransform: "uppercase" }}
-                    color="primary"
+        <div className="col-md-12">
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-body">
+                  <h3
+                    style={{
+                      color: "black",
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      fontWeight: "600",
+                    }}
                   >
                     Approved Amount
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 18 }}
-                  >
+                  </h3>
+
+                  <h6 style={{ fontSize: 18 }} className="text-black">
                     {data.length > 0
                       ? formatCurrency(data[0].totals.appAmount)
                       : "N " + 0}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+                  </h6>
+                </div>
+              </div>
+            </div>
 
-            <Grid item md={4}>
-              <Card component={Paper}>
-                <CardContent>
-                  <Typography
-                    variant="body2"
+            <div className="col-md-4">
+              <div className="card bg-warning">
+                <div className="card-body">
+                  <h2
+                    className="text-white font-w600"
                     style={{ fontSize: 10, textTransform: "uppercase" }}
-                    color="primary"
                   >
                     Actual Expenditure
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 18 }}
-                  >
+                  </h2>
+
+                  <h5 style={{ fontSize: 18 }} className="text-white">
                     {data.length > 0
                       ? formatCurrency(data[0].totals.actExp)
                       : "N " + 0}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+                  </h5>
+                </div>
+              </div>
+            </div>
 
-            <Grid item md={4}>
-              <Card component={Paper}>
-                <CardContent>
-                  <Typography
-                    variant="body2"
+            <div className="col-md-4">
+              <div className="card bg-primary">
+                <div className="card-body">
+                  <h2
                     style={{ fontSize: 10, textTransform: "uppercase" }}
-                    color="primary"
+                    className="text-white font-w600"
                   >
                     Actual Balance
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 18 }}
-                  >
+                  </h2>
+
+                  <h2 className="text-white" style={{ fontSize: 18 }}>
                     {data.length > 0
                       ? formatCurrency(data[0].totals.actBal)
-                      : "N " + 0}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Grid>
+                      : "N" + 0}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <TableComponent
-        columns={columns}
-        rows={searchTerm.length < 1 ? data : results}
-        term={searchTerm}
-        searchKeyword={searchHandler}
-        exportable
-      />
-    </>
+      <div className="row">
+        <div className="col-md-12">
+          <DataTableComponent
+            pageName="Sub Budget Heads"
+            columns={columns}
+            rows={searchTerm.length < 1 ? data : results}
+            term={searchTerm}
+            downloadButton={
+              <div className="pull-right">
+                <CSVLink
+                  className="btn btn-success btn-md"
+                  data={data}
+                  headers={headers}
+                  filename="Budget Overview"
+                >
+                  <i className="fa fa-download"></i> Download CSV
+                </CSVLink>
+              </div>
+            }
+            searchKeyWord={handleSearch}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

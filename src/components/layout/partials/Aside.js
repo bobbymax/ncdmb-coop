@@ -37,12 +37,12 @@ const Aside = () => {
             </li>
           ) : null}
 
-          {/* <li>
+          <li>
             <Link to="/overview" className="ai-icon" aria-expanded="false">
-              <i className="fa fa-total" />
+              <i className="fa fa-eye" />
               <span className="nav-text">Overview</span>
             </Link>
-          </li> */}
+          </li>
         </ul>
       </div>
     </div>

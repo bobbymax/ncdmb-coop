@@ -8,6 +8,7 @@ import TableLoader from "./TableLoader";
 const DataTableComponent = ({
   pageName,
   columns,
+  downloadButton = null,
   batch,
   rows,
   handleEdit = undefined,
@@ -37,6 +38,8 @@ const DataTableComponent = ({
       <div className="card">
         <div className="card-header">
           <h4 className="card-title">{pageName}</h4>
+
+          {downloadButton}
         </div>
 
         <div className="card-body">
@@ -74,8 +77,11 @@ const DataTableComponent = ({
                         {columns &&
                           columns.length > 0 &&
                           columns.map((col, index) => (
-                            <td key={index}>{row[col.key]}</td>
+                            <>
+                              <td key={index}>{row[col.key]}</td>
+                            </>
                           ))}
+
                         {handleEdit !== undefined && (
                           <td>
                             <span>

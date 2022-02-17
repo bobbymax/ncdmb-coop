@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, Bar } from "react-chartjs-2";
 import { formatCurrency } from "../../../services/utils/helpers";
-import DoughnutChart from "../../../components/charts/DoughnutChart";
 
 const OverviewExpenditure = () => {
   const params = useLocation();
@@ -29,6 +28,7 @@ const OverviewExpenditure = () => {
       state.subBudgetHead.approved_amount) *
       100
   );
+
   const bala =
     state.subBudgetHead.approved_amount -
     state.subBudgetHead.actual_expenditure;
@@ -65,6 +65,10 @@ const OverviewExpenditure = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="col-sm-12 col-md-8 col-lg-8">
+            <div className="card text-white bg-success"></div>
           </div>
         </div>
       </div>

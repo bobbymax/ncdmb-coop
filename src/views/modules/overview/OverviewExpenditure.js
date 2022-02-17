@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Doughnut } from "react-chartjs-2";
 import { formatCurrency } from "../../../services/utils/helpers";
+import DoughnutChart from "../../../components/charts/DoughnutChart";
 
 const OverviewExpenditure = () => {
   const params = useLocation();
 
   const initialState = {
-    subBudgetHead: null,
+    subBudgetHead: {},
   };
 
   const [state, setState] = useState(initialState);
@@ -22,11 +24,48 @@ const OverviewExpenditure = () => {
     }
   }, []);
 
+  const act = Math.round(
+    (state.subBudgetHead.actual_expenditure /
+      state.subBudgetHead.approved_amount) *
+      100
+  );
+  const bala =
+    state.subBudgetHead.approved_amount -
+    state.subBudgetHead.actual_expenditure;
+
+  const bal = Math.round((bala / state.subBudgetHead.approved_amount) * 100);
+
+  const format = {
+    labels: ["Expenditure", "Balance"],
+
+    datasets: [
+      {
+        label: "Budget Overview",
+        data: [act, bal],
+        backgroundColor: ["rgba(39, 174, 96, 1.0)", "rgba(41, 128, 185, 1.0)"],
+      },
+    ],
+  };
+
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="page-titles">
           <h2>Expenditure Overview</h2>
+        </div>
+      </div>
+
+      <div className="col-xl-12 col-md-12 col-sm-12">
+        <div className="row">
+          <div className="col-sm-12 col-md-4 col-lg-4">
+            <div className="card">
+              <div className="card-body">
+                <div className="media align-items-center">
+                  <Doughnut data={format} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

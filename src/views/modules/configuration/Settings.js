@@ -4,7 +4,13 @@ import React, { useEffect, useState } from "react";
 import TextInputField from "../../../components/forms/TextInputField";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import BasicTable from "../../../components/commons/tables/BasicTable";
-import { collection, store } from "../../../services/utils/controllers";
+import {
+  alter,
+  collection,
+  destroy,
+  store,
+} from "../../../services/utils/controllers";
+import Alert from "../../../services/classes/Alert";
 
 const Settings = () => {
   const initialState = {
@@ -18,6 +24,7 @@ const Settings = () => {
   const [state, setState] = useState(initialState);
   const [settings, setSettings] = useState([]);
   const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   const columns = [
     { key: "key", label: "Key" },
@@ -43,13 +50,33 @@ const Settings = () => {
   ];
 
   const updateRow = (data) => {
-    console.log(data);
+    setUpdate(true);
+    setState(data);
+    setOpen(true);
+  };
+
+  const deleteRow = (data) => {
+    Alert.flash(
+      "Are you sure?",
+      "warning",
+      "You would not be able to revert this!!"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        destroy("settings", data.id)
+          .then((res) => {
+            setSettings([
+              ...settings.filter((stg) => stg.id !== res.data.data.id),
+            ]);
+            Alert.success("Deleted!!", res.data.message);
+          })
+          .catch((err) => console.log(err.message));
+      }
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // console.log(state)
     const data = {
       key: state.key,
       display_name: state.display_name,
@@ -58,18 +85,42 @@ const Settings = () => {
       details: state.details,
     };
 
-    try {
-      store("settings", data)
-        .then((res) => {
-          setSettings([res.data.data, ...settings]);
-        })
-        .catch((err) => console.log(err.message));
-    } catch (error) {
-      console.log(error);
-    }
+    if (update) {
+      try {
+        alter("settings", state.issd, data)
+          .then((res) => {
+            const result = res.data.data;
 
-    setState(initialState);
-    setOpen(false);
+            setSettings(
+              settings.map((stg) => {
+                if (result.id === stg.id) {
+                  return result;
+                }
+
+                return stg;
+              })
+            );
+            setUpdate(false);
+            setState(initialState);
+            setOpen(false);
+
+            Alert.success("Updated!!", res.data.message);
+          })
+          .catch((err) => console.log(err));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        store("settings", data)
+          .then((res) => {
+            setSettings([res.data.data, ...settings]);
+          })
+          .catch((err) => console.log(err.message));
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -162,10 +213,14 @@ const Settings = () => {
                           <button type="submit" className="btn btn-primary">
                             Submit
                           </button>
+
                           <button
                             type="button"
                             className="btn btn-danger"
-                            onClick={() => setOpen(false)}
+                            onClick={() => {
+                              setOpen(false);
+                              setUpdate(false);
+                            }}
                           >
                             Close
                           </button>
@@ -185,6 +240,7 @@ const Settings = () => {
             columns={columns}
             rows={settings}
             handleEdit={updateRow}
+            handleDelete={deleteRow}
           />
         </div>
       </div>

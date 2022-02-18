@@ -46,7 +46,6 @@ const Modules = () => {
                 <ModuleCard
                   name={module.name}
                   path={`/applications${module.path}`}
-                  q
                   children={module.children}
                   entity={module}
                   handleNav={handleNav}

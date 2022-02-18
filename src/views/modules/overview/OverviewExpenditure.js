@@ -24,6 +24,7 @@ const OverviewExpenditure = () => {
 
   const initialState = {
     subBudgetHead: {},
+    expenditures: [],
   };
   const [state, setState] = useState(initialState);
 
@@ -33,7 +34,8 @@ const OverviewExpenditure = () => {
 
       setState({
         ...state,
-        subBudgetHead,
+        subBudgetHead: subBudgetHead,
+        expenditures: subBudgetHead.expenditures,
       });
     }
   }, []);
@@ -73,6 +75,15 @@ const OverviewExpenditure = () => {
     ],
   };
 
+  const value = state.expenditures.map((ex) => {
+    const label = ex.updated_at.split(",", 1);
+    console.log(ex);
+
+    return ex.amount + label;
+  });
+
+  console.log(value);
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -107,7 +118,7 @@ const OverviewExpenditure = () => {
 
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
-          <div className="card-body">
+          <div className="card-body table-responsive">
             <table className="table table-bordered table-striped">
               <thead>
                 <tr>
@@ -119,9 +130,8 @@ const OverviewExpenditure = () => {
               </thead>
 
               <tbody>
-                {state.subBudgetHead.expenditures &&
-                state.subBudgetHead.expenditures.length > 0
-                  ? state.subBudgetHead.expenditures.map((subBudget) => (
+                {state.expenditures && state.expenditures.length > 0
+                  ? state.expenditures.map((subBudget) => (
                       <tr key={subBudget.id}>
                         <td>{subBudget.subBudgetHead.budgetCode}</td>
                         <td>{subBudget.beneficiary}</td>

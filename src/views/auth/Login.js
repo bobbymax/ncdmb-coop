@@ -53,7 +53,7 @@ const Login = () => {
                             className="img-fluid"
                             src={logo}
                             alt="logo brand"
-                            style={{ width: "350px" }}
+                            // style={{ width: "350px" }}
                           />
                         </Link>
                       </div>

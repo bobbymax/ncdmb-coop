@@ -50,6 +50,7 @@ const Login = () => {
                       <div className="text-center mb-3">
                         <Link to="/">
                           <img
+                            className="img-fluid"
                             src={logo}
                             alt="logo brand"
                             style={{ width: "350px" }}

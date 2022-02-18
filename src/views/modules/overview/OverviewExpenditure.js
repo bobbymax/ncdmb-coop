@@ -1,7 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { formatCurrency } from "../../../services/utils/helpers";
+
+const labels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const OverviewExpenditure = () => {
   const params = useLocation();
@@ -9,7 +25,6 @@ const OverviewExpenditure = () => {
   const initialState = {
     subBudgetHead: {},
   };
-
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -47,18 +62,29 @@ const OverviewExpenditure = () => {
     ],
   };
 
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Budget Expenditure",
+        data: [],
+        backgroundColor: ["rgba(41, 128, 185, 1.0)"],
+      },
+    ],
+  };
+
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="page-titles">
-          <h2>Expenditure Overview</h2>
+          <h2 className="text-black">Expenditure Overview</h2>
         </div>
       </div>
 
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="row">
           <div className="col-sm-12 col-md-4 col-lg-4">
-            <div className="card">
+            <div className="card bg-light">
               <div className="card-body">
                 <div className="media align-items-center">
                   <Doughnut data={format} />
@@ -68,12 +94,18 @@ const OverviewExpenditure = () => {
           </div>
 
           <div className="col-sm-12 col-md-8 col-lg-8">
-            <div className="card text-white bg-success"></div>
+            <div className="card text-white bg-white">
+              <div className="card-body pb-0 pt-0">
+                <div className="d-flex align-items-center mb-3">
+                  <Bar data={data} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="col-md-12">
+      <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-body">
             <table className="table table-bordered table-striped">

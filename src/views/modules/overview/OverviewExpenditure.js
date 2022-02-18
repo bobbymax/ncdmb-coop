@@ -77,14 +77,10 @@ const OverviewExpenditure = () => {
     ],
   };
 
-  console.log(chartData);
-
   const returnedResult = () => {
     const chartD = [];
 
     labels.map((month) => {
-      let result = {};
-
       const total = state.expenditures
         .map((exp) => {
           const label = exp.updated_at.split(",", 1)[0];
@@ -92,18 +88,17 @@ const OverviewExpenditure = () => {
         })
         .reduce((prev, curr) => prev + curr, 0);
 
-      result["month"] = month;
-      result["total_amount"] = total;
-
-      return chartD.push(result);
+      return chartD.push(total);
     });
 
     return chartD;
   };
 
   useEffect(() => {
-    setChartData(returnedResult());
-  }, []);
+    if (state.subBudgetHead !== {} && state.subBudgetHead.id > 0) {
+      setChartData(returnedResult());
+    }
+  }, [state.expenditures]);
 
   return (
     <div className="row">

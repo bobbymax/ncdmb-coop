@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
@@ -332,37 +334,35 @@ const Logistics = (props) => {
 
               <tbody>
                 {logisticsData && logisticsData.length > 0 ? (
-                  logisticsData.map((logistic) => {
-                    if (auth.id === logistic.controller_id) {
-                      return (
-                        <tr key={logistic.id}>
-                          <td>{logistic.subBudgetHead.budgetCode}</td>
-                          <td>{logistic.beneficiary.name}</td>
-                          <td>{logistic.description}</td>
-                          <td>{formatCurrency(logistic.amount)}</td>
-                          <td>{logistic.status}</td>
-                          <td>
-                            {logistic.closed === 1 ? (
-                              <span class="badge bg-success text-white rounded-pill">
-                                Fulfilled
-                              </span>
-                            ) : (
-                              <button
-                                className="btn btn-warning"
-                                onClick={() => fulfillLogistic(logistic)}
-                                disabled={logistic.closed === 1}
-                              >
-                                <i
-                                  className="fa fa-check-circle"
-                                  style={{ color: "white !important" }}
-                                ></i>
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    }
-                  })
+                  logisticsData.map((logistic) => (
+                    auth.id === logistic.controller_id && (
+                      <tr key={logistic.id}>
+                        <td>{logistic.subBudgetHead.budgetCode}</td>
+                        <td>{logistic.beneficiary.name}</td>
+                        <td>{logistic.description}</td>
+                        <td>{formatCurrency(logistic.amount)}</td>
+                        <td>{logistic.status}</td>
+                        <td>
+                          {logistic.closed === 1 ? (
+                            <span class="badge bg-success text-white rounded-pill">
+                              Fulfilled
+                            </span>
+                          ) : (
+                            <button
+                              className="btn btn-warning"
+                              onClick={() => fulfillLogistic(logistic)}
+                              disabled={logistic.closed === 1}
+                            >
+                              <i
+                                className="fa fa-check-circle"
+                                style={{ color: "white !important" }}
+                              ></i>
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  ))
                 ) : (
                   <tr>
                     <td colSpan="6" className="text-danger">

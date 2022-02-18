@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -76,38 +77,15 @@ const OverviewExpenditure = () => {
     ],
   };
 
-  const value = state.expenditures.map((ex) => {
-    const label = ex.updated_at.split(",", 1);
-
-    return label;
-  });
-
-  // const sumAmounts = (arr, key) => {
-  //   return arr.reduce((a, b) => a + (b[key] || 0), 0);
-  // };
-
   labels.map((month) => {
-    // let monArr = [];
     let result = {};
 
-    // const total = state.expenditures
-    //   .map((exp) => {
-    //     const label = exp.updated_at.split(",", 1);
-    //     return month === label && exp.amount;
-    //   })
-    //   .reduce((prev, curr) => prev + curr);
-
-    // const total = state.expenditures.reduce((sum, exp) => {
-    //   const label = exp.updated_at.split(",", 1);
-
-    //   return month === label && sum + parseFloat(exp.amount);
-    // });
-
-    const total = state.expenditures.filter((exp) => {
-      const label = exp.updated_at.split(",", 1);
-      console.log(label);
-      return label === "Jan" && exp;
-    });
+    const total = state.expenditures
+      .map((exp) => {
+        const label = exp.updated_at.split(",", 1)[0];
+        return month === label && parseFloat(exp.amount);
+      })
+      .reduce((prev, curr) => prev + curr, 0);
 
     result["month"] = month;
     result["total_amount"] = total;

@@ -71,27 +71,39 @@ const OverviewExpenditure = () => {
     datasets: [
       {
         label: "Budget Expenditure",
-        data: [],
+        data: [chartData],
         backgroundColor: ["rgba(41, 128, 185, 1.0)"],
       },
     ],
   };
 
-  labels.map((month) => {
-    let result = {};
+  console.log(chartData);
 
-    const total = state.expenditures
-      .map((exp) => {
-        const label = exp.updated_at.split(",", 1)[0];
-        return month === label && parseFloat(exp.amount);
-      })
-      .reduce((prev, curr) => prev + curr, 0);
+  const returnedResult = () => {
+    const chartD = [];
 
-    result["month"] = month;
-    result["total_amount"] = total;
+    labels.map((month) => {
+      let result = {};
 
-    return console.log(result);
-  });
+      const total = state.expenditures
+        .map((exp) => {
+          const label = exp.updated_at.split(",", 1)[0];
+          return month === label && parseFloat(exp.amount);
+        })
+        .reduce((prev, curr) => prev + curr, 0);
+
+      result["month"] = month;
+      result["total_amount"] = total;
+
+      return chartD.push(result);
+    });
+
+    return chartD;
+  };
+
+  useEffect(() => {
+    setChartData(returnedResult());
+  }, []);
 
   return (
     <div className="row">

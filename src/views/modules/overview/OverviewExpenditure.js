@@ -71,7 +71,7 @@ const OverviewExpenditure = () => {
     datasets: [
       {
         label: "Budget Expenditure",
-        data: [chartData],
+        data: chartData,
         backgroundColor: ["rgba(41, 128, 185, 1.0)"],
       },
     ],

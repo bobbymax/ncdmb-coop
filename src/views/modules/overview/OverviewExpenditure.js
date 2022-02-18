@@ -1,16 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, Bar } from "react-chartjs-2";
 import { formatCurrency } from "../../../services/utils/helpers";
-import DoughnutChart from "../../../components/charts/DoughnutChart";
+
+const labels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const OverviewExpenditure = () => {
   const params = useLocation();
 
   const initialState = {
     subBudgetHead: {},
+    expenditures: [],
   };
-
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -19,7 +34,8 @@ const OverviewExpenditure = () => {
 
       setState({
         ...state,
-        subBudgetHead,
+        subBudgetHead: subBudgetHead,
+        expenditures: subBudgetHead.expenditures,
       });
     }
   }, []);
@@ -29,6 +45,7 @@ const OverviewExpenditure = () => {
       state.subBudgetHead.approved_amount) *
       100
   );
+
   const bala =
     state.subBudgetHead.approved_amount -
     state.subBudgetHead.actual_expenditure;
@@ -47,18 +64,38 @@ const OverviewExpenditure = () => {
     ],
   };
 
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Budget Expenditure",
+        data: [],
+        backgroundColor: ["rgba(41, 128, 185, 1.0)"],
+      },
+    ],
+  };
+
+  const value = state.expenditures.map((ex) => {
+    const label = ex.updated_at.split(",", 1);
+    console.log(ex);
+
+    return ex.amount + label;
+  });
+
+  console.log(value);
+
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="page-titles">
-          <h2>Expenditure Overview</h2>
+          <h2 className="text-black">Expenditure Overview</h2>
         </div>
       </div>
 
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="row">
           <div className="col-sm-12 col-md-4 col-lg-4">
-            <div className="card">
+            <div className="card bg-light">
               <div className="card-body">
                 <div className="media align-items-center">
                   <Doughnut data={format} />
@@ -66,12 +103,22 @@ const OverviewExpenditure = () => {
               </div>
             </div>
           </div>
+
+          <div className="col-sm-12 col-md-8 col-lg-8">
+            <div className="card text-white bg-white">
+              <div className="card-body pb-0 pt-0">
+                <div className="d-flex align-items-center mb-3">
+                  <Bar data={data} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="col-md-12">
+      <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
-          <div className="card-body">
+          <div className="card-body table-responsive">
             <table className="table table-bordered table-striped">
               <thead>
                 <tr>
@@ -83,9 +130,8 @@ const OverviewExpenditure = () => {
               </thead>
 
               <tbody>
-                {state.subBudgetHead.expenditures &&
-                state.subBudgetHead.expenditures.length > 0
-                  ? state.subBudgetHead.expenditures.map((subBudget) => (
+                {state.expenditures && state.expenditures.length > 0
+                  ? state.expenditures.map((subBudget) => (
                       <tr key={subBudget.id}>
                         <td>{subBudget.subBudgetHead.budgetCode}</td>
                         <td>{subBudget.beneficiary}</td>

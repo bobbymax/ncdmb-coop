@@ -1,14 +1,13 @@
-
-const labels = []
-
+const labels = [];
 
 const subBudgetHead = {
-    expenditures: [{
-        amount: 500000000,
-        updated: ""
-    }]
-}
-
+  expenditures: [
+    {
+      amount: 500000000,
+      updated: "",
+    },
+  ],
+};
 
 // loop through the expenditures
 
@@ -22,26 +21,27 @@ const subBudgetHead = {
 //         })
 //     ))
 
-
 // })
 
 const sumAmounts = (arr, key) => {
-    return arr.reduce((a, b) => a + (b[key] || 0), 0)
-}
+  return arr.reduce((a, b) => a + (b[key] || 0), 0);
+};
 
-labels.map(month => {
-    let monArr = []
-    let result = {}
+labels.map((month) => {
+  let monArr = [];
+  let result = {};
 
-    subBudgetHead.expenditures.map(exp => (
-        month === exp.updated && monArr.push({
-            amount: exp.amount,
-            updated: exp.updated
-        })
-    ))
+  subBudgetHead.expenditures.map(
+    (exp) =>
+      month === exp.updated &&
+      monArr.push({
+        amount: exp.amount,
+        updated: exp.updated,
+      })
+  );
 
-    result["month"] = month
-    result["total_amount"] = sumAmounts(monArr, "amount")
+  result["month"] = month;
+  result["total_amount"] = sumAmounts(monArr, "amount");
 
-    return result
-})
+  return result;
+});

@@ -27,6 +27,7 @@ const OverviewExpenditure = () => {
     expenditures: [],
   };
   const [state, setState] = useState(initialState);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     if (params.pathname && params.state) {
@@ -77,12 +78,42 @@ const OverviewExpenditure = () => {
 
   const value = state.expenditures.map((ex) => {
     const label = ex.updated_at.split(",", 1);
-    console.log(ex);
 
-    return ex.amount + label;
+    return label;
   });
 
-  console.log(value);
+  // const sumAmounts = (arr, key) => {
+  //   return arr.reduce((a, b) => a + (b[key] || 0), 0);
+  // };
+
+  labels.map((month) => {
+    // let monArr = [];
+    let result = {};
+
+    // const total = state.expenditures
+    //   .map((exp) => {
+    //     const label = exp.updated_at.split(",", 1);
+    //     return month === label && exp.amount;
+    //   })
+    //   .reduce((prev, curr) => prev + curr);
+
+    // const total = state.expenditures.reduce((sum, exp) => {
+    //   const label = exp.updated_at.split(",", 1);
+
+    //   return month === label && sum + parseFloat(exp.amount);
+    // });
+
+    const total = state.expenditures.filter((exp) => {
+      const label = exp.updated_at.split(",", 1);
+      console.log(label);
+      return label === "Jan" && exp;
+    });
+
+    result["month"] = month;
+    result["total_amount"] = total;
+
+    return console.log(result);
+  });
 
   return (
     <div className="row">

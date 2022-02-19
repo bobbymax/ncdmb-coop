@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from "react";
+import TextInputField from "../../../components/forms/TextInputField";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
 // import TextInputField from '../../'
 
 const AssignRole = () => {
+  const initialState = {
+    user_id: 0,
+    roles: [],
+  };
+
   const { data: staffs, request } = useApi(collection);
+  const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     request("users");
   }, []);
+
+  const addRole = (staff) => {
+    setOpen((prev) => !prev);
+  };
 
   return (
     <div className="row">
@@ -19,7 +30,21 @@ const AssignRole = () => {
         </div>
       </div>
 
-      {open && <h2>Open</h2>}
+      {open && (
+        <div className="col-md-12">
+          <div className="card">
+            <div className="card-body">
+              <h5>Add Role</h5>
+
+              <div className="row">
+                <div className="col-md-6">
+                  <TextInputField value={state.user_id} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="col-md-12">
         <div className="card">
@@ -42,7 +67,11 @@ const AssignRole = () => {
                       <td>{staff.staff_no}</td>
                       <td>{staff.level}</td>
                       <td>
-                        <i className="fa fa-edit"></i>
+                        <i
+                          className="fa fa-edit"
+                          onClick={() => addRole(staff)}
+                          style={{ cursor: "pointer" }}
+                        ></i>
                       </td>
                     </tr>
                   ))

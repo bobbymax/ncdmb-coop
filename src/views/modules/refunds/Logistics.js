@@ -77,11 +77,6 @@ const Logistics = (props) => {
 
     store(`logisticsRequests/${logistic.id}/complete`, { closed }).then(
       (res) => {
-        const result = res.data.data;
-        const closed = result.closed === "False" ? 0 : 1;
-
-        setFulfilled(closed);
-
         Alert.success("Logistic Fulfilled!!", res.data.message);
       }
     );
@@ -334,35 +329,36 @@ const Logistics = (props) => {
 
               <tbody>
                 {logisticsData && logisticsData.length > 0 ? (
-                  logisticsData.map((logistic) => (
-                    auth.id === logistic.controller_id && (
-                      <tr key={logistic.id}>
-                        <td>{logistic.subBudgetHead.budgetCode}</td>
-                        <td>{logistic.beneficiary.name}</td>
-                        <td>{logistic.description}</td>
-                        <td>{formatCurrency(logistic.amount)}</td>
-                        <td>{logistic.status}</td>
-                        <td>
-                          {logistic.closed === 1 ? (
-                            <span class="badge bg-success text-white rounded-pill">
-                              Fulfilled
-                            </span>
-                          ) : (
-                            <button
-                              className="btn btn-warning"
-                              onClick={() => fulfillLogistic(logistic)}
-                              disabled={logistic.closed === 1}
-                            >
-                              <i
-                                className="fa fa-check-circle"
-                                style={{ color: "white !important" }}
-                              ></i>
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  ))
+                  logisticsData.map(
+                    (logistic) =>
+                      auth.id === logistic.controller_id && (
+                        <tr key={logistic.id}>
+                          <td>{logistic.subBudgetHead.budgetCode}</td>
+                          <td>{logistic.beneficiary.name}</td>
+                          <td>{logistic.description}</td>
+                          <td>{formatCurrency(logistic.amount)}</td>
+                          <td>{logistic.status}</td>
+                          <td>
+                            {logistic.closed === 1 ? (
+                              <span class="badge bg-success text-white rounded-pill">
+                                Fulfilled
+                              </span>
+                            ) : (
+                              <button
+                                className="btn btn-warning"
+                                onClick={() => fulfillLogistic(logistic)}
+                                disabled={logistic.closed === 1}
+                              >
+                                <i
+                                  className="fa fa-check-circle"
+                                  style={{ color: "white !important" }}
+                                ></i>
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                  )
                 ) : (
                   <tr>
                     <td colSpan="6" className="text-danger">

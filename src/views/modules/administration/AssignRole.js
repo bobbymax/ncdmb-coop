@@ -33,15 +33,7 @@ const AssignRole = () => {
       {open && (
         <div className="col-md-12">
           <div className="card">
-            <div className="card-body">
-              <h5>Add Role</h5>
-
-              <div className="row">
-                <div className="col-md-6">
-                  <TextInputField value={state.user_id} />
-                </div>
-              </div>
-            </div>
+            <div className="card-body"></div>
           </div>
         </div>
       )}

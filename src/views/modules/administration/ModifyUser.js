@@ -14,6 +14,7 @@ const ModifyUser = ({ user, roles }) => {
     department_id: 0,
     name: "",
     email: "",
+    roles: [],
   };
 
   const formatRole = () => {

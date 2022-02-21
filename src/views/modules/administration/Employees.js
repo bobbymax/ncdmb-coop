@@ -411,7 +411,6 @@ const Employees = () => {
               page="Staff"
               columns={columns}
               rows={employees}
-              // handleEdit={handleUpdate}
               // handleDelete={handleDestroy}
               manageStaff={manageStaff}
             />

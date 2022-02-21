@@ -24,10 +24,10 @@ const AddStaffRole = (props) => {
         const newRole = res.data.data;
 
         Alert.success("Role", newRole.message);
+        props.onHide();
       })
       .catch((err) => console.log(err.message));
 
-    props.onHide();
     setRoles([]);
   };
 

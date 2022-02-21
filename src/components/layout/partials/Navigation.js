@@ -3,7 +3,7 @@
 import React from "react";
 import logo from "../../../assets/images/logo-ncdmb.png";
 import logoCompact from "../../../assets/images/logo-text-again.png";
-import brand from "../../../assets/images/logo-text-again.png";
+import brand from "../../../assets/images/text-logo.png";
 
 const Navigation = () => {
   return (
@@ -11,7 +11,12 @@ const Navigation = () => {
       <a href="#" className="brand-logo">
         <img className="logo-abbr" src={logo} alt="logo top" />
         <img className="logo-compact" src={logoCompact} alt="logo compact" />
-        <img className="brand-title" src={brand} alt="brand logo" />
+        <img
+          className="brand-title"
+          style={{ width: "50% !important" }}
+          src={brand}
+          alt="brand logo"
+        />
       </a>
 
       <div className="nav-control">

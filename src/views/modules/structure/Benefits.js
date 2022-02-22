@@ -15,12 +15,14 @@ import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
 import AddEntitlements from "./AddEntitlements";
 import { levelOptions } from "../../../services/utils/helpers";
+import Loading from "../../../components/commons/Loading";
 
 const Benefits = () => {
   const {
     data: benefits,
     setData: setBenefits,
     request: fetch,
+    loading,
   } = useApi(collection);
 
   const initialState = {
@@ -85,8 +87,6 @@ const Benefits = () => {
       });
     return arr;
   };
-
-  console.log(benefits);
 
   const handleModalEvent = (data) => {
     setModalShow({
@@ -181,182 +181,191 @@ const Benefits = () => {
   }, []);
 
   return (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="page-titles">
-          <button
-            className="btn btn-primary"
-            onClick={() => setOpen(!open)}
-            disabled={open}
-          >
-            <i className="fa fa-plus-square"></i> Add Benefit
-          </button>
+    <>
+      {loading ? <Loading /> : null}
+
+      <div className="row">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <button
+              className="btn btn-primary"
+              onClick={() => setOpen(!open)}
+              disabled={open}
+            >
+              <i className="fa fa-plus-square"></i> Add Benefit
+            </button>
+          </div>
         </div>
-      </div>
 
-      <AddEntitlements
-        onSubmit={handleStateChange}
-        show={modalShow.visibility}
-        benefit={modalShow.entity}
-        grades={levelOptions(gradeLevels)}
-        onHide={() => {
-          setModalShow({ ...modalShow, visibility: false });
-        }}
-      />
+        <AddEntitlements
+          onSubmit={handleStateChange}
+          show={modalShow.visibility}
+          benefit={modalShow.entity}
+          grades={levelOptions(gradeLevels)}
+          onHide={() => {
+            setModalShow({ ...modalShow, visibility: false });
+          }}
+        />
 
-      {open && (
-        <>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="form-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="col-md-4">
-                        <TextInputField
-                          placeholder="Enter Grade Level Name"
-                          label="Benefit title"
-                          type="text"
-                          value={state.name}
-                          onChange={(e) =>
-                            setState({ ...state, name: e.target.value })
-                          }
-                          error={
-                            errors && errors.name && errors.name.length > 0
-                          }
-                          errorMessage={errors && errors.name && errors.name[0]}
-                        />
-                      </div>
+        {open && (
+          <>
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="form-body">
+                    <form onSubmit={handleSubmit}>
+                      <div className="row">
+                        <div className="col-md-4">
+                          <TextInputField
+                            placeholder="Enter Grade Level Name"
+                            label="Benefit title"
+                            type="text"
+                            value={state.name}
+                            onChange={(e) =>
+                              setState({ ...state, name: e.target.value })
+                            }
+                            error={
+                              errors && errors.name && errors.name.length > 0
+                            }
+                            errorMessage={
+                              errors && errors.name && errors.name[0]
+                            }
+                          />
+                        </div>
 
-                      <div className="col-md-4">
-                        <CustomSelect
-                          defaultText="Select Parent"
-                          defaultInputValue={""}
-                          label="Select Parent"
-                          options={benefitOptions(benefits)}
-                          value={state.parentId}
-                          onChange={(e) =>
-                            setState({ ...state, parentId: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.parentId &&
-                            errors.parentId.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.parentId && errors.parentId[0]
-                          }
-                        />
-                      </div>
+                        <div className="col-md-4">
+                          <CustomSelect
+                            defaultText="Select Parent"
+                            defaultInputValue={""}
+                            label="Select Parent"
+                            options={benefitOptions(benefits)}
+                            value={state.parentId}
+                            onChange={(e) =>
+                              setState({ ...state, parentId: e.target.value })
+                            }
+                            error={
+                              errors &&
+                              errors.parentId &&
+                              errors.parentId.length > 0
+                            }
+                            errorMessage={
+                              errors && errors.parentId && errors.parentId[0]
+                            }
+                          />
+                        </div>
 
-                      <div className="col-md-4">
-                        <CustomSelect
-                          label="Requirement"
-                          defaultText="Choose Option"
-                          defaultInputValue={""}
-                          options={requirementOptions}
-                          value={state.depends}
-                          onChange={(e) =>
-                            setState({ ...state, depends: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.depends &&
-                            errors.depends.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.depends && errors.depends[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-12">
-                        <TextInputField
-                          placeholder="Description"
-                          type="text"
-                          multiline={2}
-                          value={state.description}
-                          onChange={(e) =>
-                            setState({ ...state, description: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.description &&
-                            errors.description.length > 0
-                          }
-                          errorMessage={
-                            errors &&
-                            errors.description &&
-                            errors.description[0]
-                          }
-                        />
-                      </div>
-                      <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
+                        <div className="col-md-4">
+                          <CustomSelect
+                            label="Requirement"
+                            defaultText="Choose Option"
+                            defaultInputValue={""}
+                            options={requirementOptions}
+                            value={state.depends}
+                            onChange={(e) =>
+                              setState({ ...state, depends: e.target.value })
+                            }
+                            error={
+                              errors &&
+                              errors.depends &&
+                              errors.depends.length > 0
+                            }
+                            errorMessage={
+                              errors && errors.depends && errors.depends[0]
+                            }
+                          />
+                        </div>
+                        <div className="col-md-12">
+                          <TextInputField
+                            placeholder="Description"
+                            type="text"
+                            multiline={2}
+                            value={state.description}
+                            onChange={(e) =>
+                              setState({
+                                ...state,
+                                description: e.target.value,
+                              })
+                            }
+                            error={
+                              errors &&
+                              errors.description &&
+                              errors.description.length > 0
+                            }
+                            errorMessage={
+                              errors &&
+                              errors.description &&
+                              errors.description[0]
+                            }
+                          />
+                        </div>
+                        <div className="col-md-12 mt-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
 
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setUpdate(false);
-                            setState(initialState);
-                            setOpen(false);
-                            setErrors({});
-                          }}
-                        >
-                          Close
-                        </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => {
+                              setUpdate(false);
+                              setState(initialState);
+                              setOpen(false);
+                              setErrors({});
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      <div className="col-lg-12">
-        <div className="card">
-          <div className="card-body">
-            <div className="table-responsive">
-              <table className="table table-bordered table-striped verticle-middle table-responsive-sm">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Parent</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {benefits ? (
-                    benefits.map((benefit) => {
-                      return (
-                        <BenefitsWidget
-                          key={benefit.id}
-                          benefit={benefit}
-                          onEdit={handleUpdate}
-                          onDestroy={handleDestroy}
-                          modalControl={handleModalEvent}
-                        />
-                      );
-                    })
-                  ) : (
+        <div className="col-lg-12">
+          <div className="card">
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-bordered table-striped verticle-middle table-responsive-sm">
+                  <thead>
                     <tr>
-                      <td colSpan="3" className="text-danger">
-                        {"No Data Found!!"}
-                      </td>
+                      <th>Name</th>
+                      <th>Parent</th>
+                      <th>Action</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody>
+                    {benefits ? (
+                      benefits.map((benefit) => {
+                        return (
+                          <BenefitsWidget
+                            key={benefit.id}
+                            benefit={benefit}
+                            onEdit={handleUpdate}
+                            onDestroy={handleDestroy}
+                            modalControl={handleModalEvent}
+                          />
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="text-danger">
+                          {"No Data Found!!"}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

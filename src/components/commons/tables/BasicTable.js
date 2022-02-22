@@ -7,6 +7,7 @@ const BasicTable = ({
   rows,
   handleEdit = undefined,
   handleDelete = undefined,
+  manageStaff = undefined,
   exportable = false,
 }) => {
   return (
@@ -28,8 +29,10 @@ const BasicTable = ({
                       </th>
                     ))}
                   {handleEdit !== undefined && <th scope="col">Action</th>}
+                  {manageStaff !== undefined && <th scope="col">Manage</th>}
                 </tr>
               </thead>
+
               <tbody>
                 {rows && rows.length > 0 ? (
                   rows.map((row) => (
@@ -62,6 +65,23 @@ const BasicTable = ({
                               title="Edit"
                             >
                               <i className="fa fa-trash color-muted"></i>
+                            </Link>
+                          </span>
+                        </td>
+                      )}
+
+                      {manageStaff !== undefined && (
+                        <td>
+                          <span>
+                            <Link
+                              to="#"
+                              onClick={() => manageStaff(row)}
+                              className="mr-4"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Manage"
+                            >
+                              <i className="fa fa-user-plus color-muted"></i>
                             </Link>
                           </span>
                         </td>

@@ -11,8 +11,11 @@ import { login } from "../../services/utils/auth/auth.controller";
 const Login = () => {
   const [staffNo, setStaffNo] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [success, setSucess] = useState(false);
 
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -24,14 +27,28 @@ const Login = () => {
     };
 
     try {
+      setLoading(true);
       login(data)
         .then((res) => {
-          dispatch(authenticate(res.data));
-          setStaffNo("");
-          setPassword("");
-          naviagate("/");
+          setSucess(true);
+          setLoading(false);
+          setError(false);
+
+          setTimeout(() => {
+            dispatch(authenticate(res.data));
+
+            setStaffNo("");
+            setPassword("");
+
+            navigate("/");
+          }, 2000);
         })
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+          setLoading(false);
+          setError(true);
+
+          console.log(err.message);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -47,13 +64,27 @@ const Login = () => {
                 <div className="row no-gutters">
                   <div className="col-xl-12">
                     <div className="auth-form">
+                      {success ? (
+                        <div
+                          className="alert alert-success text-center"
+                          style={{ backgroundColor: "#17bf3e" }}
+                        >
+                          <b style={{ color: "white" }}>Login successful!!</b>
+                        </div>
+                      ) : null}
+
+                      {error && (
+                        <div className="alert alert-danger text-center">
+                          <b>Login failed!!</b>
+                        </div>
+                      )}
+
                       <div className="text-center mb-3">
                         <Link to="/">
                           <img
                             className="img-fluid"
                             src={logo}
                             alt="logo brand"
-                            // style={{ width: "350px" }}
                           />
                         </Link>
                       </div>
@@ -65,6 +96,7 @@ const Login = () => {
                           value={staffNo}
                           onChange={(e) => setStaffNo(e.target.value)}
                           required
+                          disabled={loading ? true : false}
                         />
 
                         <TextInputField
@@ -74,9 +106,19 @@ const Login = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
+                          disabled={loading ? true : false}
                         />
 
-                        <ButtonField text="Sign Me In" type="submit" />
+                        <ButtonField
+                          type="submit"
+                          disabled={loading ? true : false}
+                        >
+                          {loading ? (
+                            <i className="fa fa-spinner fa-spin"></i>
+                          ) : (
+                            "Sign Me In"
+                          )}
+                        </ButtonField>
                       </form>
                     </div>
                   </div>

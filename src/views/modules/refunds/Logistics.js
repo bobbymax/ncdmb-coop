@@ -9,12 +9,14 @@ import useApi from "../../../services/hooks/useApi";
 import Alert from "../../../services/classes/Alert";
 import { useSelector } from "react-redux";
 import { formatCurrency } from "../../../services/utils/helpers";
+import Loading from "../../../components/commons/Loading";
 
 const Logistics = (props) => {
   const {
     data: logisticsData,
     setData: setLogisticsData,
     request,
+    loading,
   } = useApi(collection);
 
   const initialState = {
@@ -133,21 +135,17 @@ const Logistics = (props) => {
   }, [state.sub_budget_head_id]);
 
   useEffect(() => {
-    const user =
-      state.user_id > 0 &&
-      users.filter((user) => user.id == state.user_id && user);
+    const user = users.filter((user) => user.id === state.user_id);
 
-    if (user.length > 0) {
-      setState({
-        ...state,
-        department_id:
-          state.department === "" ? user.department.id : state.department_id,
-      });
-    }
+    setState({
+      department_id: !state.department_id === 0 ? user.department_id : 0,
+    });
   }, [state.user_id]);
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       <div className="row mb-4">
         <div className="col-md-12">
           <div className="page-titles">
@@ -287,6 +285,7 @@ const Logistics = (props) => {
                 <div className="col">
                   <div className="btn-group">
                     <button
+                      type="submit"
                       className="btn btn-success"
                       disabled={
                         state.department_id === 0 || state.description === ""
@@ -301,6 +300,7 @@ const Logistics = (props) => {
                         setOpen(false);
                         setState(initialState);
                       }}
+                      type="button"
                     >
                       <i className="fa fa-close"></i> CANCEL
                     </button>
@@ -340,7 +340,7 @@ const Logistics = (props) => {
                           <td>{logistic.status}</td>
                           <td>
                             {logistic.closed === 1 ? (
-                              <span class="badge bg-success text-white rounded-pill">
+                              <span className="badge bg-success text-white rounded-pill">
                                 Fulfilled
                               </span>
                             ) : (

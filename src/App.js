@@ -30,7 +30,6 @@ import RefundRequests from "./views/modules/refunds/RefundRequests";
 import AddModules from "./views/modules/administration/AddModules";
 import Overview from "./views/modules/overview/Overview";
 import OverviewExpenditure from "./views/modules/overview/OverviewExpenditure";
-import AssignRole from "./views/modules/administration/AssignRole";
 
 const App = () => {
   return (
@@ -292,16 +291,6 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Overview />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          exact
-          path="/assign-roles"
-          element={
-            <ProtectedRoute>
-              <AssignRole />
             </ProtectedRoute>
           }
         />

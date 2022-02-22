@@ -1,16 +1,12 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
+// /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import BatchPrintOut from "../../../components/commons/BatchPrintOut";
-import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
+import Loading from "../../../components/commons/Loading";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
 
 const Payments = (props) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
-
   const { request, data: batches, loading } = useApi(collection);
 
   const initialState = {
@@ -43,8 +39,6 @@ const Payments = (props) => {
 
   const [state, setState] = useState(initialState);
 
-  // const auth = useSelector((state) => state.access.staff.authenticatedUser);
-
   const currentStat = (stat) => {
     const curr = stats.filter((s) => stat === s.value);
     return curr[0].label;
@@ -68,16 +62,12 @@ const Payments = (props) => {
 
   useEffect(() => {
     request("batches");
-  }, []);
-
-  const columns = [
-    { key: "batch_no", label: "Budget Code" },
-    { key: "amount", label: "Amount" },
-    { key: "status", label: "Status" },
-  ];
+  }, [request]);
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       {!state.isPrinting ? (
         <>
           <>
@@ -91,9 +81,11 @@ const Payments = (props) => {
                   <div className="table-responsive">
                     <table className="table table-bordered table-striped vertical middle table reponsive-sm">
                       <thead>
-                        <th>BUDGET CODE</th>
-                        <th>AMOUNT</th>
-                        <th>STATUS</th>
+                        <tr>
+                          <th>BUDGET CODE</th>
+                          <th>AMOUNT</th>
+                          <th>STATUS</th>
+                        </tr>
                       </thead>
 
                       <tbody>
@@ -114,7 +106,15 @@ const Payments = (props) => {
                             <td>{`NGN ${new Intl.NumberFormat().format(
                               batch.amount
                             )}`}</td>
-                            <td>{batch.status}</td>
+                            <td>
+                              <span
+                                className={
+                                  "badge badge-" + currentStat(batch.status)
+                                }
+                              >
+                                {batch.status.toUpperCase()}
+                              </span>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -122,17 +122,6 @@ const Payments = (props) => {
                   </div>
                 </div>
               </div>
-
-              {/* <DataTableComponent
-                pageName="Payments"
-                columns={columns}
-                rows={searchTerm.length < 1 ? batches : results}
-                // handleEdit={handleEdit}
-                // handleDelete={handleDestroy}
-                term={searchTerm}
-                searchKeyWord={handleSearch}
-                isFetching={loading}
-              /> */}
             </div>
           </>
         </>
@@ -142,15 +131,5 @@ const Payments = (props) => {
     </>
   );
 };
-
-// const mapStateToProps = (state) => ({
-//   batches: state.budgetting.batches.collection,
-// });
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     index: (entity, broadcast) => dispatch(index(entity, broadcast)),
-//   };
-// };
 
 export default Payments;

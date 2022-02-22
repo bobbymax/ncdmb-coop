@@ -11,6 +11,7 @@ import {
   store,
 } from "../../../services/utils/controllers";
 import Alert from "../../../services/classes/Alert";
+import Loading from "../../../components/commons/Loading";
 
 const Settings = () => {
   const initialState = {
@@ -25,6 +26,7 @@ const Settings = () => {
   const [settings, setSettings] = useState([]);
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     { key: "key", label: "Key" },
@@ -127,6 +129,7 @@ const Settings = () => {
     try {
       collection("settings")
         .then((res) => {
+          setLoading(false);
           setSettings(res.data.data);
         })
         .catch((err) => console.log(err.message));
@@ -137,6 +140,8 @@ const Settings = () => {
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       <div className="row">
         <div className="col-md-12">
           <div className="page-titles">
@@ -149,6 +154,7 @@ const Settings = () => {
             </button>
           </div>
         </div>
+
         {open && (
           <div className="col-md-12">
             <div className="card">

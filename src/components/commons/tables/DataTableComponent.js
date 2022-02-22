@@ -18,6 +18,7 @@ const DataTableComponent = ({
   searchKeyWord = undefined,
   isFetching = false,
   exportable = false,
+  manageStaff = undefined,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -66,6 +67,10 @@ const DataTableComponent = ({
                   ))}
                   {handleEdit !== undefined && <th scope="col">Action</th>}
                   {action !== undefined && <th scope="col">View Breakdown</th>}
+
+                  {manageStaff !== undefined && (
+                    <th scope="col">Manage Staff</th>
+                  )}
                 </tr>
               </thead>
 
@@ -97,6 +102,7 @@ const DataTableComponent = ({
                               >
                                 <i className="fa fa-pencil color-muted"></i>
                               </Link>
+
                               <Link
                                 to="#"
                                 onClick={() => handleDelete(row)}
@@ -123,10 +129,28 @@ const DataTableComponent = ({
                             </span>
                           </td>
                         )}
+
+                        {manageStaff !== undefined && (
+                          <td>
+                            <span>
+                              <Link
+                                to="#"
+                                onClick={() => manageStaff(row)}
+                                className="mr-4"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Edit"
+                              >
+                                <i className="fa fa-edit color-muted"></i>
+                              </Link>
+                            </span>
+                          </td>
+                        )}
                       </tr>
                     ))}
               </tbody>
             </table>
+
             {!isFetching && (
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 100]}

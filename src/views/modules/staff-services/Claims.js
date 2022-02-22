@@ -2,8 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import BasicTable from "../../../components/commons/tables/BasicTable";
-// import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import ClaimTable from "../../../components/commons/widgets/ClaimTable";
 import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
@@ -13,9 +11,9 @@ import {
   store,
   destroy,
   alter,
-  fetch,
 } from "../../../services/utils/controllers";
 import TextInputField from "../../../components/forms/TextInputField";
+import Loading from "../../../components/commons/Loading";
 
 const Claims = (props) => {
   const navigate = useNavigate();
@@ -29,7 +27,12 @@ const Claims = (props) => {
     isUpdating: false,
   };
 
-  const { request, data: claims, setData: setClaims } = useApi(collection);
+  const {
+    request,
+    data: claims,
+    setData: setClaims,
+    loading,
+  } = useApi(collection);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
@@ -153,80 +156,84 @@ const Claims = (props) => {
   }, []);
 
   return (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="page-titles">
-          <button
-            className="btn btn-success"
-            disabled={open}
-            onClick={() => setOpen(true)}
-          >
-            <i className="fa fa-plus-square"></i> Add Claim
-          </button>
+    <>
+      {loading ? <Loading /> : null}
+
+      <div className="row">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <button
+              className="btn btn-success"
+              disabled={open}
+              onClick={() => setOpen(true)}
+            >
+              <i className="fa fa-plus-square"></i> Add Claim
+            </button>
+          </div>
         </div>
-      </div>
 
-      {open && (
-        <>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="form-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="col-md-12">
-                        <TextInputField
-                          placeholder="Enter Claim Title"
-                          type="text"
-                          value={state.title}
-                          onChange={(e) =>
-                            setState({ ...state, title: e.target.value })
-                          }
-                          error={
-                            errors && errors.title && errors.title.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.title && errors.title[0]
-                          }
-                        />
-                      </div>
+        {open && (
+          <>
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="form-body">
+                    <form onSubmit={handleSubmit}>
+                      <div className="row">
+                        <div className="col-md-12">
+                          <TextInputField
+                            placeholder="Enter Claim Title"
+                            type="text"
+                            value={state.title}
+                            onChange={(e) =>
+                              setState({ ...state, title: e.target.value })
+                            }
+                            error={
+                              errors && errors.title && errors.title.length > 0
+                            }
+                            errorMessage={
+                              errors && errors.title && errors.title[0]
+                            }
+                          />
+                        </div>
 
-                      <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setUpdate(false);
-                            setState(initialState);
-                            setOpen(false);
-                            setErrors({});
-                          }}
-                        >
-                          Close
-                        </button>
+                        <div className="col-md-12 mt-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => {
+                              setUpdate(false);
+                              setState(initialState);
+                              setOpen(false);
+                              setErrors({});
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      <div className="col-lg-12">
-        <ClaimTable
-          claims={claims}
-          onView={handlePrintOut}
-          onEdit={loadClaim}
-          addDetails={handleAddDetails}
-          onDestroy={deleteClaim}
-        />
+        <div className="col-lg-12">
+          <ClaimTable
+            claims={claims}
+            onView={handlePrintOut}
+            onEdit={loadClaim}
+            addDetails={handleAddDetails}
+            onDestroy={deleteClaim}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

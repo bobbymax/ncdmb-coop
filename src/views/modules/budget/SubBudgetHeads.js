@@ -227,11 +227,14 @@ const SubBudgetHeads = () => {
 
           <div className="pull-right">
             <CSVLink
-              className={`btn btn-success btn-md`}
+              className={
+                subBudgetHeads && subBudgetHeads.length > 0
+                  ? "btn btn-success btn-md"
+                  : `btn btn-success btn-md disabled`
+              }
               data={subBudgetHeads}
               headers={headers}
               filename="Sub Budget Heads"
-              area-disabled={subBudgetHeads.length > 0 ? true : false}
             >
               <i className="fa fa-download"></i> Download CSV
             </CSVLink>

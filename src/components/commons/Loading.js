@@ -1,5 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react";
+import loaderAnimation from "../../assets/animations/lf30_editor_82actrzz.json";
 
 const Loading = () => {
   return (
@@ -25,7 +26,7 @@ const Loading = () => {
 
       <div className="container">
         <Lottie
-          animationData={require("../../assets/animations/loading-bloob.json")}
+          animationData={loaderAnimation}
           style={{
             width: 300,
           }}

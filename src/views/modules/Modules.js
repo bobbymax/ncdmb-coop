@@ -9,37 +9,35 @@ const Modules = () => {
   const auth = useSelector((state) => state.auth.value.user);
 
   const [modules, setModules] = useState([]);
+  const [accessible, setAccessible] = useState([]);
 
   const handleNav = (data) => {
     //
   };
 
-  // useEffect(() => {
-  //   if (auth && auth.department) {
-  //     setModules(auth.accessibleModules);
-  //   }
-  // }, [auth]);
+  useEffect(() => {
+    collection("modules")
+      .then((res) => {
+        const data = res.data.data;
+        setModules(data);
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
 
   useEffect(() => {
-    if (auth !== null) {
-      // collection("modules").then(res => setModules(res.data.data)).catch(err => console.log(err.message));
-      collection("modules")
-        .then((res) => {
-          const data = res.data.data;
-          if (auth.administrator) {
-            setModules(data);
-          } else {
-            setModules(data.filter((mod) => canAccessModule(mod, auth) && mod));
-          }
-        })
-        .catch((err) => console.log(err.message));
+    if (auth !== null && modules.length > 0) {
+      if (auth.administrator) {
+        setAccessible(modules);
+      } else {
+        setAccessible(modules.map((mod) => canAccessModule(mod, auth) && mod));
+      }
     }
-  }, [auth]);
+  }, [auth, modules]);
 
   return (
     <>
       <div className="row">
-        {modules.map(
+        {accessible.map(
           (module) =>
             module.type === "application" && (
               <div className="col-xl-3 col-lg-6 col-sm-6" key={module.id}>

@@ -49,7 +49,14 @@ const AddModules = () => {
   }, []);
 
   const handleEdit = (data) => {
-    console.log(data);
+    const roleIds = [];
+
+    if (data.roles.length > 0) {
+      data.roles.map((role) => {
+        return roleIds.push(role.id);
+      });
+    }
+
     setState({
       id: data.id,
       name: data.name,
@@ -60,12 +67,11 @@ const AddModules = () => {
       generatePermissions: data.generatePermissions === 1 ? true : false,
       currentRoles: data.roles,
       type: data.type,
+      roles: roleIds,
     });
     setUpdate(true);
     setOpen(true);
   };
-
-  // console.log(state.roles);
 
   const handleDestroy = (data) => {
     Alert.flash(
@@ -284,16 +290,6 @@ const AddModules = () => {
                                 icon: e.target.value,
                               });
                             }}
-                            // error={
-                            //   errors &&
-                            //   errors.budgetCode &&
-                            //   errors.budgetCode.length > 0
-                            // }
-                            // errorMessage={
-                            //   errors &&
-                            //   errors.budgetCode &&
-                            //   errors.budgetCode[0]
-                            // }
                             type="text"
                           />
                         </div>

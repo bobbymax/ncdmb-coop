@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import ModuleCard from "../../components/commons/widgets/ModuleCard";
 import { collection } from "../../services/utils/controllers";
 import { canAccessModule } from "../../services/utils/access";
+import Loading from "../../components/commons/Loading";
 
 const Modules = () => {
   const auth = useSelector((state) => state.auth.value.user);
 
   const [modules, setModules] = useState([]);
   const [accessible, setAccessible] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleNav = (data) => {
     //
@@ -20,6 +22,7 @@ const Modules = () => {
       .then((res) => {
         const data = res.data.data;
         setModules(data);
+        setLoading(false);
       })
       .catch((err) => console.log(err.message));
   }, []);
@@ -36,6 +39,8 @@ const Modules = () => {
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       <div className="row">
         {accessible.map(
           (module) =>

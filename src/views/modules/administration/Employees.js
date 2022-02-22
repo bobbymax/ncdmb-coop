@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../../../services/utils/helpers";
 import AddStaffRole from "./AddStaffRole";
 import ModifyUser from "./ModifyUser";
+import Loading from "../../../components/commons/Loading";
 
 const Employees = () => {
   const initialState = {
@@ -46,6 +47,7 @@ const Employees = () => {
   const [modalShow, setModalShow] = useState(modalState);
   const [updateModalShow, setUpdateModalShow] = useState(false);
   const [staff, setStaff] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     { label: "Staff Number", key: "staff_no" },
@@ -98,6 +100,7 @@ const Employees = () => {
       collection("users")
         .then((res) => {
           setEmployees(res.data.data);
+          setLoading(false);
         })
         .catch((err) => console.log(err.message));
     } catch (error) {
@@ -247,8 +250,7 @@ const Employees = () => {
 
   return (
     <>
-      {/* <Loading /> */}
-
+      {loading && <Loading />}
       <div className="row">
         {!state.assignRole && (
           <>
@@ -425,7 +427,6 @@ const Employees = () => {
                 page="Staff"
                 columns={columns}
                 rows={employees}
-                // handleDelete={handleDestroy}
                 manageStaff={manageStaff}
               />
             </div>

@@ -7,15 +7,16 @@ const Loading = () => {
       <style jsx={true}>
         {`
           .container {
-            width: 2000px;
+            max-width: 100%;
+            width: 100%;
             height: 100%;
-            background-color: rgb(0, 0, 0, 0.5);
+            background-color: rgb(0, 0, 0, 0.2);
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
             right: 0;
-            z-index: 1;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -28,7 +29,6 @@ const Loading = () => {
           animationData={require("../../assets/animations/loading-bloob.json")}
           style={{
             width: 300,
-            opacity: 0.5,
           }}
           loop
           autoplay

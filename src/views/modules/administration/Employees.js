@@ -16,6 +16,7 @@ import BasicTable from "../../../components/commons/tables/BasicTable";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../../services/utils/helpers";
 import AddStaffRole from "./AddStaffRole";
+import ModifyUser from "./ModifyUser";
 
 const Employees = () => {
   const initialState = {
@@ -26,7 +27,6 @@ const Employees = () => {
     name: "",
     email: "",
     assignRole: false,
-    staff: {},
   };
 
   const modalState = {
@@ -44,6 +44,7 @@ const Employees = () => {
   const [update, setUpdate] = useState(false);
   const [rolesInput, setRolesInput] = useState([]);
   const [modalShow, setModalShow] = useState(modalState);
+  const [updateModalShow, setUpdateModalShow] = useState(false);
   const [staff, setStaff] = useState({});
 
   const columns = [
@@ -149,13 +150,6 @@ const Employees = () => {
     setStaff(user);
   };
 
-  const addRole = () => {
-    setModalShow({
-      ...modalShow,
-      visibility: true,
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -218,11 +212,18 @@ const Employees = () => {
     }
   };
 
-  const handleUpdate = (data) => {
-    setState(data);
-    setUpdate(true);
-    setOpen(true);
-    setRolesInput(data.roles);
+  const handleUpdate = () => {
+    setUpdateModalShow({
+      ...updateModalShow,
+      visibility: true,
+    });
+  };
+
+  const addRole = () => {
+    setModalShow({
+      ...modalShow,
+      visibility: true,
+    });
   };
 
   const handleDestroy = (data) => {
@@ -301,6 +302,7 @@ const Employees = () => {
                               }
                             />
                           </div>
+
                           <div className="col-md-3">
                             {/*  */}
                             <CustomSelect
@@ -325,6 +327,7 @@ const Employees = () => {
                               }
                             />
                           </div>
+
                           <div className="col-md-6">
                             <TextInputField
                               placeholder="Enter Email Address"
@@ -342,6 +345,7 @@ const Employees = () => {
                               }
                             />
                           </div>
+
                           <div className="col-md-6">
                             {/*  */}
                             <CustomSelect
@@ -432,6 +436,15 @@ const Employees = () => {
             user={staff}
           />
 
+          <ModifyUser
+            roles={roles}
+            user={staff}
+            show={updateModalShow}
+            onHide={() => setUpdateModalShow(false)}
+            levels={levels}
+            departments={departments}
+          />
+
           <div className="col-md-6">
             <div className="card h-auto">
               <div className="card-header bg-primary">
@@ -473,6 +486,7 @@ const Employees = () => {
                       ...state,
                       assignRole: false,
                     });
+                    setStaff({});
                   }}
                 >
                   Close <i className="fa fa-close"></i>
@@ -501,6 +515,7 @@ const Employees = () => {
 
                 <Link
                   to="#"
+                  onClick={() => handleUpdate()}
                   className="list-group-item list-group-item-action text-center"
                 >
                   Modify Account <i className="fa fa-user-edit"></i>

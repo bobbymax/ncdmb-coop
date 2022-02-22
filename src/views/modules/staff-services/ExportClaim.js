@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Pdf from "react-to-pdf";
-import logo from "../../../assets/images/batch_logo.png";
+import logo from "../../../assets/images/claim_logo.png";
 import { formatDate, amountToWords } from "../../../services/utils/helpers";
 import "./Claim.css";
 
@@ -49,6 +49,7 @@ const ExportClaim = ({ claim, auth, onClose }) => {
       padding: "10px 0 15px 0",
       borderBottom: "3px solid #028a0e",
       marginBottom: 30,
+      width: "100%",
     },
     tableStyle: {
       width: "100%",
@@ -92,11 +93,11 @@ const ExportClaim = ({ claim, auth, onClose }) => {
         <div className="claimBackground" style={styles.outter}>
           <div style={styles.topSection}>
             <img src={logo} alt="claim ncdmb logo" style={styles.logo} />
+
             <h5 style={styles.claim_id}>
               CLAIM ID:{" "}
               <strong>{state ? state.reference_no.toUpperCase() : null}</strong>
             </h5>
-
             <div style={styles.clearfix}></div>
           </div>
 

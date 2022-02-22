@@ -40,7 +40,6 @@ const Claims = (props) => {
   const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
-  // const [loading, setLoading] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();

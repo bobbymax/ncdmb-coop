@@ -3,10 +3,8 @@
 // /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import Select from "react-select";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
-import makeAnimated from "react-select/animated";
 
 import { alter } from "../../../services/utils/controllers";
 import Alert from "../../../services/classes/Alert";
@@ -21,17 +19,6 @@ const ModifyUser = (props) => {
     email: "",
   };
 
-  const formatRole = () => {
-    return (
-      props.roles &&
-      props.roles.length > 0 &&
-      props.roles.map((role) => ({
-        value: role.id,
-        label: role.name,
-      }))
-    );
-  };
-
   const formatLevels = () => {
     return (
       props.levels.length > 0 &&
@@ -44,25 +31,20 @@ const ModifyUser = (props) => {
   };
 
   useEffect(() => {
-    // if (props.user) {
-
-    // }
-    setState({
-      ...state,
-      id: props.user.id,
-      staff_no: props.user.staff_no,
-      grade_level_id: props.user.grade_level_id,
-      department_id: props.user.department_id,
-      name: props.user.name,
-      email: props.user.email,
-    });
-
-    setRolesInput(props.user.roles);
+    if (props.user) {
+      setState({
+        ...state,
+        id: props.user.id,
+        staff_no: props.user.staff_no,
+        grade_level_id: props.user.grade_level_id,
+        department_id: props.user.department_id,
+        name: props.user.name,
+        email: props.user.email,
+      });
+    }
   }, [props.user]);
 
   const [state, setState] = useState(initialState);
-  const [rolesInput, setRolesInput] = useState([]);
-  const animated = makeAnimated();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -73,30 +55,15 @@ const ModifyUser = (props) => {
       department_id: parseInt(state.department_id),
       name: state.name,
       email: state.email,
-      roles: rolesInput,
     };
 
-    try {
-      alter("users", state.id, data)
-        .then((res) => {
-          const result = res.data.data;
+    alter("users", state.id, data)
+      .then((res) => {
+        Alert.success("Updated User!!", res.message);
+      })
+      .catch((err) => console.log(err.message));
 
-          // setEmployees(
-          //   employees.map((el) => {
-          //     if (result.id === el.id) {
-          //       return result;
-          //     }
-
-          //     return el;
-          //   })
-          // );
-
-          Alert.success("Updated user!!!", result.message);
-        })
-        .catch((err) => console.log(err.message));
-    } catch (error) {
-      console.log(error);
-    }
+    props.onHide();
   };
 
   const formatDept = () => {
@@ -112,16 +79,22 @@ const ModifyUser = (props) => {
 
   return (
     <Modal
-      // className="modal"
+      className="modal"
       show={props.show}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       onHide={props.onHide}
     >
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
+        <div className="modal-header">
+          <h2 className="modal-title" id="contained-modal-title-vcenter">
+            Modify User
+          </h2>
+        </div>
+
+        <div className="modal-body">
+          <div className="container-fluid">
             <div className="row">
               <div className="col-md-3">
                 <TextInputField
@@ -142,7 +115,6 @@ const ModifyUser = (props) => {
               </div>
 
               <div className="col-md-3">
-                {/*  */}
                 <CustomSelect
                   defaultText="Select Grade Level"
                   options={formatLevels()}
@@ -167,7 +139,6 @@ const ModifyUser = (props) => {
               </div>
 
               <div className="col-md-6">
-                {/*  */}
                 <CustomSelect
                   defaultText="Select Department"
                   options={formatDept()}
@@ -180,39 +151,24 @@ const ModifyUser = (props) => {
                   }
                 />
               </div>
-
-              <div className="col-md-12">
-                {/*  */}
-                <Select
-                  closeMenuOnSelect={false}
-                  components={animated}
-                  options={formatRole()}
-                  value={rolesInput}
-                  onChange={setRolesInput}
-                  isMulti
-                />
-              </div>
-
-              <div className="col-md-12 mt-3">
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => {
-                    props.onHide();
-                    setState(initialState);
-                  }}
-                >
-                  Close
-                </button>
-              </div>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+
+        <div className="modal-footer">
+          <button className="btn btn-success" type="submit">
+            Submit
+          </button>
+
+          <button
+            className="btn btn-danger"
+            type="button"
+            onClick={props.onHide}
+          >
+            Close
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

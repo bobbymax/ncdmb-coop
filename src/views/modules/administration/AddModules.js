@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
+import Loading from "../../../components/commons/Loading";
 import DataTableComponent from "../../../components/commons/tables/DataTableComponent";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
@@ -18,7 +19,7 @@ const AddModules = () => {
   const {
     data: modules,
     setData: setModules,
-    loading: isLoading,
+    loading,
     request,
   } = useApi(collection);
 
@@ -196,256 +197,265 @@ const AddModules = () => {
   };
 
   return (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="page-titles">
-          <button
-            className="btn btn-primary"
-            onClick={() => setOpen(!open)}
-            disabled={open}
-          >
-            <i className="fa fa-plus-square"></i> Add Modules
-          </button>
+    <>
+      {loading ? <Loading /> : null}
+
+      <div className="row">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <button
+              className="btn btn-primary"
+              onClick={() => setOpen(!open)}
+              disabled={open}
+            >
+              <i className="fa fa-plus-square"></i> Add Modules
+            </button>
+          </div>
         </div>
-      </div>
 
-      {open && (
-        <>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="form-body">
-                  <>
-                    <form onSubmit={handleSubmit}>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <TextInputField
-                            label="Name"
-                            value={state.name}
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                name: e.target.value,
-                              });
-                            }}
-                            placeholder="Name"
-                            type="text"
-                          />
-                        </div>
-
-                        <div className="col-md-6">
-                          <TextInputField
-                            label="Path"
-                            value={state.path}
-                            placeholder="Path"
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                path: e.target.value,
-                              });
-                            }}
-                            type="text"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <CustomSelect
-                            options={modulesOptions(modules)}
-                            value={state.parentId}
-                            label="Parent Id"
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                parentId: e.target.value,
-                              });
-                            }}
-                            type="text"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <CustomSelect
-                            options={options}
-                            value={state.type}
-                            label="Type"
-                            placeholder="Type"
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                type: e.target.value,
-                              });
-                            }}
-                            type="text"
-                          />
-                        </div>
-
-                        <div className="col-md-4">
-                          <TextInputField
-                            value={state.icon}
-                            label="Icon"
-                            placeholder="Icon"
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                icon: e.target.value,
-                              });
-                            }}
-                            type="text"
-                          />
-                        </div>
-
-                        <div
-                          className="col-sm-4 col-md-6 d-flex justify-content-between"
-                          // style={{ width: "300px !important" }}
-                        >
-                          <div class="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              value={state.isMenu}
-                              checked={
-                                state.isMenu
-                                  ? 1
-                                  : 0 || state.isMenu == 1
-                                  ? true
-                                  : false
-                              }
+        {open && (
+          <>
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="form-body">
+                    <>
+                      <form onSubmit={handleSubmit}>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <TextInputField
+                              label="Name"
+                              value={state.name}
                               onChange={(e) => {
-                                const value = e.target.checked ? true : false;
-
                                 setState({
                                   ...state,
-                                  isMenu: value,
+                                  name: e.target.value,
                                 });
                               }}
+                              placeholder="Name"
+                              type="text"
                             />
-
-                            <label
-                              class="form-check-label"
-                              htmlFor="flexCheckDefault"
-                            >
-                              Is Menu
-                            </label>
                           </div>
 
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value={state.generatePermissions}
-                              checked={
-                                state.generatePermissions
-                                  ? 1
-                                  : 0 || state.generatePermissions === 1
-                                  ? true
-                                  : false
-                              }
+                          <div className="col-md-6">
+                            <TextInputField
+                              label="Path"
+                              value={state.path}
+                              placeholder="Path"
                               onChange={(e) => {
-                                const value = e.target.checked ? true : false;
-
                                 setState({
                                   ...state,
-                                  generatePermissions: value,
+                                  path: e.target.value,
                                 });
                               }}
+                              type="text"
                             />
-
-                            <label
-                              class="form-check-label"
-                              htmlFor="flexCheckDefault"
-                            >
-                              Generate Permission
-                            </label>
                           </div>
-                        </div>
 
-                        <div className="col-md-12">
-                          <div className="dropdown-divider"></div>
+                          <div className="col-md-4">
+                            <CustomSelect
+                              options={modulesOptions(modules)}
+                              value={state.parentId}
+                              label="Parent Id"
+                              onChange={(e) => {
+                                setState({
+                                  ...state,
+                                  parentId: e.target.value,
+                                });
+                              }}
+                              type="text"
+                            />
+                          </div>
 
-                          <div className="d-flex justify-content-between">
-                            {roles && roles.length > 0
-                              ? roles.map((role) => {
-                                  return (
-                                    <div class="form-check" key={role.id}>
-                                      <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value={role.id}
-                                        onChange={(e) => {
-                                          let valIndex =
-                                            state.roles.includes(
-                                              e.target.value
-                                            ) &&
-                                            state.roles.indexOf(e.target.value);
-                                          e.target.checked
-                                            ? setState({
-                                                ...state,
-                                                roles: [
-                                                  e.target.value,
-                                                  ...state.roles,
-                                                ],
-                                              })
-                                            : state.roles.includes(
+                          <div className="col-md-4">
+                            <CustomSelect
+                              options={options}
+                              value={state.type}
+                              label="Type"
+                              placeholder="Type"
+                              onChange={(e) => {
+                                setState({
+                                  ...state,
+                                  type: e.target.value,
+                                });
+                              }}
+                              type="text"
+                            />
+                          </div>
+
+                          <div className="col-md-4">
+                            <TextInputField
+                              value={state.icon}
+                              label="Icon"
+                              placeholder="Icon"
+                              onChange={(e) => {
+                                setState({
+                                  ...state,
+                                  icon: e.target.value,
+                                });
+                              }}
+                              type="text"
+                            />
+                          </div>
+
+                          <div
+                            className="col-sm-4 col-md-6 d-flex justify-content-between"
+                            // style={{ width: "300px !important" }}
+                          >
+                            <div class="form-check">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                value={state.isMenu}
+                                checked={
+                                  state.isMenu
+                                    ? 1
+                                    : 0 || state.isMenu == 1
+                                    ? true
+                                    : false
+                                }
+                                onChange={(e) => {
+                                  const value = e.target.checked ? true : false;
+
+                                  setState({
+                                    ...state,
+                                    isMenu: value,
+                                  });
+                                }}
+                              />
+
+                              <label
+                                class="form-check-label"
+                                htmlFor="flexCheckDefault"
+                              >
+                                Is Menu
+                              </label>
+                            </div>
+
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value={state.generatePermissions}
+                                checked={
+                                  state.generatePermissions
+                                    ? 1
+                                    : 0 || state.generatePermissions === 1
+                                    ? true
+                                    : false
+                                }
+                                onChange={(e) => {
+                                  const value = e.target.checked ? true : false;
+
+                                  setState({
+                                    ...state,
+                                    generatePermissions: value,
+                                  });
+                                }}
+                              />
+
+                              <label
+                                class="form-check-label"
+                                htmlFor="flexCheckDefault"
+                              >
+                                Generate Permission
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="col-md-12">
+                            <div className="dropdown-divider"></div>
+
+                            <div className="d-flex justify-content-between">
+                              {roles && roles.length > 0
+                                ? roles.map((role) => {
+                                    return (
+                                      <div class="form-check" key={role.id}>
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          value={role.id}
+                                          onChange={(e) => {
+                                            let valIndex =
+                                              state.roles.includes(
                                                 e.target.value
                                               ) &&
-                                              state.roles.splice(valIndex, 1) &&
-                                              setState({
-                                                ...state,
-                                                roles: state.roles,
-                                              });
-                                        }}
-                                      />
+                                              state.roles.indexOf(
+                                                e.target.value
+                                              );
+                                            e.target.checked
+                                              ? setState({
+                                                  ...state,
+                                                  roles: [
+                                                    e.target.value,
+                                                    ...state.roles,
+                                                  ],
+                                                })
+                                              : state.roles.includes(
+                                                  e.target.value
+                                                ) &&
+                                                state.roles.splice(
+                                                  valIndex,
+                                                  1
+                                                ) &&
+                                                setState({
+                                                  ...state,
+                                                  roles: state.roles,
+                                                });
+                                          }}
+                                        />
 
-                                      <label class="form-check-label">
-                                        {role.name}
-                                      </label>
-                                    </div>
-                                  );
-                                })
-                              : null}
+                                        <label class="form-check-label">
+                                          {role.name}
+                                        </label>
+                                      </div>
+                                    );
+                                  })
+                                : null}
+                            </div>
+                          </div>
+
+                          <div className="col-md-12 mt-3 d-flex">
+                            <button type="submit" className="btn btn-primary">
+                              {update ? "Update" : "Submit"}
+                            </button>
+
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={() => {
+                                setUpdate(false);
+                                setState(initialState);
+                                setOpen(false);
+                              }}
+                            >
+                              Close
+                            </button>
                           </div>
                         </div>
-
-                        <div className="col-md-12 mt-3 d-flex">
-                          <button type="submit" className="btn btn-primary">
-                            {update ? "Update" : "Submit"}
-                          </button>
-
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => {
-                              setUpdate(false);
-                              setState(initialState);
-                              setOpen(false);
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </>
+                      </form>
+                    </>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      <div className="col-lg-12">
-        <DataTableComponent
-          pageName="Modules"
-          columns={columns}
-          rows={searchTerm.length < 1 ? modules : results}
-          handleEdit={handleEdit}
-          handleDelete={handleDestroy}
-          term={searchTerm}
-          searchKeyWord={handleSearch}
-          isFetching={isLoading}
-        />
+        <div className="col-lg-12">
+          <DataTableComponent
+            pageName="Modules"
+            columns={columns}
+            rows={searchTerm.length < 1 ? modules : results}
+            handleEdit={handleEdit}
+            handleDelete={handleDestroy}
+            term={searchTerm}
+            searchKeyWord={handleSearch}
+            // isFetching={isLoading}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

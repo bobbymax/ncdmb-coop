@@ -7,6 +7,7 @@ import DataTableComponent from "../../../components/commons/tables/DataTableComp
 import CustomSelect from "../../../components/forms/CustomSelect";
 import { useSelector } from "react-redux";
 import { CSVLink } from "react-csv";
+import Loading from "../../../components/commons/Loading";
 
 const columns = [
   {
@@ -58,6 +59,8 @@ const Overview = (props) => {
   const [results, setResults] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [department, setDepartment] = useState(0);
+  const [loading, setLoading] = useState(true);
+
   const auth = useSelector((state) => state.auth.value.user);
 
   const handleSearch = (term) => {
@@ -85,6 +88,7 @@ const Overview = (props) => {
         .then((res) => {
           setData(res.data.data);
           setDepartment(id);
+          setLoading(false);
         })
         .catch((err) => console.log(err.message));
     }
@@ -141,7 +145,9 @@ const Overview = (props) => {
   };
 
   return (
-    <div>
+    <>
+      {loading ? <Loading /> : null}
+
       <div className="row">
         <div className="col-md-12">
           <CustomSelect
@@ -232,7 +238,11 @@ const Overview = (props) => {
             downloadButton={
               <div className="pull-right">
                 <CSVLink
-                  className="btn btn-success btn-md"
+                  className={
+                    data && data.length > 0
+                      ? "btn btn-success btn-md"
+                      : "btn btn-success btn-md disabled"
+                  }
                   data={data}
                   headers={headers}
                   filename="Budget Overview"
@@ -246,7 +256,7 @@ const Overview = (props) => {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

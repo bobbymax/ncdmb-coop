@@ -7,12 +7,14 @@ import useApi from "../../../services/hooks/useApi";
 import BatchWidget from "../../../components/commons/widgets/BatchWidget";
 import BatchCard from "../../../components/commons/widgets/BatchCard";
 import "./drag.css";
+import Loading from "../../../components/commons/Loading";
 
 const Batch = (props) => {
   const {
     data: expenditures,
     setData: setExpenditures,
     request,
+    loading,
   } = useApi(collection);
 
   const initialState = {
@@ -140,18 +142,6 @@ const Batch = (props) => {
     store("batches", data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err.message));
-
-    // setState({
-    //   ...state,
-    //   board: [],
-    //   boardType: "",
-    //   maxSlot: 0,
-    //   code: "",
-    //   total: 0,
-    //   buttonDisabled: false,
-    // });
-
-    // props.history.push("/payments");
   };
 
   const handleDelete = (expenditure) => {
@@ -207,6 +197,8 @@ const Batch = (props) => {
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
 
       <button

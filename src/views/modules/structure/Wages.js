@@ -13,9 +13,15 @@ import {
 } from "../../../services/utils/controllers";
 import { validate } from "../../../services/utils/validation";
 import useApi from "../../../services/hooks/useApi";
+import Loading from "../../../components/commons/Loading";
 
 const Wages = () => {
-  const { data: prices, setData: setPrices, request } = useApi(collection);
+  const {
+    data: prices,
+    setData: setPrices,
+    request,
+    loading,
+  } = useApi(collection);
 
   const initialState = {
     id: 0,
@@ -149,99 +155,107 @@ const Wages = () => {
   }, []);
 
   return (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="page-titles">
-          <button
-            className="btn btn-primary"
-            onClick={() => setOpen(!open)}
-            disabled={open}
-          >
-            <i className="fa fa-plus-square"></i> Add Price
-          </button>
+    <>
+      {loading ? <Loading /> : null}
+      <div className="row">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <button
+              className="btn btn-primary"
+              onClick={() => setOpen(!open)}
+              disabled={open}
+            >
+              <i className="fa fa-plus-square"></i> Add Price
+            </button>
+          </div>
         </div>
-      </div>
 
-      {open && (
-        <>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="form-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <CustomSelect
-                          defaultText="Select Benefit"
-                          options={benefitOptions(options)}
-                          value={state.benefit_id}
-                          onChange={(e) =>
-                            setState({ ...state, benefit_id: e.target.value })
-                          }
-                          error={
-                            errors &&
-                            errors.benefit_id &&
-                            errors.benefit_id.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.benefit_id && errors.benefit_id[0]
-                          }
-                        />
-                      </div>
+        {open && (
+          <>
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="form-body">
+                    <form onSubmit={handleSubmit}>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <CustomSelect
+                            defaultText="Select Benefit"
+                            options={benefitOptions(options)}
+                            value={state.benefit_id}
+                            onChange={(e) =>
+                              setState({ ...state, benefit_id: e.target.value })
+                            }
+                            error={
+                              errors &&
+                              errors.benefit_id &&
+                              errors.benefit_id.length > 0
+                            }
+                            errorMessage={
+                              errors &&
+                              errors.benefit_id &&
+                              errors.benefit_id[0]
+                            }
+                          />
+                        </div>
 
-                      <div className="col-md-6">
-                        <TextInputField
-                          placeholder="Amount"
-                          type="number"
-                          value={state.amount}
-                          onChange={(e) =>
-                            setState({ ...state, amount: e.target.value })
-                          }
-                          error={
-                            errors && errors.amount && errors.amount.length > 0
-                          }
-                          errorMessage={
-                            errors && errors.amount && errors.amount[0]
-                          }
-                        />
-                      </div>
+                        <div className="col-md-6">
+                          <TextInputField
+                            placeholder="Amount"
+                            type="number"
+                            value={state.amount}
+                            onChange={(e) =>
+                              setState({ ...state, amount: e.target.value })
+                            }
+                            error={
+                              errors &&
+                              errors.amount &&
+                              errors.amount.length > 0
+                            }
+                            errorMessage={
+                              errors && errors.amount && errors.amount[0]
+                            }
+                          />
+                        </div>
 
-                      <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setUpdate(false);
-                            setState(initialState);
-                            setOpen(false);
-                            setErrors({});
-                          }}
-                        >
-                          Close
-                        </button>
+                        <div className="col-md-12 mt-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => {
+                              setUpdate(false);
+                              setState(initialState);
+                              setOpen(false);
+                              setErrors({});
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      <div className="col-lg-12">
-        <BasicTable
-          page="Price Listing"
-          columns={columns}
-          rows={prices}
-          handleEdit={handleUpdate}
-          handleDelete={handleDestroy}
-        />
+        <div className="col-lg-12">
+          <BasicTable
+            page="Price Listing"
+            columns={columns}
+            rows={prices}
+            handleEdit={handleUpdate}
+            handleDelete={handleDestroy}
+          />
+        </div>
       </div>
-    </div>
+      1
+    </>
   );
 };
 

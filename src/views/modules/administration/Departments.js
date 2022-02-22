@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Loading from "../../../components/commons/Loading";
 import BasicTable from "../../../components/commons/tables/BasicTable";
 import CustomSelect from "../../../components/forms/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
@@ -25,6 +26,7 @@ const Departments = () => {
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     {
@@ -154,7 +156,10 @@ const Departments = () => {
   useEffect(() => {
     try {
       collection("departments")
-        .then((res) => setDepartments(res.data.data))
+        .then((res) => {
+          setLoading(false);
+          setDepartments(res.data.data);
+        })
         .catch((err) => console.log(err.message));
     } catch (error) {
       console.log(error);
@@ -163,6 +168,8 @@ const Departments = () => {
 
   return (
     <>
+      {loading ? <Loading /> : null}
+
       <div className="row">
         <div className="col-md-12">
           <div className="page-titles">

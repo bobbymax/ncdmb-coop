@@ -59,6 +59,14 @@ export const formatCurrency = (fig) => {
   return "NGN " + currency.format(fig);
 };
 
+// const htmlEntities = (str) => {
+//   return String(str)
+//     .replace(/&/g, "&amp;")
+//     .replace(/</g, "&lt;")
+//     .replace(/>/g, "&gt;")
+//     .replace(/"/g, "&quot;");
+// };
+
 export const verifyNumOfDays = (started, ended) => {
   const date1 = new Date(started);
   const date2 = new Date(ended);

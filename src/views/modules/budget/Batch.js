@@ -30,7 +30,7 @@ const Batch = (props) => {
   };
   const [state, setState] = useState(initialState);
   const grandTotal =
-    state.board.length !== 0
+    state.board.length > 0
       ? state.board.reduce(
           (sum, expenditure) => sum + parseFloat(expenditure.amount),
           0
@@ -202,7 +202,7 @@ const Batch = (props) => {
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
 
       <button
-        className="btn btn-success btn-md"
+        className="btn btn-success btn-md btn-rounded"
         type="button"
         onClick={() =>
           setState({ ...state, code: uniqueNumberGenerator(state.boardType) })
@@ -212,7 +212,7 @@ const Batch = (props) => {
         Generate Batch Number
       </button>
 
-      <div className="row mt-3">
+      <div className="row mt-5">
         <div className="col-md-8">
           <BatchWidget
             data={defaultData}
@@ -227,44 +227,41 @@ const Batch = (props) => {
 
         <div className="col-md-4">
           <div className="row">
-            <div className="col">
-              <h4 className="content-title content-title-xs mb-3">
-                Batch - {state.code.toUpperCase()}
+            <div className="col-md-12">
+              <h4 className="content-title content-title-xs mb-3 text-muted">
+                - BATCH - {state.code.toUpperCase()}
               </h4>
             </div>
-          </div>
 
-          {state.board.length !== 0
-            ? state.board.map((batch) => (
+            {state.board.length > 0 &&
+              state.board.map((batch) => (
                 <BatchCard
                   key={batch.id}
                   batch={batch}
                   onRemove={handleDelete}
                 />
-              ))
-            : null}
+              ))}
+            <div className="col-md-12">
+              <div className="card bg-warning">
+                <div className="card-body">
+                  <div className="total mb-3">
+                    <h3 className="card-value text-white">
+                      {grandPrettyTotal(state.total)}
+                    </h3>
+                  </div>
 
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              margin: "10px 0px",
-            }}
-          >
-            <div className="align-items-center justify-content-between mg-b-10">
-              <h3 className="card-value">{grandPrettyTotal(state.total)}</h3>
+                  <h5 className="text-default mb-4">{"GRAND TOTAL"}</h5>
+                  <button
+                    className="btn btn-success btn-rounded"
+                    disabled={state.code === ""}
+                    onClick={handleBatcher}
+                  >
+                    Batch Payments
+                  </button>
+                </div>
+              </div>
             </div>
-
-            <span className="">{"Grand Total"}</span>
           </div>
-
-          <button
-            className="btn btn-success btn-sm"
-            disabled={state.code === ""}
-            onClick={handleBatcher}
-          >
-            Batch Payments
-          </button>
         </div>
       </div>
     </>

@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react";
-import loaderAnimation from "../../assets/animations/lf30_editor_82actrzz.json";
+import loaderAnimation from "../../assets/animations/lf30_editor_dv61jfyj.json";
 
 const Loading = () => {
   return (
@@ -28,7 +28,7 @@ const Loading = () => {
         <Lottie
           animationData={loaderAnimation}
           style={{
-            width: 300,
+            width: 500,
           }}
           loop
           autoplay

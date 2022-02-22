@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
+// /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-undef */
+// /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";

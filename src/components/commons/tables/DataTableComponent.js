@@ -130,19 +130,6 @@ const DataTableComponent = ({
                           </td>
                         )}
 
-                        {action !== undefined && (
-                          <td>
-                            <span>
-                              <button
-                                onClick={() => action(row)}
-                                className="mr-4 btn-sm btn btn-primary"
-                              >
-                                <i className="fa fa-gavel"></i>
-                              </button>
-                            </span>
-                          </td>
-                        )}
-
                         {manageStaff !== undefined && (
                           <td>
                             <span>

@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../../../services/utils/helpers";
 import AddStaffRole from "./AddStaffRole";
 import ModifyUser from "./ModifyUser";
-import Loading from "../../../components/commons/Loading";
 
 const Employees = () => {
   const initialState = {

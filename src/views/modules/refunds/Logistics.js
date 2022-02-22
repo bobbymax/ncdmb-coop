@@ -135,17 +135,11 @@ const Logistics = (props) => {
   }, [state.sub_budget_head_id]);
 
   useEffect(() => {
-    const user =
-      state.user_id > 0 &&
-      users.filter((user) => user.id == state.user_id && user);
+    const user = users.filter((user) => user.id === state.user_id);
 
-    if (user.length > 0) {
-      setState({
-        ...state,
-        department_id:
-          state.department === "" ? user.department.id : state.department_id,
-      });
-    }
+    setState({
+      department_id: !state.department_id === 0 ? user.department_id : 0,
+    });
   }, [state.user_id]);
 
   return (

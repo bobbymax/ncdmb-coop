@@ -5,7 +5,7 @@ import loaderAnimation from "../../assets/animations/lf30_editor_dv61jfyj.json";
 const Loading = () => {
   return (
     <>
-      <style jsx={true}>
+      <style jsx="true">
         {`
           .container {
             max-width: 100%;

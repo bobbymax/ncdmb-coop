@@ -54,18 +54,20 @@ const Aside = () => {
             </li>
           ) : null}
 
-          <li
-            className={
-              location.pathname && location.pathname === "/overview"
-                ? "mm-active"
-                : ""
-            }
-          >
-            <Link to="/overview" className="ai-icon" aria-expanded="false">
-              <i className="fa fa-eye" />
-              <span className="nav-text">Overview</span>
-            </Link>
-          </li>
+          {auth && auth.administrator ? (
+            <li
+              className={
+                location.pathname && location.pathname === "/overview"
+                  ? "mm-active"
+                  : ""
+              }
+            >
+              <Link to="/overview" className="ai-icon" aria-expanded="false">
+                <i className="fa fa-eye" />
+                <span className="nav-text">Overview</span>
+              </Link>
+            </li>
+          ) : null}
         </ul>
       </div>
     </div>

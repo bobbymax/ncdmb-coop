@@ -96,6 +96,7 @@ const Login = () => {
                           value={staffNo}
                           onChange={(e) => setStaffNo(e.target.value)}
                           required
+                          disabled={loading ? true : false}
                         />
 
                         <TextInputField
@@ -105,6 +106,7 @@ const Login = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
+                          disabled={loading ? true : false}
                         />
 
                         <ButtonField

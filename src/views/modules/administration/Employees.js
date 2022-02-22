@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../../../services/utils/helpers";
 import AddStaffRole from "./AddStaffRole";
 import ModifyUser from "./ModifyUser";
+import Loading from "../../../components/commons/Loading";
 
 const Employees = () => {
   const initialState = {
@@ -246,349 +247,360 @@ const Employees = () => {
   };
 
   return (
-    <div className="row">
-      {!state.assignRole && (
-        <>
-          <div className="col-md-12">
-            <div className="page-titles">
-              <button
-                className="btn btn-success"
-                onClick={() => setOpen(!open)}
-                disabled={open}
-              >
-                <i className="fa fa-plus"></i> Add Staff
-              </button>
-            </div>
-          </div>
+    <>
+      {/* <Loading /> */}
 
+      <div className="row">
+        {!state.assignRole && (
           <>
-            {open && (
-              <div className="col-md-12">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="form-body">
-                      <form onSubmit={handleSubmit}>
-                        <div className="row">
-                          <div className="col-md-3">
-                            <TextInputField
-                              placeholder="Enter Staff Number"
-                              value={state.staff_no}
-                              onChange={(e) =>
-                                setState({ ...state, staff_no: e.target.value })
-                              }
-                              error={
-                                errors &&
-                                errors.staff_no &&
-                                errors.staff_no.length > 0
-                              }
-                              errorMessage={
-                                errors && errors.staff_no && errors.staff_no[0]
-                              }
-                            />
-                          </div>
+            <div className="col-md-12">
+              <div className="page-titles">
+                <button
+                  className="btn btn-success"
+                  onClick={() => setOpen(!open)}
+                  disabled={open}
+                >
+                  <i className="fa fa-plus"></i> Add Staff
+                </button>
+              </div>
+            </div>
 
-                          <div className="col-md-6">
-                            <TextInputField
-                              placeholder="Enter Fullname (Surname First)"
-                              value={state.name}
-                              onChange={(e) =>
-                                setState({ ...state, name: e.target.value })
-                              }
-                              error={
-                                errors && errors.name && errors.name.length > 0
-                              }
-                              errorMessage={
-                                errors && errors.name && errors.name[0]
-                              }
-                            />
-                          </div>
+            <>
+              {open && (
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="form-body">
+                        <form onSubmit={handleSubmit}>
+                          <div className="row">
+                            <div className="col-md-3">
+                              <TextInputField
+                                placeholder="Enter Staff Number"
+                                value={state.staff_no}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    staff_no: e.target.value,
+                                  })
+                                }
+                                error={
+                                  errors &&
+                                  errors.staff_no &&
+                                  errors.staff_no.length > 0
+                                }
+                                errorMessage={
+                                  errors &&
+                                  errors.staff_no &&
+                                  errors.staff_no[0]
+                                }
+                              />
+                            </div>
 
-                          <div className="col-md-3">
-                            {/*  */}
-                            <CustomSelect
-                              defaultText="Select Grade Level"
-                              options={formatLevels()}
-                              value={state.grade_level_id}
-                              onChange={(e) =>
-                                setState({
-                                  ...state,
-                                  grade_level_id: e.target.value,
-                                })
-                              }
-                              error={
-                                errors &&
-                                errors.grade_level_id &&
-                                errors.grade_level_id.length > 0
-                              }
-                              errorMessage={
-                                errors &&
-                                errors.grade_level_id &&
-                                errors.grade_level_id[0]
-                              }
-                            />
-                          </div>
+                            <div className="col-md-6">
+                              <TextInputField
+                                placeholder="Enter Fullname (Surname First)"
+                                value={state.name}
+                                onChange={(e) =>
+                                  setState({ ...state, name: e.target.value })
+                                }
+                                error={
+                                  errors &&
+                                  errors.name &&
+                                  errors.name.length > 0
+                                }
+                                errorMessage={
+                                  errors && errors.name && errors.name[0]
+                                }
+                              />
+                            </div>
 
-                          <div className="col-md-6">
-                            <TextInputField
-                              placeholder="Enter Email Address"
-                              value={state.email}
-                              onChange={(e) =>
-                                setState({ ...state, email: e.target.value })
-                              }
-                              error={
-                                errors &&
-                                errors.email &&
-                                errors.email.length > 0
-                              }
-                              errorMessage={
-                                errors && errors.email && errors.email[0]
-                              }
-                            />
-                          </div>
+                            <div className="col-md-3">
+                              {/*  */}
+                              <CustomSelect
+                                defaultText="Select Grade Level"
+                                options={formatLevels()}
+                                value={state.grade_level_id}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    grade_level_id: e.target.value,
+                                  })
+                                }
+                                error={
+                                  errors &&
+                                  errors.grade_level_id &&
+                                  errors.grade_level_id.length > 0
+                                }
+                                errorMessage={
+                                  errors &&
+                                  errors.grade_level_id &&
+                                  errors.grade_level_id[0]
+                                }
+                              />
+                            </div>
 
-                          <div className="col-md-6">
-                            {/*  */}
-                            <CustomSelect
-                              defaultText="Select Department"
-                              options={formatDept()}
-                              value={state.department_id}
-                              onChange={(e) =>
-                                setState({
-                                  ...state,
-                                  department_id: e.target.value,
-                                })
-                              }
-                              error={
-                                errors &&
-                                errors.department_id &&
-                                errors.department_id.length > 0
-                              }
-                              errorMessage={
-                                errors &&
-                                errors.department_id &&
-                                errors.department_id[0]
-                              }
-                            />
-                          </div>
+                            <div className="col-md-6">
+                              <TextInputField
+                                placeholder="Enter Email Address"
+                                value={state.email}
+                                onChange={(e) =>
+                                  setState({ ...state, email: e.target.value })
+                                }
+                                error={
+                                  errors &&
+                                  errors.email &&
+                                  errors.email.length > 0
+                                }
+                                errorMessage={
+                                  errors && errors.email && errors.email[0]
+                                }
+                              />
+                            </div>
 
-                          <div className="col-md-12">
-                            {/*  */}
-                            <Select
-                              closeMenuOnSelect={false}
-                              components={animated}
-                              options={formatRole()}
-                              value={rolesInput}
-                              onChange={setRolesInput}
-                              isMulti
-                            />
-                          </div>
+                            <div className="col-md-6">
+                              {/*  */}
+                              <CustomSelect
+                                defaultText="Select Department"
+                                options={formatDept()}
+                                value={state.department_id}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    department_id: e.target.value,
+                                  })
+                                }
+                                error={
+                                  errors &&
+                                  errors.department_id &&
+                                  errors.department_id.length > 0
+                                }
+                                errorMessage={
+                                  errors &&
+                                  errors.department_id &&
+                                  errors.department_id[0]
+                                }
+                              />
+                            </div>
 
-                          <div className="col-md-12 mt-3">
-                            <button type="submit" className="btn btn-primary">
-                              Submit
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={() => {
-                                setUpdate(false);
-                                setState(initialState);
-                                setOpen(false);
-                                setErrors({});
-                                setRolesInput([]);
-                              }}
-                            >
-                              Close
-                            </button>
+                            <div className="col-md-12">
+                              {/*  */}
+                              <Select
+                                closeMenuOnSelect={false}
+                                components={animated}
+                                options={formatRole()}
+                                value={rolesInput}
+                                onChange={setRolesInput}
+                                isMulti
+                              />
+                            </div>
+
+                            <div className="col-md-12 mt-3">
+                              <button type="submit" className="btn btn-primary">
+                                Submit
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={() => {
+                                  setUpdate(false);
+                                  setState(initialState);
+                                  setOpen(false);
+                                  setErrors({});
+                                  setRolesInput([]);
+                                }}
+                              >
+                                Close
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      </form>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </>
+
+            <div className="col-lg-12">
+              <BasicTable
+                page="Staff"
+                columns={columns}
+                rows={employees}
+                // handleDelete={handleDestroy}
+                manageStaff={manageStaff}
+              />
+            </div>
           </>
+        )}
 
-          <div className="col-lg-12">
-            <BasicTable
-              page="Staff"
-              columns={columns}
-              rows={employees}
-              // handleDelete={handleDestroy}
-              manageStaff={manageStaff}
+        {state.assignRole && (
+          <>
+            <AddStaffRole
+              show={modalShow.visibility}
+              onHide={() =>
+                setModalShow({
+                  ...modalShow,
+                  visibility: false,
+                })
+              }
+              roles={roles}
+              user={staff}
             />
-          </div>
-        </>
-      )}
 
-      {state.assignRole && (
-        <>
-          <AddStaffRole
-            show={modalShow.visibility}
-            onHide={() =>
-              setModalShow({
-                ...modalShow,
-                visibility: false,
-              })
-            }
-            roles={roles}
-            user={staff}
-          />
+            <ModifyUser
+              roles={roles}
+              user={staff}
+              show={updateModalShow}
+              onHide={() => setUpdateModalShow(false)}
+              levels={levels}
+              departments={departments}
+            />
 
-          <ModifyUser
-            roles={roles}
-            user={staff}
-            show={updateModalShow}
-            onHide={() => setUpdateModalShow(false)}
-            levels={levels}
-            departments={departments}
-          />
+            <div className="col-md-6">
+              <div className="card h-auto">
+                <div className="card-header bg-primary">
+                  <h2 className="text-white">
+                    <i className="fa fa-user-circle"></i> {staff.name}
+                  </h2>
+                </div>
 
-          <div className="col-md-6">
-            <div className="card h-auto">
-              <div className="card-header bg-primary">
-                <h2 className="text-white">
-                  <i className="fa fa-user-circle"></i> {staff.name}
-                </h2>
-              </div>
+                <div className="card-body">
+                  <h3>User Profile</h3>
+                  <div className="dropdown-divider"></div>
 
-              <div className="card-body">
-                <h3>User Profile</h3>
-                <div className="dropdown-divider"></div>
-
-                <div className="list-group">
-                  <p className="list-group-item">
-                    <b>Staff ID:</b> {staff.staff_no}
-                  </p>
-                  <p className="list-group-item">
-                    <b>Department:</b> {staff.department.name}
-                  </p>
-                  <p className="list-group-item">
-                    <b>Full Name:</b> {staff.name}
-                  </p>
-                  <p className="list-group-item">
-                    <b>Email:</b> {staff.email}
-                  </p>
+                  <div className="list-group">
+                    <p className="list-group-item">
+                      <b>Staff ID:</b> {staff.staff_no}
+                    </p>
+                    <p className="list-group-item">
+                      <b>Department:</b> {staff.department.name}
+                    </p>
+                    <p className="list-group-item">
+                      <b>Full Name:</b> {staff.name}
+                    </p>
+                    <p className="list-group-item">
+                      <b>Email:</b> {staff.email}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="col-md-6">
-            <div className="card">
-              <div className="list-group">
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action list-group-action-hover-primary text-center"
-                  onClick={() => {
-                    setState({
-                      ...state,
-                      assignRole: false,
-                    });
-                    setStaff({});
-                  }}
-                >
-                  Close <i className="fa fa-close"></i>
-                </Link>
+            <div className="col-md-6">
+              <div className="card">
+                <div className="list-group">
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action list-group-action-hover-primary text-center"
+                    onClick={() => {
+                      setState({
+                        ...state,
+                        assignRole: false,
+                      });
+                      setStaff({});
+                    }}
+                  >
+                    Close <i className="fa fa-close"></i>
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Reset Password <i className="fa fa-lock"></i>
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Reset Password <i className="fa fa-lock"></i>
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Reset Security Question <i className="fa fa-question"></i>
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Reset Security Question <i className="fa fa-question"></i>
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Modification Log
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Modification Log
+                  </Link>
 
-                <Link
-                  to="#"
-                  onClick={() => handleUpdate()}
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Modify Account <i className="fa fa-user-edit"></i>
-                </Link>
+                  <Link
+                    to="#"
+                    onClick={() => handleUpdate()}
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Modify Account <i className="fa fa-user-edit"></i>
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  User Activity <i className="fa fa-user-"></i>
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    User Activity <i className="fa fa-user-"></i>
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Block Account
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Block Account
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                >
-                  Reset Account Privilege
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                  >
+                    Reset Account Privilege
+                  </Link>
 
-                <Link
-                  to="#"
-                  className="list-group-item list-group-item-action text-center"
-                  onClick={() => addRole()}
-                >
-                  Add Role <i className="fa fa-user-edit"></i>
-                </Link>
+                  <Link
+                    to="#"
+                    className="list-group-item list-group-item-action text-center"
+                    onClick={() => addRole()}
+                  >
+                    Add Role <i className="fa fa-user-edit"></i>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <table className="table table-bordered table-striped">
-                  <thead>
-                    <tr>
-                      <th>Description</th>
-                      <th>Start Date</th>
-                      <th>End Date</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {staff.roles && staff.roles.length > 0 ? (
-                      staff.roles.map((role, index) => (
-                        <tr key={index}>
-                          <td>{role.name}</td>
-                          <td>{formatDate(role.start_date)}</td>
-                          <td>{formatDate(role.expiry_date)}</td>
-                        </tr>
-                      ))
-                    ) : (
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-body">
+                  <table className="table table-bordered table-striped">
+                    <thead>
                       <tr>
-                        <td colSpan={3} className="text-danger">
-                          No User Roles!
-                        </td>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+
+                    <tbody>
+                      {staff.roles && staff.roles.length > 0 ? (
+                        staff.roles.map((role, index) => (
+                          <tr key={index}>
+                            <td>{role.name}</td>
+                            <td>{formatDate(role.start_date)}</td>
+                            <td>{formatDate(role.expiry_date)}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={3} className="text-danger">
+                            No User Roles!
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import TextInputField from "../../../components/forms/TextInputField";
 import useApi from "../../../services/hooks/useApi";
 import { collection } from "../../../services/utils/controllers";
-// import TextInputField from '../../'
 
 const AssignRole = () => {
   const initialState = {

@@ -106,6 +106,7 @@ const Header = () => {
                   </svg>
                   <div className="pulse-css" />
                 </a>
+
                 <div className="dropdown-menu dropdown-menu-right">
                   <div
                     id="DZ_W_TimeLine02"
@@ -122,6 +123,7 @@ const Header = () => {
                           </h6>
                         </a>
                       </li>
+
                       <li>
                         <div className="timeline-badge info"></div>
                         <a className="timeline-panel text-muted" href="#">
@@ -177,6 +179,7 @@ const Header = () => {
                   </div>
                 </div>
               </li>
+
               <li className="nav-item dropdown header-profile">
                 <a
                   className="nav-link"
@@ -191,7 +194,7 @@ const Header = () => {
                   <img src={avatar} width={20} alt="an avatar illustration" />
                 </a>
                 <div className="dropdown-menu dropdown-menu-right">
-                  <a href="/app-profile.html" className="dropdown-item ai-icon">
+                  <Link to="/user/profile" className="dropdown-item ai-icon">
                     <svg
                       id="icon-user1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +212,8 @@ const Header = () => {
                       <circle cx={12} cy={7} r={4} />
                     </svg>
                     <span className="ml-2">Profile </span>
-                  </a>
+                  </Link>
+
                   <Link
                     to="#"
                     onClick={logout}

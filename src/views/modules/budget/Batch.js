@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
@@ -18,110 +19,72 @@ const Batch = (props) => {
   } = useApi(collection);
 
   const initialState = {
-    board: [],
     boardType: "",
     maxSlot: 0,
     code: "",
     total: 0,
-    len: 0,
-    canvas: false,
     buttonDisabled: false,
     sub_budget_head_id: 0,
+    subBudgetCode: "",
   };
+
+  const maxSlots = {
+    staffPayment: 6,
+    thirdParty: 1,
+  };
+
   const [state, setState] = useState(initialState);
-  const grandTotal =
-    state.board.length !== 0
-      ? state.board.reduce(
-          (sum, expenditure) => sum + parseFloat(expenditure.amount),
-          0
-        )
-      : 0;
+  const [board, setBoard] = useState([]);
 
   const defaultData = [
     {
       id: 1,
       title: "STAFF PAYMENT",
-      items: expenditures.filter((ex) => {
-        return ex.payment_type && ex.payment_type === "staff-payment";
-      }),
+      items: expenditures.filter(
+        (ex) => ex.payment_type && ex.payment_type === "staff-payment"
+      ),
     },
     {
       id: 2,
       title: "THIRD PARTY",
-      items: expenditures.filter((ex) => {
-        return ex.payment_type && ex.payment_type === "third-party";
-      }),
+      items: expenditures.filter(
+        (ex) => ex.payment_type && ex.payment_type === "third-party"
+      ),
     },
   ];
 
-  const boardLength = state.board.length;
+  const boardLength = board.length;
+  const disableActiveButton = state.maxSlot > 0 && boardLength == state.maxSlot;
+  const boardTypeState = state.boardType !== "" && boardLength == 0 && "";
 
   const batchClaim = (expenditure) => {
-    const batch = expenditures.filter((batch) => expenditure.id === batch.id);
+    // Filter selected expenditure from expenditures
+    const newLoads = expenditures.filter((exp) => exp.id != expenditure.id);
+    // Check board length
+    const availableSlots =
+      expenditure.payment_type === "staff-payment"
+        ? maxSlots.staffPayment
+        : maxSlots.thirdParty;
 
-    const maxSlots = {
-      staffPayment: 6,
-      thirdParty: 1,
-    };
-
-    if (
-      expenditure.payment_type === "third-party" &&
-      state.board.length < maxSlots.thirdParty
-    ) {
-      const newExpenditure = expenditures.filter(
-        (batch) => expenditure.id !== batch.id
-      );
-
-      setExpenditures(newExpenditure);
-
+    if (board.length == 0) {
+      setExpenditures(newLoads);
+      setBoard([expenditure, ...board]);
       setState({
         ...state,
-        board: [...state.board, batch[0]],
-        buttonDisabled: !state.buttonDisabled,
         boardType: expenditure.payment_type,
-        maxSlot: maxSlots.thirdParty,
+        sub_budget_head_id: expenditure.subBudgetHead.id,
+        maxSlot: availableSlots,
+        subBudgetCode: expenditure.subBudgetHead.budgetCode,
       });
-    } else if (
-      expenditure.payment_type === "staff-payment" &&
-      state.board.length <= maxSlots.staffPayment
-    ) {
-      if (
-        boardLength >= 1 &&
-        expenditure.subBudgetHead.id === state.sub_budget_head_id
-      ) {
-        const newExpenditure = expenditures.filter(
-          (batch) => expenditure.id !== batch.id
-        );
-
-        setExpenditures(newExpenditure);
-
-        setState({
-          ...state,
-          board: [...state.board, batch[0]],
-          buttonDisabled: true,
-          boardType: expenditure.payment_type,
-          maxSlot: maxSlots.staffPayment,
-        });
-      } else {
-        const newExpenditure = expenditures.filter(
-          (batch) => expenditure.id !== batch.id
-        );
-
-        setExpenditures(newExpenditure);
-
-        setState({
-          ...state,
-          board: [...state.board, batch[0]],
-          buttonDisabled: true,
-          boardType: expenditure.payment_type,
-          maxSlot: maxSlots.staffPayment,
-        });
-      }
     } else {
-      setState({
-        ...state,
-        buttonDisabled: !state.buttonDisabled,
-      });
+      if (
+        expenditure.payment_type === state.boardType &&
+        board.length <= state.maxSlot &&
+        expenditure.subBudgetHead.id == state.sub_budget_head_id
+      ) {
+        setExpenditures(newLoads);
+        setBoard([expenditure, ...board]);
+      }
     }
   };
 
@@ -132,42 +95,49 @@ const Batch = (props) => {
   const handleBatcher = () => {
     const data = {
       batch_no: state.code,
-      expenditures: state.board,
-      noOfClaim: state.board.length,
-      subBudgetHeadCode: state.board[0].subBudgetHead.budgetCode,
+      expenditures: board,
+      noOfClaim: board.length,
+      subBudgetHeadCode: state.subBudgetCode,
       amount: state.total,
       steps: 1,
     };
 
-    store("batches", data)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err.message));
+    console.log(data);
+
+    // store("batches", data)
+    //   .then((res) => {
+    //     const data = res.data.data;
+    //     setBoard([]);
+    //     console.log(data);
+    //   })
+    //   .catch((err) => console.log(err.message));
   };
 
   const handleDelete = (expenditure) => {
-    if (state.board.length !== 0) {
-      const claimChoosen = state.board.filter((b) => expenditure.id === b.id);
+    if (board.length >= 1) {
+      const claimChoosen = board.filter((b) => expenditure.id === b.id);
 
-      const boardState = state.board.filter((b) => expenditure.id !== b.id);
+      const boardState = board.filter((b) => expenditure.id !== b.id);
 
       if (boardState.length > 0) {
         const newExpenditure = [...expenditures, claimChoosen[0]];
 
         setExpenditures(newExpenditure);
+        setBoard(boardState);
 
         setState({
           ...state,
-          board: boardState,
           buttonDisabled: state.boardType !== "" ? true : false,
         });
       } else {
         const newExpenditure = [...expenditures, claimChoosen[0]];
 
         setExpenditures(newExpenditure);
+        setBoard(boardState);
 
         setState({
           ...state,
-          board: boardState,
+          sub_budget_head_id: 0,
           boardType: "",
           buttonDisabled: false,
         });
@@ -180,20 +150,34 @@ const Batch = (props) => {
   }, []);
 
   useEffect(() => {
-    if (boardLength === 1) {
+    if (boardLength > 0) {
+      const total = board.reduce(
+        (sum, expenditure) => sum + parseFloat(expenditure.amount),
+        0
+      );
+
       setState({
         ...state,
-        sub_budget_head_id: state.board[0].subBudgetHead.id,
+        total: total,
+        buttonDisabled: disableActiveButton,
+      });
+    } else {
+      setState({
+        ...state,
+        total: 0,
+        buttonDisabled: false,
       });
     }
   }, [boardLength]);
 
   useEffect(() => {
-    setState({
-      ...state,
-      total: grandTotal,
-    });
-  }, [grandTotal]);
+    if (state.code !== "") {
+      setState({
+        ...state,
+        code: boardTypeState,
+      });
+    }
+  }, [boardTypeState]);
 
   return (
     <>
@@ -202,7 +186,7 @@ const Batch = (props) => {
       <h4 className="content-title content-title-xs mb-3">Expenditures</h4>
 
       <button
-        className="btn btn-success btn-md"
+        className="btn btn-success btn-md btn-rounded"
         type="button"
         onClick={() =>
           setState({ ...state, code: uniqueNumberGenerator(state.boardType) })
@@ -212,59 +196,54 @@ const Batch = (props) => {
         Generate Batch Number
       </button>
 
-      <div className="row mt-3">
+      <div className="row mt-5">
         <div className="col-md-8">
           <BatchWidget
             data={defaultData}
             addToBatch={batchClaim}
             isButtonOff={state.buttonDisabled}
             paymentType={state.boardType}
-            maxed={
-              state.board.length > 0 && state.board.length === state.maxSlot
-            }
+            subBudgetHeadId={state.sub_budget_head_id}
           />
         </div>
 
         <div className="col-md-4">
           <div className="row">
-            <div className="col">
-              <h4 className="content-title content-title-xs mb-3">
-                Batch - {state.code.toUpperCase()}
+            <div className="col-md-12">
+              <h4 className="content-title content-title-xs mb-3 text-muted">
+                - BATCH - {state.code.toUpperCase()}
               </h4>
             </div>
-          </div>
 
-          {state.board.length !== 0
-            ? state.board.map((batch) => (
+            {board.length > 0 &&
+              board.map((batch) => (
                 <BatchCard
                   key={batch.id}
                   batch={batch}
                   onRemove={handleDelete}
                 />
-              ))
-            : null}
+              ))}
+            <div className="col-md-12">
+              <div className="card bg-warning">
+                <div className="card-body">
+                  <div className="total mb-3">
+                    <h3 className="card-value text-white">
+                      {grandPrettyTotal(state.total)}
+                    </h3>
+                  </div>
 
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              margin: "10px 0px",
-            }}
-          >
-            <div className="align-items-center justify-content-between mg-b-10">
-              <h3 className="card-value">{grandPrettyTotal(state.total)}</h3>
+                  <h5 className="text-default mb-4">{"GRAND TOTAL"}</h5>
+                  <button
+                    className="btn btn-success btn-rounded"
+                    disabled={state.code === ""}
+                    onClick={handleBatcher}
+                  >
+                    Batch Payments
+                  </button>
+                </div>
+              </div>
             </div>
-
-            <span className="">{"Grand Total"}</span>
           </div>
-
-          <button
-            className="btn btn-success btn-sm"
-            disabled={state.code === ""}
-            onClick={handleBatcher}
-          >
-            Batch Payments
-          </button>
         </div>
       </div>
     </>

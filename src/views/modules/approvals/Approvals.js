@@ -41,12 +41,6 @@ const Approvals = (props) => {
           });
         })
         .catch((err) => console.log(err));
-
-      // setState({
-      //   ...state,
-      //   batch_code: "",
-      //   showDetails: true,
-      // });
     }
   };
 
@@ -98,18 +92,7 @@ const Approvals = (props) => {
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
 
-    setState({
-      ...state,
-      batch_code: "",
-      batch: null,
-      batch_id: 0,
-      modification: 0,
-      previousTotal: 0,
-      grandTotal: 0,
-      status: "",
-      isUpdating: false,
-      showDetails: false,
-    });
+    setState(initialState);
   };
 
   useEffect(() => {
@@ -122,6 +105,8 @@ const Approvals = (props) => {
       });
     }
   }, [state.batch, state.showDetails]);
+
+  console.log(state.batch);
 
   return (
     <>
@@ -143,9 +128,9 @@ const Approvals = (props) => {
         </div>
       </form>
 
-      <button className="btn btn-primary" onClick={getBatches}>
+      {/* <button className="btn btn-primary" onClick={getBatches}>
         Get Batch
-      </button>
+      </button> */}
 
       <div className={"payments-container mt-4"}>
         {state.expenditure !== null && state.isUpdating ? (
@@ -282,7 +267,7 @@ const Approvals = (props) => {
                   }
                   onClick={() => {
                     setState({ ...state, status: "approved" });
-                    // handlePaymentAction("approved");
+                    handlePaymentAction("approved");
                   }}
                 >
                   {state.batch && state.batch.steps === 4 ? "Post" : "Clear"}{" "}

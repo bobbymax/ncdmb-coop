@@ -7,7 +7,6 @@ function BatchWidget({
   addToBatch,
   isButtonOff,
   paymentType,
-  maxed,
   subBudgetHeadId,
 }) {
   if (data) {
@@ -36,12 +35,13 @@ function BatchWidget({
                                   className="btn btn-success btn-xs btn-rounded"
                                   onClick={() => addToBatch(item)}
                                   disabled={
-                                    isButtonOff &&
-                                    subBudgetHeadId > 0 &&
-                                    item.subBudgetHead.id != subBudgetHeadId
+                                    isButtonOff ||
+                                    (paymentType !== "" &&
+                                      paymentType !== item.payment_type) ||
+                                    (subBudgetHeadId > 0 &&
+                                      subBudgetHeadId != item.subBudgetHead.id)
                                   }
                                 >
-                                  {console.log(item.subBudgetHead.id)}
                                   <i className="fa fa-plus"></i>
                                 </button>
                               </div>

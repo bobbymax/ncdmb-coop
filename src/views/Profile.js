@@ -9,7 +9,7 @@ const Profile = () => {
   return (
     <div className="row">
       <div className="col-md-7">
-        <div className="card h-auto bg-white">
+        <div className="card h-auto">
           <div className="card-header bg-success">
             <h2 className="text-white">
               <i className="fa fa-user rounded-circle"></i> {user.name}

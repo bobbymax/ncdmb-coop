@@ -61,6 +61,7 @@ const Header = () => {
                           <div className="media mr-2">
                             <img alt="image" width={50} src={notAvatar} />
                           </div>
+
                           <div className="media-body">
                             <h6 className="mb-1">Dr sultads Send you Photo</h6>
                             <small className="d-block">
@@ -69,6 +70,7 @@ const Header = () => {
                           </div>
                         </div>
                       </li>
+
                       <li>
                         <div className="timeline-panel">
                           <div className="media mr-2 media-info">KG</div>

@@ -9,6 +9,7 @@ const BasicTable = ({
   handleDelete = undefined,
   manageStaff = undefined,
   exportable = false,
+  loading,
 }) => {
   return (
     <>
@@ -89,11 +90,18 @@ const BasicTable = ({
                     </tr>
                   ))
                 ) : (
-                  <tr>
-                    <td className="text-danger" colSpan={columns.length + 1}>
-                      No Data Found!!!
-                    </td>
-                  </tr>
+                  <>
+                    {!loading && rows.length <= 0 ? (
+                      <tr>
+                        <td
+                          className="text-danger"
+                          colSpan={columns.length + 1}
+                        >
+                          No Data Found!!!
+                        </td>
+                      </tr>
+                    ) : null}
+                  </>
                 )}
               </tbody>
             </table>

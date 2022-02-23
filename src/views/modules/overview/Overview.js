@@ -92,7 +92,7 @@ const Overview = (props) => {
         })
         .catch((err) => console.log(err.message));
     }
-  }, [auth.department_id]);
+  }, []);
 
   useEffect(() => {
     collection("departments")
@@ -149,6 +149,12 @@ const Overview = (props) => {
       {loading ? <Loading /> : null}
 
       <div className="row">
+        <div className="col-md-12">
+          <div className="page-titles">
+            <h2>Overview</h2>
+          </div>
+        </div>
+
         <div className="col-md-12">
           <CustomSelect
             options={filterOptions(departments)}

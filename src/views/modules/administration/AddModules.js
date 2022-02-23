@@ -302,7 +302,7 @@ const AddModules = () => {
                             className="col-sm-4 col-md-6 d-flex justify-content-between"
                             // style={{ width: "300px !important" }}
                           >
-                            <div class="form-check">
+                            <div className="form-check">
                               <input
                                 className="form-check-input"
                                 type="checkbox"
@@ -325,16 +325,16 @@ const AddModules = () => {
                               />
 
                               <label
-                                class="form-check-label"
+                                className="form-check-label"
                                 htmlFor="flexCheckDefault"
                               >
                                 Is Menu
                               </label>
                             </div>
 
-                            <div class="form-check">
+                            <div className="form-check">
                               <input
-                                class="form-check-input"
+                                className="form-check-input"
                                 type="checkbox"
                                 value={state.generatePermissions}
                                 checked={
@@ -355,7 +355,7 @@ const AddModules = () => {
                               />
 
                               <label
-                                class="form-check-label"
+                                className="form-check-label"
                                 htmlFor="flexCheckDefault"
                               >
                                 Generate Permission
@@ -370,9 +370,9 @@ const AddModules = () => {
                               {roles && roles.length > 0
                                 ? roles.map((role) => {
                                     return (
-                                      <div class="form-check" key={role.id}>
+                                      <div className="form-check" key={role.id}>
                                         <input
-                                          class="form-check-input"
+                                          className="form-check-input"
                                           type="checkbox"
                                           value={role.id}
                                           onChange={(e) => {
@@ -405,7 +405,7 @@ const AddModules = () => {
                                           }}
                                         />
 
-                                        <label class="form-check-label">
+                                        <label className="form-check-label">
                                           {role.name}
                                         </label>
                                       </div>

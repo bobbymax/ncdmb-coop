@@ -5,8 +5,7 @@ const Footer = () => {
     <div className="footer">
       <div className="copyright">
         <p>
-          Copyright © Designed &amp; Developed by{" "}
-          <a href="http://dexignzone.com/">DexignZone</a> 2020
+          Copyright © Designed &amp; Developed by <b>ICT Department</b> 2022
         </p>
       </div>
     </div>

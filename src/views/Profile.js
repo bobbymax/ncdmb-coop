@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -10,9 +12,10 @@ const Profile = () => {
     <div className="row">
       <div className="col-md-7">
         <div className="card h-auto">
-          <div className="card-header bg-success">
+          <div className="card-header text-center bg-success">
             <h2 className="text-white">
-              <i className="fa fa-user rounded-circle"></i> {user.name}
+              <i className="fa fa-user text-success bg-white rounded-circle h-25"></i>{" "}
+              {user.name}
             </h2>
           </div>
 

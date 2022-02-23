@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -31,14 +32,21 @@ const Approvals = (props) => {
 
     if (state.batch_code !== "") {
       collection("batches/" + state.batch_code)
-        .then((res) => setState({ ...state, batch: res.data.data }))
+        .then((res) => {
+          setState({
+            ...state,
+            batch: res.data.data,
+            batch_code: "",
+            showDetails: true,
+          });
+        })
         .catch((err) => console.log(err));
 
-      setState({
-        ...state,
-        batch_code: "",
-        showDetails: true,
-      });
+      // setState({
+      //   ...state,
+      //   batch_code: "",
+      //   showDetails: true,
+      // });
     }
   };
 
@@ -48,6 +56,12 @@ const Approvals = (props) => {
     const data = {
       amount: state.amount,
     };
+  };
+
+  const getBatches = () => {
+    collection("batches")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const fetchExpenditureSubBudgetHead = (batch) => {
@@ -128,6 +142,10 @@ const Approvals = (props) => {
           </div>
         </div>
       </form>
+
+      <button className="btn btn-primary" onClick={getBatches}>
+        Get Batch
+      </button>
 
       <div className={"payments-container mt-4"}>
         {state.expenditure !== null && state.isUpdating ? (
@@ -216,7 +234,7 @@ const Approvals = (props) => {
         ) : null}
 
         {state.batch && state.showDetails ? (
-          <div className="card card-invoice">
+          <div className="card">
             <div className="card-header">
               <div>
                 <h5 className="mg-b-3">
@@ -225,14 +243,14 @@ const Approvals = (props) => {
                     : ""}
                 </h5>
 
-                <span className="tx-sm text-muted">
+                <span className="text-muted">
                   {state.batch && state.batch.controller
                     ? `Expenditure raised by ${state.batch.controller.name} on date`
                     : ""}
                 </span>
               </div>
 
-              <div className="btn-group-invoice">
+              <div className="btn-group">
                 {state.batch &&
                 state.batch.steps === 3 &&
                 state.batch.editable === 1 &&
@@ -250,7 +268,6 @@ const Approvals = (props) => {
                       handlePaymentAction("queried");
                     }}
                   >
-                    {/* <FiActivity className="mr-2" /> */}
                     Query
                   </button>
                 ) : null}
@@ -268,16 +285,13 @@ const Approvals = (props) => {
                     // handlePaymentAction("approved");
                   }}
                 >
-                  {/* <FiPackage className="mr-2" /> */}
-                  {state.batch && state.batch.steps === 4
-                    ? "Post"
-                    : "Clear"}{" "}
+                  {state.batch && state.batch.steps === 4 ? "Post" : "Clear"}{" "}
                   Payment
                 </button>
               </div>
             </div>
 
-            <div className="card-body">
+            <div className="card-body table-responsive">
               <div className="row">
                 <div className="col-sm-6">
                   <label className="content-label text-success">
@@ -308,7 +322,7 @@ const Approvals = (props) => {
                 </div>
               </div>
 
-              <table className="table-striped table-bordered table-responsive mg-t-25">
+              <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
                     {state.batch &&
@@ -342,7 +356,6 @@ const Approvals = (props) => {
                                   onClick={() => modifyExpenditure(exp)}
                                 >
                                   Edit
-                                  {/* <FiEdit3 /> */}
                                 </button>
                               </td>
                             ) : null}

@@ -429,6 +429,7 @@ const Employees = () => {
                 columns={columns}
                 rows={employees}
                 manageStaff={manageStaff}
+                loading={loading}
               />
             </div>
           </>

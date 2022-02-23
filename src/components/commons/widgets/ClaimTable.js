@@ -1,9 +1,13 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
-// import { Link } from "react-router-dom";
-import TableLoader from "../../commons/tables/TableLoader";
 
-const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
+const ClaimTable = ({
+  claims,
+  onEdit,
+  onDestroy,
+  onView,
+  addDetails,
+  loading,
+}) => {
   return (
     <>
       {claims && (
@@ -79,7 +83,7 @@ const ClaimTable = ({ claims, onEdit, onDestroy, onView, addDetails }) => {
                     </tr>
                   ))}
 
-                  {claims.length <= 0 && (
+                  {!loading && claims.length <= 0 && (
                     <tr>
                       <td colSpan="3" className="text-danger">
                         {"No Data Found!!"}

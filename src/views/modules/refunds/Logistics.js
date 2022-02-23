@@ -360,11 +360,15 @@ const Logistics = (props) => {
                       )
                   )
                 ) : (
-                  <tr>
-                    <td colSpan="6" className="text-danger">
-                      No Data Found!!
-                    </td>
-                  </tr>
+                  <>
+                    {!loading && logisticsData.length <= 0 && (
+                      <tr>
+                        <td colSpan="6" className="text-danger">
+                          No Data Found!!
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 )}
               </tbody>
             </table>

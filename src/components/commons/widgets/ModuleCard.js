@@ -23,6 +23,7 @@ const ModuleCard = ({
                 <p className="mb-1" style={{ textAlign: "right" }}>
                   {name}
                 </p>
+
                 <h3 className="text-white" style={{ textAlign: "right" }}>
                   {children.length}
                 </h3>

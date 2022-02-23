@@ -10,7 +10,7 @@ import BatchCard from "../../../components/commons/widgets/BatchCard";
 import "./drag.css";
 import Loading from "../../../components/commons/Loading";
 
-const Batch = (props) => {
+const BatchPayment = (props) => {
   const {
     data: expenditures,
     setData: setExpenditures,
@@ -250,4 +250,4 @@ const Batch = (props) => {
   );
 };
 
-export default Batch;
+export default BatchPayment;

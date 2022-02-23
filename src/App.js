@@ -30,6 +30,7 @@ import RefundRequests from "./views/modules/refunds/RefundRequests";
 import AddModules from "./views/modules/administration/AddModules";
 import Overview from "./views/modules/overview/Overview";
 import OverviewExpenditure from "./views/modules/overview/OverviewExpenditure";
+import Profile from "./views/Profile";
 
 const App = () => {
   return (
@@ -291,6 +292,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Overview />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/user/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

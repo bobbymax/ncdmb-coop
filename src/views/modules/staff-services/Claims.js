@@ -230,6 +230,7 @@ const Claims = (props) => {
             onEdit={loadClaim}
             addDetails={handleAddDetails}
             onDestroy={deleteClaim}
+            loading={loading}
           />
         </div>
       </div>

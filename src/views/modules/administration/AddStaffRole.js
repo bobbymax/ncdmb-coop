@@ -21,14 +21,11 @@ const AddStaffRole = (props) => {
 
     store(`users/${props.user.id}/roles`, data)
       .then((res) => {
-        const newRole = res.data.data;
-
-        Alert.success("Role", newRole.message);
+        Alert.success("Role", res.message);
+        setRoles([]);
         props.onHide();
       })
       .catch((err) => console.log(err.message));
-
-    setRoles([]);
   };
 
   const formatRole = () => {

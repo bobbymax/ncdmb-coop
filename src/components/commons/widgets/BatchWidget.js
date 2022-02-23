@@ -1,7 +1,15 @@
+/* eslint-disable eqeqeq */
 import React from "react";
 import { formatCurrency } from "../../../services/utils/helpers";
 
-function BatchWidget({ data, addToBatch, isButtonOff, paymentType, maxed }) {
+function BatchWidget({
+  data,
+  addToBatch,
+  isButtonOff,
+  paymentType,
+  maxed,
+  subBudgetHeadId,
+}) {
   if (data) {
     return (
       <div className="row">
@@ -28,11 +36,12 @@ function BatchWidget({ data, addToBatch, isButtonOff, paymentType, maxed }) {
                                   className="btn btn-success btn-xs btn-rounded"
                                   onClick={() => addToBatch(item)}
                                   disabled={
-                                    (isButtonOff &&
-                                      item.payment_type !== paymentType) ||
-                                    maxed
+                                    isButtonOff &&
+                                    subBudgetHeadId > 0 &&
+                                    item.subBudgetHead.id != subBudgetHeadId
                                   }
                                 >
+                                  {console.log(item.subBudgetHead.id)}
                                   <i className="fa fa-plus"></i>
                                 </button>
                               </div>

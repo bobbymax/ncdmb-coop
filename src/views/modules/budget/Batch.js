@@ -27,6 +27,7 @@ const Batch = (props) => {
     canvas: false,
     buttonDisabled: false,
     sub_budget_head_id: 0,
+    errorMssg: "",
   };
   const [state, setState] = useState(initialState);
   const grandTotal =
@@ -57,72 +58,126 @@ const Batch = (props) => {
   const boardLength = state.board.length;
 
   const batchClaim = (expenditure) => {
-    const batch = expenditures.filter((batch) => expenditure.id === batch.id);
+    // const batch = expenditures.filter((batch) => expenditure.id === batch.id);
+
+    // console.log(expenditure);
+
+    const newLoads = expenditures.filter((exp) => exp.id !== expenditure.id);
 
     const maxSlots = {
       staffPayment: 6,
       thirdParty: 1,
     };
 
-    if (
-      expenditure.payment_type === "third-party" &&
-      state.board.length < maxSlots.thirdParty
-    ) {
-      const newExpenditure = expenditures.filter(
-        (batch) => expenditure.id !== batch.id
-      );
+    switch (expenditure.payment_type) {
+      case "third-party":
+        if (state.board.length < maxSlots.thirdParty) {
+          setExpenditures(newLoads);
+          setState({
+            ...state,
+            board: [expenditure, ...state.board],
+            boardType: expenditure.payment_type,
+            buttonDisabled: !state.buttonDisabled,
+            sub_budget_head_id: expenditure.subBudgetHead.id,
+          });
+        }
+        break;
 
-      setExpenditures(newExpenditure);
+      case "staff-payment":
+        if (state.board.length <= maxSlots.staffPayment) {
+          if (boardLength === 0) {
+            setExpenditures(newLoads);
+            setState({
+              ...state,
+              board: [expenditure, ...state.board],
+              boardType: expenditure.payment_type,
+              sub_budget_head_id: expenditure.subBudgetHead.id,
+              buttonDisabled: boardLength === maxSlots.staffPayment,
+            });
+          } else if (
+            boardLength > 0 &&
+            expenditure.subBudgetHead.id === state.sub_budget_head_id
+          ) {
+            setExpenditures(newLoads);
+            setState({
+              ...state,
+              board: [expenditure, ...state.board],
+              boardType: expenditure.payment_type,
+              buttonDisabled: boardLength === maxSlots.staffPayment,
+            });
+          } else {
+            setState({
+              ...state,
+              errorMssg:
+                "Add Expenditures with the same Sub Budget Head Only!!!",
+            });
+          }
+        }
+        break;
 
-      setState({
-        ...state,
-        board: [...state.board, batch[0]],
-        buttonDisabled: !state.buttonDisabled,
-        boardType: expenditure.payment_type,
-        maxSlot: maxSlots.thirdParty,
-      });
-    } else if (
-      expenditure.payment_type === "staff-payment" &&
-      state.board.length <= maxSlots.staffPayment
-    ) {
-      if (
-        boardLength >= 1 &&
-        expenditure.subBudgetHead.id === state.sub_budget_head_id
-      ) {
-        const newExpenditure = expenditures.filter(
-          (batch) => expenditure.id !== batch.id
-        );
-
-        setExpenditures(newExpenditure);
-
-        setState({
-          ...state,
-          board: [...state.board, batch[0]],
-          buttonDisabled: true,
-          boardType: expenditure.payment_type,
-          maxSlot: maxSlots.staffPayment,
-        });
-      } else {
-        const newExpenditure = expenditures.filter(
-          (batch) => expenditure.id !== batch.id
-        );
-
-        setExpenditures(newExpenditure);
-
-        setState({
-          ...state,
-          board: [...state.board, batch[0]],
-          buttonDisabled: true,
-          boardType: expenditure.payment_type,
-          maxSlot: maxSlots.staffPayment,
-        });
-      }
-    } else {
-      setState({
-        ...state,
-        buttonDisabled: !state.buttonDisabled,
-      });
+      default:
+        break;
     }
+
+    // if (
+    //   expenditure.payment_type === "third-party" &&
+    //   state.board.length < maxSlots.thirdParty
+    // ) {
+    //   const newExpenditure = expenditures.filter(
+    //     (batch) => expenditure.id !== batch.id
+    //   );
+
+    //   setExpenditures(newExpenditure);
+
+    //   setState({
+    //     ...state,
+    //     board: [...state.board, batch[0]],
+    //     buttonDisabled: !state.buttonDisabled,
+    //     boardType: expenditure.payment_type,
+    //     maxSlot: maxSlots.thirdParty,
+    //   });
+    // } else if (
+    //   expenditure.payment_type === "staff-payment" &&
+    //   state.board.length <= maxSlots.staffPayment
+    // ) {
+    //   if (
+    //     boardLength >= 1 &&
+    //     expenditure.subBudgetHead.id === state.sub_budget_head_id
+    //   ) {
+    //     const newExpenditure = expenditures.filter(
+    //       (batch) => expenditure.id !== batch.id
+    //     );
+
+    //     setExpenditures(newExpenditure);
+
+    //     setState({
+    //       ...state,
+    //       board: [...state.board, batch[0]],
+    //       buttonDisabled: true,
+    //       boardType: expenditure.payment_type,
+    //       maxSlot: maxSlots.staffPayment,
+    //     });
+    //   } else {
+    //     const newExpenditure = expenditures.filter(
+    //       (batch) => expenditure.id !== batch.id
+    //     );
+
+    //     setExpenditures(newExpenditure);
+
+    //     setState({
+    //       ...state,
+    //       board: [...state.board, batch[0]],
+    //       buttonDisabled: true,
+    //       boardType: expenditure.payment_type,
+    //       maxSlot: maxSlots.staffPayment,
+    //     });
+    //   }
+    // } else {
+    //   setState({
+    //     ...state,
+    //     buttonDisabled: !state.buttonDisabled,
+    //   });
+    // }
   };
 
   const grandPrettyTotal = (num) => {
@@ -145,7 +200,7 @@ const Batch = (props) => {
   };
 
   const handleDelete = (expenditure) => {
-    if (state.board.length !== 0) {
+    if (state.board.length >= 1) {
       const claimChoosen = state.board.filter((b) => expenditure.id === b.id);
 
       const boardState = state.board.filter((b) => expenditure.id !== b.id);
@@ -167,6 +222,7 @@ const Batch = (props) => {
 
         setState({
           ...state,
+          sub_budget_head_id: 0,
           board: boardState,
           boardType: "",
           buttonDisabled: false,
@@ -178,6 +234,19 @@ const Batch = (props) => {
   useEffect(() => {
     request("expenditures");
   }, []);
+
+  useEffect(() => {
+    if (
+      boardLength === 1 &&
+      state.sub_budget_head_id > 0 &&
+      state.boardType === "third-party"
+    ) {
+      setState({
+        ...state,
+        buttonDisabled: true,
+      });
+    }
+  }, [boardLength, state.sub_budget_head_id, state.boardType]);
 
   useEffect(() => {
     if (boardLength === 1) {
@@ -219,6 +288,7 @@ const Batch = (props) => {
             addToBatch={batchClaim}
             isButtonOff={state.buttonDisabled}
             paymentType={state.boardType}
+            subBudgetHeadId={state.sub_budget_head_id}
             maxed={
               state.board.length > 0 && state.board.length === state.maxSlot
             }

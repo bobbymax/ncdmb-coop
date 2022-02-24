@@ -25,7 +25,7 @@ import Claim from "./views/modules/staff-services/Claim";
 import Instructions from "./views/modules/staff-services/Instructions";
 import Approvals from "./views/modules/approvals/Approvals";
 import Logistics from "./views/modules/refunds/Logistics";
-import Batch from "./views/modules/budget/Batch";
+import BatchPayments from "./views/modules/budget/BatchPayments";
 import RefundRequests from "./views/modules/refunds/RefundRequests";
 import AddModules from "./views/modules/administration/AddModules";
 import Overview from "./views/modules/overview/Overview";
@@ -261,7 +261,7 @@ const App = () => {
           path="/batch/claim"
           element={
             <ProtectedRoute>
-              <Batch />
+              <BatchPayments />
             </ProtectedRoute>
           }
         />

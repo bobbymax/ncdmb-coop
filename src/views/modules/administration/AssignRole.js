@@ -1,83 +1,101 @@
-import React, { useEffect, useState } from "react";
-import TextInputField from "../../../components/forms/TextInputField";
-import useApi from "../../../services/hooks/useApi";
-import { collection } from "../../../services/utils/controllers";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
+import { Modal } from "react-bootstrap";
+import Alert from "../../../services/classes/Alert";
 
-const AssignRole = () => {
-  const initialState = {
-    user_id: 0,
-    roles: [],
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { store } from "../../../services/utils/controllers";
+
+const AddStaffRole = (props) => {
+  const [roles, setRoles] = useState([]);
+
+  const handleModalStateChange = (e) => {
+    e.preventDefault();
+
+    const data = {
+      user_id: props.user.id,
+      roles: roles,
+    };
+
+    store(`users/${props.user.id}/roles`, data)
+      .then((res) => {
+        Alert.success("Role", res.message);
+        setRoles([]);
+        props.onHide();
+      })
+      .catch((err) => console.log(err.message));
   };
 
-  const { data: staffs, request } = useApi(collection);
-  const [state, setState] = useState(initialState);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    request("users");
-  }, []);
-
-  const addRole = (staff) => {
-    setOpen((prev) => !prev);
+  const formatRole = () => {
+    return (
+      props.roles &&
+      props.roles.length > 0 &&
+      props.roles.map((role) => ({
+        value: role.id,
+        label: role.name,
+      }))
+    );
   };
 
   return (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="page-titles">
-          <h2>Assign Role</h2>
-        </div>
-      </div>
+    <>
+      <Modal
+        className="modal"
+        show={props.show}
+        onHide={props.onHide}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <>
+          <form onSubmit={handleModalStateChange}>
+            <div className="modal-header">
+              <h5 className="modal-title" id="contained-modal-title-vcenter">
+                Add Role
+              </h5>
+            </div>
 
-      {open && (
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-body"></div>
-          </div>
-        </div>
-      )}
+            <div className="modal-body">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-12">
+                    <>
+                      <label className="form-label">Select Role</label>
 
-      <div className="col-md-12">
-        <div className="card">
-          <div className="card-body table-responsive">
-            <table className="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <td>Name</td>
-                  <td>Staff No</td>
-                  <td>Level</td>
-                  <td>Manage</td>
-                </tr>
-              </thead>
+                      <Select
+                        components={makeAnimated()}
+                        options={formatRole()}
+                        placeholder="Select Roles"
+                        onChange={setRoles}
+                        value={roles}
+                        isMulti={true}
+                      />
+                    </>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-              <tbody>
-                {staffs.length && staffs.length > 0 ? (
-                  staffs.map((staff) => (
-                    <tr key={staff.id}>
-                      <td>{staff.name}</td>
-                      <td>{staff.staff_no}</td>
-                      <td>{staff.level}</td>
-                      <td>
-                        <i
-                          className="fa fa-edit"
-                          onClick={() => addRole(staff)}
-                          style={{ cursor: "pointer" }}
-                        ></i>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4}>No Data</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="modal-footer">
+              <button className="btn btn-success" type="submit">
+                Submit
+              </button>
+
+              <button
+                className="btn btn-danger"
+                type="button"
+                onClick={props.onHide}
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </>
+      </Modal>
+    </>
   );
 };
 
-export default AssignRole;
+export default AddStaffRole;

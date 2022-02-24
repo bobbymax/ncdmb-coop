@@ -140,6 +140,7 @@ const BatchPayment = (props) => {
           sub_budget_head_id: 0,
           boardType: "",
           buttonDisabled: false,
+          code: "",
         });
       }
     }

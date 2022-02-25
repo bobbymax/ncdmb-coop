@@ -34,20 +34,21 @@ const BatchPayment = (props) => {
   };
 
   const [state, setState] = useState(initialState);
+  const [batchable, setBatchable] = useState([]);
   const [board, setBoard] = useState([]);
 
   const defaultData = [
     {
       id: 1,
       title: "STAFF PAYMENT",
-      items: expenditures.filter(
+      items: batchable.filter(
         (ex) => ex.payment_type && ex.payment_type === "staff-payment"
       ),
     },
     {
       id: 2,
       title: "THIRD PARTY",
-      items: expenditures.filter(
+      items: batchable.filter(
         (ex) => ex.payment_type && ex.payment_type === "third-party"
       ),
     },
@@ -102,15 +103,14 @@ const BatchPayment = (props) => {
       steps: 1,
     };
 
-    console.log(data);
-
-    // store("batches", data)
-    //   .then((res) => {
-    //     const data = res.data.data;
-    //     setBoard([]);
-    //     console.log(data);
-    //   })
-    //   .catch((err) => console.log(err.message));
+    store("batches", data)
+      .then((res) => {
+        const data = res.data.data;
+        setBoard([]);
+        setState(initialState);
+        console.log(data);
+      })
+      .catch((err) => console.log(err.message));
   };
 
   const handleDelete = (expenditure) => {
@@ -149,6 +149,12 @@ const BatchPayment = (props) => {
   useEffect(() => {
     request("expenditures");
   }, []);
+
+  useEffect(() => {
+    if (expenditures.length > 0) {
+      setBatchable(expenditures.filter((exp) => !exp.batched));
+    }
+  }, [expenditures]);
 
   useEffect(() => {
     if (boardLength > 0) {

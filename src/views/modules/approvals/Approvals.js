@@ -2,8 +2,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Alert from "../../../services/classes/Alert";
 import { collection, store } from "../../../services/utils/controllers";
-import { getPaymentType, userHasRole } from "../../../services/utils/helpers";
+import {
+  formatCurrency,
+  getPaymentType,
+  userHasRole,
+} from "../../../services/utils/helpers";
 
 const Approvals = (props) => {
   const auth = useSelector((state) => state.auth.value.user);
@@ -33,11 +38,14 @@ const Approvals = (props) => {
     if (state.batch_code !== "") {
       collection("batches/" + state.batch_code)
         .then((res) => {
+          const data = res.data.data;
           setState({
             ...state,
-            batch: res.data.data,
+            batch: data,
+            batch_id: data.id,
             batch_code: "",
             showDetails: true,
+            grandTotal: parseFloat(data.amount),
           });
         })
         .catch((err) => console.log(err));
@@ -88,8 +96,14 @@ const Approvals = (props) => {
       status: status,
     };
 
+    // console.log(status);
+
     store("clear/payments", data)
-      .then((res) => console.log(res))
+      .then((res) => {
+        const data = res.data;
+        Alert.success("Payment Status!!", data.message);
+        console.log(data.data);
+      })
       .catch((err) => console.log(err));
 
     setState(initialState);
@@ -105,8 +119,6 @@ const Approvals = (props) => {
       });
     }
   }, [state.batch, state.showDetails]);
-
-  console.log(state.batch);
 
   return (
     <>
@@ -235,7 +247,7 @@ const Approvals = (props) => {
                 </span>
               </div>
 
-              <div className="btn-group">
+              <div className="btn-group btn-rounded">
                 {state.batch &&
                 state.batch.steps === 3 &&
                 state.batch.editable === 1 &&
@@ -270,7 +282,10 @@ const Approvals = (props) => {
                     handlePaymentAction("approved");
                   }}
                 >
-                  {state.batch && state.batch.steps === 4 ? "Post" : "Clear"}{" "}
+                  <i className="fa fa-send mr-2"></i>
+                  {state.batch && state.batch.steps === 4
+                    ? "Post"
+                    : "Clear"}{" "}
                   Payment
                 </button>
               </div>
@@ -283,21 +298,15 @@ const Approvals = (props) => {
                     Billed From
                   </label>
 
-                  <h6 className="tx-15 mg-b-10">
+                  <h6 className="tx-15 mg-b-10 text-muted">
                     {state.batch && state.batch.expenditures
                       ? fetchExpenditureSubBudgetHead(state.batch)
                       : ""}
                   </h6>
-
-                  <p className="mg-b-0">
-                    {state.batch && state.batch.expenditures
-                      ? fetchExpenditureSubBudgetHeadDesc(state.batch)
-                      : ""}
-                  </p>
                 </div>
 
                 <div className="col-sm-6 tx-right d-none d-md-block">
-                  <label className="content-label text-secondary">
+                  <label className="content-label text-muted">
                     Batch Number
                   </label>
 
@@ -336,11 +345,11 @@ const Approvals = (props) => {
                             userHasRole(auth, "treasury-officer") ? (
                               <td>
                                 <button
-                                  className="btn btn-secondary btn-sm"
+                                  className="btn btn-warning btn-sm btn-rounded"
                                   type="button"
                                   onClick={() => modifyExpenditure(exp)}
                                 >
-                                  Edit
+                                  <i className="fa fa-edit text-white"></i>
                                 </button>
                               </td>
                             ) : null}
@@ -364,10 +373,9 @@ const Approvals = (props) => {
                     <>
                       <label className="content-label mg-b-10">Action</label>
                       <div className="row">
-                        <div className="col">
-                          <input
+                        <div className="col-md-12">
+                          <textarea
                             className="form-control"
-                            as="textarea"
                             placeholder="Enter Description"
                             value={state.description}
                             onChange={(e) =>
@@ -376,7 +384,8 @@ const Approvals = (props) => {
                                 description: e.target.value,
                               })
                             }
-                          />
+                            rows={4}
+                          ></textarea>
                         </div>
                       </div>
                     </>
@@ -399,7 +408,7 @@ const Approvals = (props) => {
                     ) : null}
                     <li className="d-flex justify-content-between">
                       <strong>TOTAL DUE</strong>
-                      <strong>NGN {state.grandTotal}</strong>
+                      <strong>{formatCurrency(state.grandTotal)}</strong>
                     </li>
                   </ul>
                 </div>

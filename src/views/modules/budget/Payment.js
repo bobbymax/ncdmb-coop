@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 // /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
@@ -62,7 +63,7 @@ const Payments = (props) => {
 
   useEffect(() => {
     request("batches");
-  }, [request]);
+  }, []);
 
   return (
     <>

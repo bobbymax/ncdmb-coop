@@ -64,8 +64,14 @@ function BatchWidget({
                 </div>
               ))
             ) : (
-              <div className="bottom-card">
-                <span className="">No Expenditure Data</span>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="text-danger">No Expenditure Data</h5>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>

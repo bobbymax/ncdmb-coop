@@ -31,6 +31,8 @@ import AddModules from "./views/modules/administration/AddModules";
 import Overview from "./views/modules/overview/Overview";
 import OverviewExpenditure from "./views/modules/overview/OverviewExpenditure";
 import Profile from "./views/Profile";
+import Configuration from "./views/modules/configuration/Configuration";
+import TouringAdvance from "./views/modules/staff-services/TouringAdvance";
 
 const App = () => {
   return (
@@ -302,6 +304,26 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/configuration"
+          element={
+            <ProtectedRoute>
+              <Configuration />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          exact
+          path="/touring-advance"
+          element={
+            <ProtectedRoute>
+              <TouringAdvance />
             </ProtectedRoute>
           }
         />

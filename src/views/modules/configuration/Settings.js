@@ -117,6 +117,8 @@ const Settings = () => {
         store("settings", data)
           .then((res) => {
             setSettings([res.data.data, ...settings]);
+            setState(initialState);
+            setOpen(false);
           })
           .catch((err) => console.log(err.message));
       } catch (error) {

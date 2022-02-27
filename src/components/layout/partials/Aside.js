@@ -68,6 +68,25 @@ const Aside = () => {
               </Link>
             </li>
           ) : null}
+
+          {auth && auth.administrator ? (
+            <li
+              className={
+                location.pathname && location.pathname === "/configuration"
+                  ? "mm-active"
+                  : ""
+              }
+            >
+              <Link
+                to="/configuration"
+                className="ai-icon"
+                aria-expanded="false"
+              >
+                <i className="fa fa-building" />
+                <span className="nav-text">Configuration</span>
+              </Link>
+            </li>
+          ) : null}
         </ul>
       </div>
     </div>

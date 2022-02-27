@@ -9,8 +9,10 @@ import BatchWidget from "../../../components/commons/widgets/BatchWidget";
 import BatchCard from "../../../components/commons/widgets/BatchCard";
 import "./drag.css";
 import Loading from "../../../components/commons/Loading";
+import { useSelector } from "react-redux";
 
 const BatchPayment = (props) => {
+  const auth = useSelector((state) => state.auth.value.user);
   const {
     data: expenditures,
     setData: setExpenditures,
@@ -152,7 +154,11 @@ const BatchPayment = (props) => {
 
   useEffect(() => {
     if (expenditures.length > 0) {
-      setBatchable(expenditures.filter((exp) => !exp.batched));
+      setBatchable(
+        expenditures.filter(
+          (exp) => !exp.batched && auth && exp.user_id == auth.id
+        )
+      );
     }
   }, [expenditures]);
 

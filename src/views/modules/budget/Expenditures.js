@@ -1,16 +1,13 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { collection, store } from "../../../services/utils/controllers";
-import CustomSelect from "../../../components/forms/CustomSelect";
+import CustomSelect from "../../../components/forms/select/CustomSelect";
 import TextInputField from "../../../components/forms/TextInputField";
 import Alert from "../../../services/classes/Alert";
-import useApi from "../../../services/hooks/useApi";
+import CustomSelectOptions from "../../../components/forms/select/CustomSelectOptions";
 
 const Expenditures = () => {
-  const { data: subBudgetHeads, request } = useApi(collection);
-
   const initialState = {
     claim: null,
     code: "",
@@ -29,10 +26,7 @@ const Expenditures = () => {
   };
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    request("subBudgetHeads");
-  }, []);
+  const [subBudgetHeads, setSubBudgetHeads] = useState([]);
 
   useEffect(() => {
     const single =
@@ -104,14 +98,14 @@ const Expenditures = () => {
     });
   };
 
-  const subBudgetHeadsOptions = (optionsArr) => {
-    const arr = [];
-    optionsArr.length > 0 &&
-      optionsArr.forEach((el) => {
-        arr.push({ key: el.id, label: el.name });
-      });
-    return arr;
-  };
+  // const subBudgetHeadsOptions = (optionsArr) => {
+  //   const arr = [];
+  //   optionsArr.length > 0 &&
+  //     optionsArr.forEach((el) => {
+  //       arr.push({ key: el.id, label: el.name });
+  //     });
+  //   return arr;
+  // };
 
   const paymentType = [
     { key: "staff-claim", label: "STAFF CLAIM" },
@@ -123,6 +117,19 @@ const Expenditures = () => {
     { key: "staff-payment", label: "STAFF PAYMENT" },
     { key: "third-party", label: "THIRD PARTY" },
   ];
+
+  useEffect(() => {
+    try {
+      collection("subBudgetHeads")
+        .then((res) => {
+          const data = res.data.data;
+          setSubBudgetHeads(data);
+        })
+        .catch((err) => console.log(err.message));
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <div className="row">
@@ -141,10 +148,6 @@ const Expenditures = () => {
                   <div className="row">
                     <div className="col-md-4">
                       <CustomSelect
-                        options={options}
-                        defaultInputValue="SELECT PAYMENT TYPE"
-                        placeholder="STAFF PAYMENT"
-                        type="text"
                         value={state.payment_type}
                         onChange={(e) => {
                           setState({
@@ -152,31 +155,48 @@ const Expenditures = () => {
                             payment_type: e.target.value,
                           });
                         }}
-                        error={
-                          errors &&
-                          errors.payment_type &&
-                          errors.payment_type.length > 0
-                        }
-                        errorMessage={
-                          errors &&
-                          errors.payment_type &&
-                          errors.payment_type[0]
-                        }
-                      />
+                      >
+                        <CustomSelectOptions
+                          label="SELECT STAFF PAYMENT"
+                          value=""
+                          disabled
+                        />
+
+                        {options.map((opt, i) => (
+                          <CustomSelectOptions
+                            key={i}
+                            label={opt.label}
+                            value={opt.key}
+                          />
+                        ))}
+                      </CustomSelect>
                     </div>
 
                     <div className="col-md-4">
                       <CustomSelect
-                        options={paymentType}
-                        placeholder="STAFF PAYMENT TYPE"
                         value={state.type}
-                        onChange={(e) =>
-                          setState({ ...state, type: e.target.value })
-                        }
-                        error={errors && errors.type && errors.type.length > 0}
-                        errorMessage={errors && errors.type && errors.type[0]}
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            type: e.target.value,
+                          });
+                        }}
                         disabled={state.payment_type === "third-party"}
-                      />
+                      >
+                        <CustomSelectOptions
+                          label="STAFF PAYMENT TYPE"
+                          value=""
+                          disabled
+                        />
+
+                        {paymentType.map((opt, i) => (
+                          <CustomSelectOptions
+                            key={i}
+                            label={opt.label}
+                            value={opt.key}
+                          />
+                        ))}
+                      </CustomSelect>
                     </div>
 
                     <div className="col-md-4">
@@ -196,8 +216,6 @@ const Expenditures = () => {
 
                     <div className="col-md-12">
                       <CustomSelect
-                        defaultText="SELECT SUB BUDGET HEAD"
-                        options={subBudgetHeadsOptions(subBudgetHeads)}
                         value={state.sub_budget_head_id}
                         onChange={(e) => {
                           setState({
@@ -205,13 +223,22 @@ const Expenditures = () => {
                             sub_budget_head_id: e.target.value,
                           });
                         }}
-                        error={
-                          errors && errors.isSuper && errors.isSuper.length > 0
-                        }
-                        errorMessage={
-                          errors && errors.isSuper && errors.isSuper[0]
-                        }
-                      />
+                      >
+                        <CustomSelectOptions
+                          label="SELECT SUB BUDGET HEAD"
+                          value={0}
+                          disabled
+                        />
+
+                        {subBudgetHeads.length > 0 &&
+                          subBudgetHeads.map((subBudgetHead) => (
+                            <CustomSelectOptions
+                              key={subBudgetHead.id}
+                              label={subBudgetHead.name}
+                              value={subBudgetHead.id}
+                            />
+                          ))}
+                      </CustomSelect>
                     </div>
 
                     <div className="col-md-6">

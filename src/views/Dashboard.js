@@ -59,7 +59,7 @@ const Dashboard = () => {
       </div>
 
       <div className="row">
-        <div className="col-xl-6 col-xxl-12">
+        <div className="col-xl-12 col-xxl-12">
           <BudgetController />
         </div>
 

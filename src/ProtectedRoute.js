@@ -35,14 +35,15 @@ const ProtectedRoute = ({ children }) => {
       <div id="main-wrapper" style={{ opacity: 1 }}>
         <Navigation />
         <Header />
-        <Aside />
+        {/* <Aside /> */}
 
+        {/* 
         <div className="content-body">
           <div className="container-fluid">
-            {auth ? children : <Navigate to="/login" />}
+           
           </div>
         </div>
-        <Footer />
+        <Footer /> */}
       </div>
     </>
   );

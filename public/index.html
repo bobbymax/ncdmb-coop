@@ -33,6 +33,30 @@
       rel="stylesheet"
     />
     <link href="%PUBLIC_URL%/css/style.css" rel="stylesheet" />
+
+    <!-- New Styles -->
+    <link
+      href="%PUBLIC_URL%/plugins/custom/fullcalendar/fullcalendar.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="%PUBLIC_URL%/plugins/custom/datatables/datatables.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!--end::Page Vendor Stylesheets-->
+    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link
+      href="%PUBLIC_URL%/plugins/global/plugins.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="%PUBLIC_URL%/css/style.bundle.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <title>Budget Portal</title>
   </head>
 
@@ -44,7 +68,14 @@
     }
   </style>
 
-  <body class="h-100">
+  <body
+    id="kt_body"
+    class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed"
+    style="
+      --kt-toolbar-height: 55px;
+      --kt-toolbar-height-tablet-and-mobile: 55px;
+    "
+  >
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

@@ -1,12 +1,13 @@
 import React from "react";
+import Toolbar from "./Toolbar";
 
-const Content = ({ children }) => {
+const Content = ({ children, auth }) => {
   return (
-    <div
-      className="content d-flex flex-column flex-column-fluid"
-      id="kt_content"
-    >
-      {children}
+    <div className="content bg-danger" id="kt_content">
+      <div className="container-xxl">
+        <Toolbar auth={auth} />
+        {children}
+      </div>
     </div>
   );
 };

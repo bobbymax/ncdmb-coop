@@ -58,8 +58,8 @@ const Login = () => {
       <div className="d-flex flex-column flex-root">
         <div className="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
           <div className="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-            <Link to="#" class="mb-12">
-              <img alt="Logo" src={logo} class="h-100px" />
+            <Link to="#" className="mb-12">
+              <img alt="Logo" src={logo} className="h-100px" />
             </Link>
 
             <div className="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
@@ -79,9 +79,8 @@ const Login = () => {
               )}
 
               <form className="form w-100" onSubmit={handleSubmit}>
-                <div class="text-center mb-10">
-                  <h1 class="text-dark mb-3">Sign In to Budget Portal</h1>
-                  <div class="text-gray-400 fw-bold fs-4">Welcome Back!</div>
+                <div className="text-center mb-10">
+                  <h1 className="text-dark mb-3">Sign In to Budget Portal</h1>
                 </div>
 
                 <div className="fv-row mb-10">

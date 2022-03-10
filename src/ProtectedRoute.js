@@ -3,13 +3,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-// import ChatBox from "./components/commons/ChatBox"
 import Aside from "./components/layout/partials/Aside";
 import Content from "./components/layout/partials/Content";
-import Footer from "./components/layout/partials/Footer";
+// import Footer from "./components/layout/partials/Footer";
 import Header from "./components/layout/partials/Header";
-import Navigation from "./components/layout/partials/Navigation";
-import Toolbar from "./components/layout/partials/Toolbar";
+// import Navigation from "./components/layout/partials/Navigation";
 import { fetchSiteConfig } from "./features/config/configSlice";
 import { collection } from "./services/utils/controllers";
 
@@ -42,14 +40,9 @@ const ProtectedRoute = ({ children }) => {
           id="kt_wrapper"
         >
           <Header />
-          <Content>
-            <Toolbar auth={auth} />
 
-            <div className="container">
-              <div className="">
-                {auth ? children : <Navigate to="/login" />}
-              </div>
-            </div>
+          <Content auth={auth}>
+            {auth ? children : <Navigate to="/login" />}
           </Content>
         </div>
       </div>

@@ -52,13 +52,13 @@ const Header = () => {
         </div>
 
         <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-          <a href="../../demo1/dist/index.html" className="d-lg-none">
+          <Link to="#" className="d-lg-none">
             <img
               alt="Logo"
               src={require("../../../assets/images/newLogoAlone.png")}
               className="h-30px"
             />
-          </a>
+          </Link>
         </div>
 
         <div className="d-flex align-items-center">
@@ -83,7 +83,7 @@ const Header = () => {
                     id="kt_header_user_menu_toggle"
                   >
                     <div
-                      className="cursor-pointer symbol symbol-30px symbol-md-40px show menu-dropdown bg-primary"
+                      className="cursor-pointer symbol symbol-30px symbol-md-40px show menu-dropdown"
                       data-kt-menu-trigger="click"
                       data-kt-menu-attach="parent"
                       data-kt-menu-placement="bottom-start"

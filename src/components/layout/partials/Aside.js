@@ -10,88 +10,6 @@ const Aside = () => {
   const auth = useSelector((state) => state.auth.value.user);
 
   return (
-    // <div className="deznav">
-    //   <div className="deznav-scroll">
-    //     <ul className="metismenu" id="menu">
-    //       <li
-    //         className={
-    //           location.pathname && location.pathname === "/" ? "mm-active" : ""
-    //         }
-    //       >
-    //         <NavLink to="/" className="ai-icon" aria-expanded="false">
-    //           <i className="flaticon-381-networking" />
-    //           <span className="nav-text">Dashboard</span>
-    //         </NavLink>
-    //       </li>
-
-    //       <li
-    //         className={
-    //           location.pathname && location.pathname === "/applications"
-    //             ? "mm-active"
-    //             : ""
-    //         }
-    //       >
-    //         <NavLink
-    //           to="/applications"
-    //           className="ai-icon"
-    //           aria-expanded="false"
-    //         >
-    //           <i className="flaticon-381-app" />
-    //           <span className="nav-text">Modules</span>
-    //         </NavLink>
-    //       </li>
-
-    //       {auth && auth.administrator ? (
-    //         <li
-    //           className={
-    //             location.pathname && location.pathname === "/settings"
-    //               ? "mm-active"
-    //               : ""
-    //           }
-    //         >
-    //           <Link to="/settings" className="ai-icon" aria-expanded="false">
-    //             <i className="flaticon-381-settings-2" />
-    //             <span className="nav-text">Settings</span>
-    //           </Link>
-    //         </li>
-    //       ) : null}
-
-    //       {auth && auth.administrator ? (
-    //         <li
-    //           className={
-    //             location.pathname && location.pathname === "/overview"
-    //               ? "mm-active"
-    //               : ""
-    //           }
-    //         >
-    //           <Link to="/overview" className="ai-icon" aria-expanded="false">
-    //             <i className="fa fa-eye" />
-    //             <span className="nav-text">Overview</span>
-    //           </Link>
-    //         </li>
-    //       ) : null}
-
-    //       {auth && auth.administrator ? (
-    //         <li
-    //           className={
-    //             location.pathname && location.pathname === "/configuration"
-    //               ? "mm-active"
-    //               : ""
-    //           }
-    //         >
-    //           <Link
-    //             to="/configuration"
-    //             className="ai-icon"
-    //             aria-expanded="false"
-    //           >
-    //             <i className="fa fa-building" />
-    //             <span className="nav-text">Configuration</span>
-    //           </Link>
-    //         </li>
-    //       ) : null}
-    //     </ul>
-    //   </div>
-    // </div>
     <div
       id="kt_aside"
       className="aside aside-dark aside-hoverable"
@@ -179,19 +97,41 @@ const Aside = () => {
                       viewBox="0 0 24 24"
                       fill="none"
                     >
-                      <path
-                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
+                      <rect
+                        x="2"
+                        y="2"
+                        width="9"
+                        height="9"
+                        rx="2"
                         fill="black"
-                      />
-                      <path
-                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
-                        fill="black"
-                      />
-                      <path
+                      ></rect>
+                      <rect
                         opacity="0.3"
-                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
+                        x="13"
+                        y="2"
+                        width="9"
+                        height="9"
+                        rx="2"
                         fill="black"
-                      />
+                      ></rect>
+                      <rect
+                        opacity="0.3"
+                        x="13"
+                        y="13"
+                        width="9"
+                        height="9"
+                        rx="2"
+                        fill="black"
+                      ></rect>
+                      <rect
+                        opacity="0.3"
+                        x="2"
+                        y="13"
+                        width="9"
+                        height="9"
+                        rx="2"
+                        fill="black"
+                      ></rect>
                     </svg>
                   </span>
                 </span>
@@ -201,10 +141,10 @@ const Aside = () => {
             </NavLink>
 
             <NavLink
-              to="/modules"
+              to="/applications"
               data-kt-menu-trigger="click"
               className={
-                location.pathname && location.pathname === "/modules"
+                location.pathname && location.pathname === "/applications"
                   ? "menu-item here"
                   : "menu-item"
               }
@@ -245,125 +185,128 @@ const Aside = () => {
               </span>
             </NavLink>
 
-            <NavLink
-              to="/modules"
-              data-kt-menu-trigger="click"
-              className={
-                location.pathname && location.pathname === "/settings"
-                  ? "menu-item here"
-                  : "menu-item"
-              }
-            >
-              <span className="menu-link">
-                <span className="menu-icon">
-                  <span className="svg-icon svg-icon-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
-                        fill="black"
-                      />
-                      <path
-                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
-                        fill="black"
-                      />
-                      <path
-                        opacity="0.3"
-                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
-                        fill="black"
-                      />
-                    </svg>
+            {auth && auth.administrator ? (
+              <NavLink
+                to="/settings"
+                data-kt-menu-trigger="click"
+                className={
+                  location.pathname && location.pathname === "/settings"
+                    ? "menu-item here"
+                    : "menu-item"
+                }
+              >
+                <span className="menu-link">
+                  <span className="menu-icon">
+                    <span className="svg-icon svg-icon-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M18 21.6C16.6 20.4 9.1 20.3 6.3 21.2C5.7 21.4 5.1 21.2 4.7 20.8L2 18C4.2 15.8 10.8 15.1 15.8 15.8C16.2 18.3 17 20.5 18 21.6ZM18.8 2.8C18.4 2.4 17.8 2.20001 17.2 2.40001C14.4 3.30001 6.9 3.2 5.5 2C6.8 3.3 7.4 5.5 7.7 7.7C9 7.9 10.3 8 11.7 8C15.8 8 19.8 7.2 21.5 5.5L18.8 2.8Z"
+                          fill="black"
+                        ></path>
+                        <path
+                          opacity="0.3"
+                          d="M21.2 17.3C21.4 17.9 21.2 18.5 20.8 18.9L18 21.6C15.8 19.4 15.1 12.8 15.8 7.8C18.3 7.4 20.4 6.70001 21.5 5.60001C20.4 7.00001 20.2 14.5 21.2 17.3ZM8 11.7C8 9 7.7 4.2 5.5 2L2.8 4.8C2.4 5.2 2.2 5.80001 2.4 6.40001C2.7 7.40001 3.00001 9.2 3.10001 11.7C3.10001 15.5 2.40001 17.6 2.10001 18C3.20001 16.9 5.3 16.2 7.8 15.8C8 14.2 8 12.7 8 11.7Z"
+                          fill="black"
+                        ></path>
+                      </svg>
+                    </span>
                   </span>
-                </span>
-                <span className="menu-title">Settings</span>
-                <span className="menu-arrow"></span>
-              </span>
-            </NavLink>
 
-            <NavLink
-              to="/overview"
-              data-kt-menu-trigger="click"
-              className={
-                location.pathname && location.pathname === "/overview"
-                  ? "menu-item here"
-                  : "menu-item"
-              }
-            >
-              <span className="menu-link">
-                <span className="menu-icon">
-                  <span className="svg-icon svg-icon-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
-                        fill="black"
-                      />
-                      <path
-                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
-                        fill="black"
-                      />
-                      <path
-                        opacity="0.3"
-                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
-                        fill="black"
-                      />
-                    </svg>
-                  </span>
+                  <span className="menu-title">Settings</span>
+                  <span className="menu-arrow"></span>
                 </span>
-                <span className="menu-title">Overview</span>
-                <span className="menu-arrow"></span>
-              </span>
-            </NavLink>
+              </NavLink>
+            ) : null}
 
-            <NavLink
-              to="/configuration"
-              data-kt-menu-trigger="click"
-              className={
-                location.pathname && location.pathname === "/configuration"
-                  ? "menu-item here"
-                  : "menu-item"
-              }
-            >
-              <span className="menu-link">
-                <span className="menu-icon">
-                  <span className="svg-icon svg-icon-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
-                        fill="black"
-                      />
-                      <path
-                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
-                        fill="black"
-                      />
-                      <path
-                        opacity="0.3"
-                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
-                        fill="black"
-                      />
-                    </svg>
+            {auth && auth.administrator ? (
+              <NavLink
+                to="/overview"
+                data-kt-menu-trigger="click"
+                className={
+                  location.pathname && location.pathname === "/overview"
+                    ? "menu-item here"
+                    : "menu-item"
+                }
+              >
+                <span className="menu-link">
+                  <span className="menu-icon">
+                    <span className="svg-icon svg-icon-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
+                          fill="black"
+                        />
+                        <path
+                          opacity="0.3"
+                          d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
+                          fill="black"
+                        />
+                      </svg>
+                    </span>
                   </span>
+                  <span className="menu-title">Overview</span>
+                  <span className="menu-arrow"></span>
                 </span>
-                <span className="menu-title">Configuration</span>
-                <span className="menu-arrow"></span>
-              </span>
-            </NavLink>
+              </NavLink>
+            ) : null}
+
+            {auth && auth.administrator ? (
+              <NavLink
+                to="/configuration"
+                data-kt-menu-trigger="click"
+                className={
+                  location.pathname && location.pathname === "/configuration"
+                    ? "menu-item here"
+                    : "menu-item"
+                }
+              >
+                <span className="menu-link">
+                  <span className="menu-icon">
+                    <span className="svg-icon svg-icon-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
+                          fill="black"
+                        />
+                        <path
+                          opacity="0.3"
+                          d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
+                          fill="black"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                  <span className="menu-title">Configuration</span>
+                  <span className="menu-arrow"></span>
+                </span>
+              </NavLink>
+            ) : null}
           </div>
         </div>
       </div>

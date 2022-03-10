@@ -37,18 +37,17 @@ const ProtectedRoute = ({ children }) => {
       <div className="page d-flex flex-row flex-column-fluid">
         <Aside />
 
-        {/* Displayed content */}
         <div
           className="wrapper d-flex flex-column flex-row-fluid"
           id="kt_wrapper"
         >
           <Header />
           <Content>
-            <Toolbar user={auth} />
+            <Toolbar auth={auth} />
 
             <div className="container">
-              <div className="row">
-                {/* {auth ? children : <Navigate to="/login" />} */}
+              <div className="">
+                {auth ? children : <Navigate to="/login" />}
               </div>
             </div>
           </Content>

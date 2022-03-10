@@ -10,10 +10,10 @@ const ButtonField = ({
     <div className="text-center">
       <button
         type={type}
-        className={`btn btn-${variant} btn-block`}
+        className={`btn btn-lg w-100 mb-5 btn-${variant}`}
         {...otherProps}
       >
-        <>{children}</>
+        <span className="indicator-label">{children}</span>
       </button>
     </div>
   );

@@ -19,9 +19,7 @@ const TextInputField = ({
   return (
     <div className={`form-group ${error ? "input-danger" : ""}`}>
       {label !== "" && (
-        <label className="mb-1">
-          <strong>{label}</strong>
-        </label>
+        <label className="mb-1 s-6 fw-bolder text-dark">{label}</label>
       )}
 
       {multiline === 0 ? (

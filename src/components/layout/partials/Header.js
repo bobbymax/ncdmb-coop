@@ -109,11 +109,11 @@ const Header = () => {
 
                           <div className="d-flex flex-column">
                             <div className="fw-bolder d-flex align-items-center fs-5">
-                              Max Smith
+                              {auth && auth.name}
                             </div>
 
                             <span className="fw-bold text-muted text-hover-primary fs-7">
-                              max@kt.com
+                              {auth && auth.email}
                             </span>
                           </div>
                         </div>
@@ -122,7 +122,7 @@ const Header = () => {
                       <div className="separator my-2"></div>
 
                       <div className="menu-item px-5">
-                        <Link to="#" className="menu-link px-5">
+                        <Link to="/user/profile" className="menu-link px-5">
                           My Profile
                         </Link>
                       </div>
@@ -130,7 +130,11 @@ const Header = () => {
                       <div className="separator my-2"></div>
 
                       <div className="menu-item px-5">
-                        <Link to="#" className="menu-link px-5">
+                        <Link
+                          className="menu-link px-5"
+                          to="#"
+                          onClick={logout}
+                        >
                           Sign Out
                         </Link>
                       </div>

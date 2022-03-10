@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -55,75 +54,69 @@ const Login = () => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
-      <div className="authincation h-100">
-        <div className="container h-100">
-          <div className="row justify-content-center h-100 align-items-center">
-            <div className="col-md-6">
-              <div className="authincation-content">
-                <div className="row no-gutters">
-                  <div className="col-xl-12">
-                    <div className="auth-form">
-                      {success ? (
-                        <div
-                          className="alert alert-success text-center"
-                          style={{ backgroundColor: "#17bf3e" }}
-                        >
-                          <b style={{ color: "white" }}>Login successful!!</b>
-                        </div>
-                      ) : null}
+    <div className="bg-body h-100">
+      <div className="d-flex flex-column flex-root">
+        <div className="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+          <div className="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+            <Link to="#" class="mb-12">
+              <img alt="Logo" src={logo} class="h-100px" />
+            </Link>
 
-                      {error && (
-                        <div className="alert alert-danger text-center">
-                          <b>Login failed!!</b>
-                        </div>
-                      )}
-
-                      <div className="text-center mb-3">
-                        <Link to="/">
-                          <img
-                            className="img-fluid"
-                            src={logo}
-                            alt="logo brand"
-                          />
-                        </Link>
-                      </div>
-
-                      <form onSubmit={handleSubmit}>
-                        <TextInputField
-                          label="Staff Number"
-                          placeholder="Enter Staff Number"
-                          value={staffNo}
-                          onChange={(e) => setStaffNo(e.target.value)}
-                          required
-                          disabled={loading ? true : false}
-                        />
-
-                        <TextInputField
-                          label="Password"
-                          type="password"
-                          placeholder="Enter Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                          disabled={loading ? true : false}
-                        />
-
-                        <ButtonField
-                          type="submit"
-                          disabled={loading ? true : false}
-                        >
-                          {loading ? (
-                            <i className="fa fa-spinner fa-spin"></i>
-                          ) : (
-                            "Sign Me In"
-                          )}
-                        </ButtonField>
-                      </form>
-                    </div>
-                  </div>
+            <div className="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+              {success ? (
+                <div
+                  className="alert alert-success text-center"
+                  style={{ backgroundColor: "#17bf3e" }}
+                >
+                  <b style={{ color: "white" }}>Login successful!!</b>
                 </div>
-              </div>
+              ) : null}
+
+              {error && (
+                <div className="alert alert-danger text-center">
+                  <b>Login failed!!</b>
+                </div>
+              )}
+
+              <form className="form w-100" onSubmit={handleSubmit}>
+                <div class="text-center mb-10">
+                  <h1 class="text-dark mb-3">Sign In to Budget Portal</h1>
+                  <div class="text-gray-400 fw-bold fs-4">Welcome Back!</div>
+                </div>
+
+                <div className="fv-row mb-10">
+                  <TextInputField
+                    additionalClasses="form-control-lg form-control-solid"
+                    label="Staff Number"
+                    placeholder="Enter Staff Number"
+                    value={staffNo}
+                    onChange={(e) => setStaffNo(e.target.value)}
+                    required
+                    disabled={loading ? true : false}
+                  />
+                </div>
+
+                <div className="fv-row mb-10">
+                  <TextInputField
+                    additionalClasses="form-control-lg form-control-solid"
+                    label="Password"
+                    type="password"
+                    placeholder="Enter Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading ? true : false}
+                  />
+                </div>
+
+                <ButtonField type="submit" disabled={loading ? true : false}>
+                  {loading ? (
+                    <i className="fa fa-circle-notch fa-2x fa-spin"></i>
+                  ) : (
+                    "Sign In"
+                  )}
+                </ButtonField>
+              </form>
             </div>
           </div>
         </div>

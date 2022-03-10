@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 // import ChatBox from "./components/commons/ChatBox"
 import Aside from "./components/layout/partials/Aside";
+import Content from "./components/layout/partials/Content";
 import Footer from "./components/layout/partials/Footer";
 import Header from "./components/layout/partials/Header";
 import Navigation from "./components/layout/partials/Navigation";
+import Toolbar from "./components/layout/partials/Toolbar";
 import { fetchSiteConfig } from "./features/config/configSlice";
 import { collection } from "./services/utils/controllers";
 
@@ -31,21 +33,28 @@ const ProtectedRoute = ({ children }) => {
   }, [auth]);
 
   return (
-    <>
-      <div id="main-wrapper" style={{ opacity: 1 }}>
-        <Navigation />
-        <Header />
-        {/* <Aside /> */}
+    <div className="d-flex flex-column flex-root">
+      <div className="page d-flex flex-row flex-column-fluid">
+        <Aside />
 
-        {/* 
-        <div className="content-body">
-          <div className="container-fluid">
-           
-          </div>
+        {/* Displayed content */}
+        <div
+          className="wrapper d-flex flex-column flex-row-fluid"
+          id="kt_wrapper"
+        >
+          <Header />
+          <Content>
+            <Toolbar user={auth} />
+
+            <div className="container">
+              <div className="row">
+                {/* {auth ? children : <Navigate to="/login" />} */}
+              </div>
+            </div>
+          </Content>
         </div>
-        <Footer /> */}
       </div>
-    </>
+    </div>
   );
 };
 

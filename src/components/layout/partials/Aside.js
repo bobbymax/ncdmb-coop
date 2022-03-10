@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 import React from "react";
@@ -102,11 +103,11 @@ const Aside = () => {
       data-kt-drawer-direction="start"
       data-kt-drawer-toggle="#kt_aside_mobile_toggle"
     >
-      <div className="aside-logo flex-column-auto" id="kt_aside_logo">
+      <div className="aside-logo bg-light flex-column-auto" id="kt_aside_logo">
         <a href="#">
           <img
             alt="Logo"
-            src={require("../../../assets/media/logos/logo-1-dark.svg").default}
+            src={require("../../../assets/images/newLogo.png")}
             className="h-25px logo"
           />
         </a>
@@ -142,127 +143,107 @@ const Aside = () => {
         </div>
       </div>
 
-      <div className="aside-menu flex-column-fluid"></div>
-      <div
-        className="hover-scroll-overlay-y my-5 my-lg-5"
-        id="kt_aside_menu_wrapper"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: false, lg: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer"
-        data-kt-scroll-wrappers="#kt_aside_menu"
-        data-kt-scroll-offset="0"
-      >
+      <div className="aside-menu flex-column-fluid">
         <div
-          className="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
-          id="#kt_aside_menu"
-          data-kt-menu="true"
-          data-kt-menu-expand="false"
+          className="hover-scroll-overlay-y my-5 my-lg-5"
+          id="kt_aside_menu_wrapper"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="{default: false, lg: true}"
+          data-kt-scroll-height="auto"
+          data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer"
+          data-kt-scroll-wrappers="#kt_aside_menu"
+          data-kt-scroll-offset="0"
         >
-          <div data-kt-menu-trigger="click" className="menu-item">
-            <span className="menu-link">
-              <span className="menu-icon">
-                <span className="svg-icon svg-icon-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <rect
-                      x="2"
-                      y="2"
-                      width="9"
-                      height="9"
-                      rx="2"
-                      fill="black"
-                    />
-                    <rect
-                      opacity="0.3"
-                      x="13"
-                      y="2"
-                      width="9"
-                      height="9"
-                      rx="2"
-                      fill="black"
-                    />
-                    <rect
-                      opacity="0.3"
-                      x="13"
-                      y="13"
-                      width="9"
-                      height="9"
-                      rx="2"
-                      fill="black"
-                    />
-                    <rect
-                      opacity="0.3"
-                      x="2"
-                      y="13"
-                      width="9"
-                      height="9"
-                      rx="2"
-                      fill="black"
-                    />
-                  </svg>
+          <div
+            className="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
+            id="#kt_aside_menu"
+            data-kt-menu="true"
+            data-kt-menu-expand="false"
+          >
+            <NavLink
+              to="/"
+              data-kt-menu-trigger="click"
+              className={
+                location.pathname && location.pathname === "/"
+                  ? "menu-item here"
+                  : "menu-item"
+              }
+            >
+              <span to="/" className="menu-link">
+                <span className="menu-icon">
+                  <span class="svg-icon svg-icon-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
+                        fill="black"
+                      />
+                      <path
+                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
+                        fill="black"
+                      />
+                      <path
+                        opacity="0.3"
+                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </span>
                 </span>
+                <span className="menu-title">Dashboard</span>
+                <span className="menu-arrow"></span>
               </span>
+            </NavLink>
 
-              <span className="menu-title">Dashboard</span>
-              <span className="menu-arrow"></span>
-            </span>
+            <NavLink
+              to="/"
+              data-kt-menu-trigger="click"
+              className={
+                location.pathname && location.pathname === "/"
+                  ? "menu-item here"
+                  : "menu-item"
+              }
+            >
+              <span to="/" className="menu-link">
+                <span className="menu-icon">
+                  <span class="svg-icon svg-icon-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M21 9V11C21 11.6 20.6 12 20 12H14V8H20C20.6 8 21 8.4 21 9ZM10 8H4C3.4 8 3 8.4 3 9V11C3 11.6 3.4 12 4 12H10V8Z"
+                        fill="black"
+                      />
+                      <path
+                        d="M15 2C13.3 2 12 3.3 12 5V8H15C16.7 8 18 6.7 18 5C18 3.3 16.7 2 15 2Z"
+                        fill="black"
+                      />
+                      <path
+                        opacity="0.3"
+                        d="M9 2C10.7 2 12 3.3 12 5V8H9C7.3 8 6 6.7 6 5C6 3.3 7.3 2 9 2ZM4 12V21C4 21.6 4.4 22 5 22H10V12H4ZM20 12V21C20 21.6 19.6 22 19 22H14V12H20Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </span>
+                </span>
+                <span className="menu-title">Modules</span>
+                <span className="menu-arrow"></span>
+              </span>
+            </NavLink>
           </div>
         </div>
-
-        <div data-kt-menu-trigger="click" className="menu-item">
-          <span className="menu-link">
-            <span className="menu-icon">
-              <span className="svg-icon svg-icon-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <rect x="2" y="2" width="9" height="9" rx="2" fill="black" />
-                  <rect
-                    opacity="0.3"
-                    x="13"
-                    y="2"
-                    width="9"
-                    height="9"
-                    rx="2"
-                    fill="black"
-                  />
-                  <rect
-                    opacity="0.3"
-                    x="13"
-                    y="13"
-                    width="9"
-                    height="9"
-                    rx="2"
-                    fill="black"
-                  />
-                  <rect
-                    opacity="0.3"
-                    x="2"
-                    y="13"
-                    width="9"
-                    height="9"
-                    rx="2"
-                    fill="black"
-                  />
-                </svg>
-              </span>
-            </span>
-
-            <span className="menu-title">Dashboard</span>
-            <span className="menu-arrow"></span>
-          </span>
-        </div>
       </div>
+
+      {/* Menu Item */}
     </div>
   );
 };

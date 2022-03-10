@@ -9,32 +9,12 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <link
-      href="%PUBLIC_URL%/vendor/jqvmap/css/jqvmap.min.css"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"
     />
-    <!-- <link href="%PUBLIC_URL%/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet"> -->
-    <link
-      href="%PUBLIC_URL%/vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
-      rel="stylesheet"
-    />
-    <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet" />
-    <link
-      href="%PUBLIC_URL%/vendor/owl-carousel/owl.carousel.css"
-      rel="stylesheet"
-    />
-    <link href="%PUBLIC_URL%/css/style.css" rel="stylesheet" />
 
-    <!-- New Styles -->
     <link
       href="%PUBLIC_URL%/plugins/custom/fullcalendar/fullcalendar.bundle.css"
       rel="stylesheet"
@@ -45,13 +25,13 @@
       rel="stylesheet"
       type="text/css"
     />
-    <!--end::Page Vendor Stylesheets-->
-    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+
     <link
       href="%PUBLIC_URL%/plugins/global/plugins.bundle.css"
       rel="stylesheet"
       type="text/css"
     />
+
     <link
       href="%PUBLIC_URL%/css/style.bundle.css"
       rel="stylesheet"
@@ -92,39 +72,24 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <!-- Required vendors -->
-    <script src="%PUBLIC_URL%/vendor/global/global.min.js"></script>
-    <script src="%PUBLIC_URL%/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-    <script src="%PUBLIC_URL%/js/deznav-init.js"></script>
-    <script src="%PUBLIC_URL%/vendor/owl-carousel/owl.carousel.js"></script>
+    <!-- <script>
+      var hostUrl = "assets/";
+    </script> -->
 
-    <!-- Apex Chart
-    <script src="%PUBLIC_URL%/vendor/apexchart/apexchart.js"></script> -->
-
-    <!-- Chartist -->
-    <script src="%PUBLIC_URL%/vendor/chartist/js/chartist.min.js"></script>
-    <script src="%PUBLIC_URL%/vendor/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
-
-    <!-- Flot -->
-    <script src="%PUBLIC_URL%/vendor/flot/jquery.flot.js"></script>
-    <script src="%PUBLIC_URL%/vendor/flot/jquery.flot.pie.js"></script>
-    <script src="%PUBLIC_URL%/vendor/flot/jquery.flot.resize.js"></script>
-    <script src="%PUBLIC_URL%/vendor/flot-spline/jquery.flot.spline.min.js"></script>
-
-    <!-- Vectormap -->
-    <script src="%PUBLIC_URL%/vendor/jqvmap/js/jquery.vmap.min.js"></script>
-    <script src="%PUBLIC_URL%/vendor/jqvmap/js/jquery.vmap.world.js"></script>
-
-    <!-- Chart piety plugin files -->
-    <script src="%PUBLIC_URL%/vendor/peity/jquery.peity.min.js"></script>
-
-    <!-- Init file -->
-    <script src="%PUBLIC_URL%/js/plugins-init/widgets-script-init.js"></script>
-    <script src="%PUBLIC_URL%/js/custom.min.js"></script>
-
-    <!-- Datatable -->
-    <!-- <script src="%PUBLIC_URL%/vendor/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="%PUBLIC_URL%/js/plugins-init/datatables.init.js"></script> -->
+    <script src="%PUBLIC_URL%/plugins/global/plugins.bundle.js"></script>
+    <script src="%PUBLIC_URL%/js/scripts.bundle.js"></script>
+    <!--end::Global Javascript Bundle-->
+    <!--begin::Page Vendors Javascript(used by this page)-->
+    <script src="%PUBLIC_URL%/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+    <script src="%PUBLIC_URL%/plugins/custom/datatables/datatables.bundle.js"></script>
+    <!--end::Page Vendors Javascript-->
+    <!--begin::Page Custom Javascript(used by this page)-->
+    <script src="%PUBLIC_URL%/js/widgets.bundle.js"></script>
+    <script src="%PUBLIC_URL%/js/custom/widgets.js"></script>
+    <script src="%PUBLIC_URL%/js/custom/apps/chat/chat.js"></script>
+    <script src="%PUBLIC_URL%/js/custom/utilities/modals/upgrade-plan.js"></script>
+    <script src="%PUBLIC_URL%/js/custom/utilities/modals/create-app.js"></script>
+    <script src="%PUBLIC_URL%/js/custom/utilities/modals/users-search.js"></script>
   </body>
 </html>

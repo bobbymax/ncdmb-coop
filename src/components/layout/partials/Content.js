@@ -3,7 +3,7 @@ import Toolbar from "./Toolbar";
 
 const Content = ({ children, auth }) => {
   return (
-    <div className="content bg-danger" id="kt_content">
+    <div className="content" id="kt_content">
       <div className="container-xxl">
         <Toolbar auth={auth} />
         {children}
